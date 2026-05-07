@@ -195,14 +195,20 @@ def build_html(articles, overall_summary, cat_summaries, all_count, candidate_co
         stars = "★" * a.get("relevance_score", 3) + "☆" * (5 - a.get("relevance_score", 3))
         pub   = a.get("published", "")[:16].replace("T", " ")
         all_articles_html += f"""
-        <div class="article-item" onclick="showArticle({i})" style="border-left:3px solid {color}" data-cat="{cat}">
-          <div class="article-meta">
-            <span class="art-cat" style="color:{color}">{icon} {cat}</span>
-            <span class="art-src">{a['source']}</span>
-            <span class="art-stars">{stars}</span>
+        <div class="article-item" style="border-left:3px solid {color}" data-cat="{cat}" data-idx="{i}">
+          <div class="check-wrap">
+            <input type="checkbox" id="chk-{i}" onchange="updateCount()" onclick="event.stopPropagation()">
+            <label class="check-label" for="chk-{i}">保存する</label>
           </div>
-          <div class="article-title">{a.get('title_ja', a['title'])}</div>
-          <div class="article-summary">{a.get('summary_ja', '')}</div>
+          <div onclick="showArticle({i})">
+            <div class="article-meta">
+              <span class="art-cat" style="color:{color}">{icon} {cat}</span>
+              <span class="art-src">{a['source']}</span>
+              <span class="art-stars">{stars}</span>
+            </div>
+            <div class="article-title">{a.get('title_ja', a['title'])}</div>
+            <div class="article-summary">{a.get('summary_ja', '')}</div>
+          </div>
         </div>"""
 
     if not all_articles_html:
@@ -340,7 +346,25 @@ def build_html(articles, overall_summary, cat_summaries, all_count, candidate_co
     }}
     .deep-loading {{ font-size:13px; color:var(--fg3); }}
 
-    footer {{
+    /* Save bar */
+    .save-bar {{
+      position:fixed; bottom:0; left:0; right:0;
+      background:var(--bg2); border-top:1px solid var(--rule);
+      padding:12px 20px; display:flex; align-items:center; justify-content:space-between;
+      z-index:200;
+    }}
+    .save-count {{ font-size:13px; color:var(--fg3); }}
+    .save-btn {{
+      background:var(--accent); border:none; color:#fff;
+      padding:10px 24px; border-radius:8px; cursor:pointer;
+      font-size:14px; font-weight:700;
+    }}
+    .save-btn:disabled {{ background:var(--fg3); cursor:not-allowed; }}
+    .check-wrap {{ display:flex; align-items:center; gap:8px; margin-bottom:6px; }}
+    .check-wrap input[type=checkbox] {{ width:18px; height:18px; cursor:pointer; accent-color:var(--accent); }}
+    .check-label {{ font-size:12px; color:var(--fg3); cursor:pointer; }}
+
+    footer {{{
       text-align:center; font-size:11px; color:var(--fg3);
       padding:20px; border-top:1px solid var(--rule); margin-top:40px;
     }}
@@ -411,6 +435,7 @@ const CAT_ICONS  = {json.dumps(CAT_ICONS,  ensure_ascii=False)};
 const CAT_COLORS = {json.dumps(CAT_COLORS, ensure_ascii=False)};
 const CAT_SUMMARIES = {json.dumps(cat_summaries, ensure_ascii=False)};
 const GEMINI_KEY = ""; // ← 深掘り分析を使う場合は aistudio.google.com のAPIキーを入力
+const GAS_URL = "https://script.google.com/macros/s/AKfycbz9Nc874Azvh8zqv5BySUGToK01aIkInocGYeqxgyyiJ-fN0YCqIW4h2E9NRkYBQ8bO/exec";
 
 let history = ["top"];
 let currentArticleIdx = null;
@@ -472,6 +497,42 @@ function showArticle(idx, push=true) {{
   showPage("article");
 }}
 
+function updateCount() {
+  const checked = document.querySelectorAll('#all-articles input[type=checkbox]:checked').length;
+  document.getElementById('save-count').textContent = `チェックした記事: ${{checked}}件`;
+  document.getElementById('save-btn').disabled = checked === 0;
+}}
+
+async function saveChecked() {{
+  const checkboxes = document.querySelectorAll('#all-articles input[type=checkbox]:checked');
+  if (checkboxes.length === 0) return;
+  const articles = [];
+  checkboxes.forEach(cb => {{
+    const idx = parseInt(cb.id.replace('chk-', ''));
+    articles.push(ARTICLES[idx]);
+  }});
+  const btn = document.getElementById('save-btn');
+  btn.disabled = true;
+  btn.textContent = '保存中...';
+  try {{
+    await fetch(GAS_URL, {{
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {{'Content-Type': 'application/json'}},
+      body: JSON.stringify({{ articles }})
+    }});
+    btn.textContent = '✅ 保存しました';
+    checkboxes.forEach(cb => {{ cb.checked = false; }});
+    updateCount();
+    setTimeout(() => {{
+      btn.textContent = '📥 スプレッドシートに保存';
+    }}, 3000);
+  }} catch(e) {{
+    btn.textContent = 'エラー: ' + e.message;
+    btn.disabled = false;
+  }}
+}}
+
 async function loadDeepDive() {{
   const a = ARTICLES[currentArticleIdx];
   document.getElementById("deep-content").innerHTML = '<div class="deep-loading">⟳ 分析中...</div>';
@@ -495,6 +556,11 @@ async function loadDeepDive() {{
   }}
 }}
 </script>
+
+<div class="save-bar">
+  <div class="save-count" id="save-count">チェックした記事: 0件</div>
+  <button class="save-btn" id="save-btn" onclick="saveChecked()" disabled>📥 スプレッドシートに保存</button>
+</div>
 </body>
 </html>"""
     return html
