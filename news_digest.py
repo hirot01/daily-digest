@@ -364,7 +364,7 @@ def build_html(articles, overall_summary, cat_summaries, all_count, candidate_co
     .check-wrap input[type=checkbox] {{ width:18px; height:18px; cursor:pointer; accent-color:var(--accent); }}
     .check-label {{ font-size:12px; color:var(--fg3); cursor:pointer; }}
 
-    footer {{{
+    footer {{
       text-align:center; font-size:11px; color:var(--fg3);
       padding:20px; border-top:1px solid var(--rule); margin-top:40px;
     }}
@@ -497,7 +497,7 @@ function showArticle(idx, push=true) {{
   showPage("article");
 }}
 
-function updateCount() {
+function updateCount() {{
   const checked = document.querySelectorAll('#all-articles input[type=checkbox]:checked').length;
   document.getElementById('save-count').textContent = `チェックした記事: ${{checked}}件`;
   document.getElementById('save-btn').disabled = checked === 0;
