@@ -570,7 +570,7 @@ async function loadDeepDive() {{
     return;
   }}
   try {{
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${{GEMINI_KEY}}`, {{
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${{GEMINI_KEY}}`, {{
       method:"POST", headers:{{"Content-Type":"application/json"}},
       body: JSON.stringify({{ contents:[{{ parts:[{{ text:
         `以下のニュース記事を深掘り分析してください（250〜300字、文章形式）。\\n①市場・業界への示唆\\n②タイのボイラー・バイオマス事業または日タイ貿易への影響\\n③今後の注目点\\n\\n【タイトル】${{a.title_ja||a.title}}\\n【本文】${{a.body_ja||a.body}}\\n【カテゴリ】${{a.category}}`
@@ -601,7 +601,7 @@ def main():
         model = genai.Client(api_key=api_key)
     else:
         genai.configure(api_key=api_key)
-        model = genai.GenerativeModel("gemini-1.5-flash")
+        model = genai.GenerativeModel("gemini-2.0-flash")
 
     print(f"[{datetime.now().strftime('%H:%M:%S')}] RSS取得中...")
     all_articles = fetch_feeds(hours_back=24)
