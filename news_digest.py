@@ -5,7 +5,13 @@ news_digest.py — 毎日ニュース自動巡回スクリプト v2
 """
 
 import feedparser
-import google.generativeai as genai
+try:
+    from google import genai
+    from google.genai import types
+    USE_NEW_SDK = True
+except ImportError:
+    import google.generativeai as genai
+    USE_NEW_SDK = False
 import os, json, re
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
@@ -13,13 +19,20 @@ from pathlib import Path
 # ========== 設定 ==========
 
 KEYWORDS = [
-    "Thailand boiler", "タイ ボイラー",
-    "biomass fuel", "biomass energy", "バイオマス",
-    "Japan Thailand trade", "日タイ 貿易", "日タイ ビジネス",
-    "USD JPY", "THB JPY", "ドル円", "バーツ",
-    "EFB palm", "coconut shell fuel", "rubber wood biomass",
-    "industrial boiler", "stoker boiler", "steam boiler Thailand",
-    "renewable energy Thailand", "タイ エネルギー",
+    # タイ関連（広め）
+    "Thailand", "Thai", "タイ", "Bangkok", "バンコク",
+    # ボイラー・産業設備
+    "boiler", "ボイラー", "stoker", "steam", "industrial",
+    # バイオマス・エネルギー
+    "biomass", "バイオマス", "EFB", "palm", "renewable energy",
+    "energy", "エネルギー", "fuel", "combustion",
+    # 日タイ貿易
+    "Japan", "日本", "JTEPA", "trade", "export", "import", "貿易", "輸出", "輸入",
+    # 為替
+    "JPY", "THB", "yen", "baht", "円", "バーツ", "為替", "exchange rate",
+    "USD", "dollar", "ドル",
+    # アジア経済
+    "ASEAN", "Southeast Asia", "東南アジア", "Asia",
 ]
 
 RSS_FEEDS = [
@@ -36,6 +49,9 @@ RSS_FEEDS = [
     {"name": "Google: biomass Thailand","url": "https://news.google.com/rss/search?q=biomass+Thailand+boiler&hl=en&gl=TH&ceid=TH:en", "lang": "en"},
     {"name": "Google: Japan Thailand",  "url": "https://news.google.com/rss/search?q=Japan+Thailand+trade&hl=en&gl=JP&ceid=JP:en",    "lang": "en"},
     {"name": "Google: 為替 THB",        "url": "https://news.google.com/rss/search?q=USD+JPY+THB+%E7%82%BA%E6%9B%BF&hl=ja&gl=JP&ceid=JP:ja", "lang": "ja"},
+    # newsclip.be（タイ日本語ニュース）
+    {"name": "newsclip: タイ経済・企業",  "url": "https://newsclip.be/category/thai-news/thai-economy/feed", "lang": "ja"},
+    {"name": "newsclip: 業界事情",        "url": "https://newsclip.be/category/business/products/feed",      "lang": "ja"},
 ]
 
 CAT_ICONS  = {"ボイラー/産業設備": "🔧", "バイオマス/エネルギー": "🌿", "日タイ貿易/ビジネス": "🤝", "為替/金融": "💹", "その他": "📰"}
@@ -47,8 +63,10 @@ def fetch_feeds(hours_back=24):
     cutoff = datetime.now(timezone.utc) - timedelta(hours=hours_back)
     articles = []
     for fi in RSS_FEEDS:
+        count = 0
         try:
             feed = feedparser.parse(fi["url"])
+            total = len(feed.entries)
             for entry in feed.entries[:20]:
                 published = None
                 for attr in ["published_parsed", "updated_parsed"]:
@@ -67,8 +85,11 @@ def fetch_feeds(hours_back=24):
                     "link": entry.get("link", ""),
                     "published": published.isoformat(),
                 })
+                count += 1
+            status = feed.get("status", "?")
+            print(f"  [{status}] {fi['name']}: {count}件採用 / {total}件取得")
         except Exception as e:
-            print(f"  [WARN] {fi['name']}: {e}")
+            print(f"  [ERR] {fi['name']}: {e}")
     return articles
 
 def keyword_score(a):
@@ -78,7 +99,14 @@ def keyword_score(a):
 # ========== Gemini 呼び出し ==========
 
 def gemini(model, prompt):
-    raw = model.generate_content(prompt).text.strip()
+    if USE_NEW_SDK:
+        response = model.models.generate_content(
+            model="gemini-2.0-flash",
+            contents=prompt
+        )
+        raw = response.text.strip()
+    else:
+        raw = model.generate_content(prompt).text.strip()
     return re.sub(r"^```json\s*|^```\s*|```$", "", raw, flags=re.MULTILINE).strip()
 
 def analyze_articles(model, candidates):
@@ -568,8 +596,12 @@ async function loadDeepDive() {{
 # ========== メイン ==========
 
 def main():
-    genai.configure(api_key=os.environ["GEMINI_API_KEY"])
-    model = genai.GenerativeModel("gemini-1.5-flash")
+    api_key = os.environ["GEMINI_API_KEY"]
+    if USE_NEW_SDK:
+        model = genai.Client(api_key=api_key)
+    else:
+        genai.configure(api_key=api_key)
+        model = genai.GenerativeModel("gemini-1.5-flash")
 
     print(f"[{datetime.now().strftime('%H:%M:%S')}] RSS取得中...")
     all_articles = fetch_feeds(hours_back=24)
