@@ -378,7 +378,7 @@ def build_html(analyzed_articles, all_count, candidate_count):
 <body>
   <header>
     <div class="masthead">📋 デイリーニュースダイジェスト</div>
-    <div class="sub">{date_str}　｜　GTB・バイオマス・日タイビジネス・為替</div>
+    <div class="sub">{date_str}　｜　業界ニュースダイジェスト</div>
     <div class="stats-bar">
       <span>📡 取得記事数: {all_count}件</span>
       <span>🔍 キーワード候補: {candidate_count}件</span>
