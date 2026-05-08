@@ -2,15 +2,14 @@ name: Daily News Digest
 
 on:
   schedule:
+    # 毎朝8時JST（UTC 23:00 = JST 08:00）
     - cron: '0 23 * * *'
+  # 手動実行ボタンも有効化（テスト用）
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    permissions:
-      contents: write
 
     steps:
       - name: リポジトリをチェックアウト
@@ -32,7 +31,9 @@ jobs:
       - name: HTMLをdocsフォルダに移動
         run: |
           mkdir -p docs
+          # 最新版をindex.htmlとして上書き（URLが毎日同じになる）
           cp digest_*.html docs/index.html
+          # 日付入りのアーカイブも保存
           cp digest_*.html docs/
 
       - name: GitHub Pagesにコミット・プッシュ
