@@ -21,7 +21,7 @@ jobs:
           python-version: '3.11'
 
       - name: 依存ライブラリをインストール
-        run: pip install feedparser google-generativeai
+        run: pip install feedparser google-genai
 
       - name: ダイジェスト生成
         env:
