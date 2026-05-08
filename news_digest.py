@@ -5,7 +5,7 @@ news_digest.py — 毎日ニュース自動巡回スクリプト v2
 """
 
 import feedparser
-import google.generativeai as genai
+from google import genai
 import os, json, re
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
@@ -93,7 +93,11 @@ def keyword_score(a):
 # ========== Gemini 呼び出し ==========
 
 def gemini(model, prompt):
-    raw = model.generate_content(prompt).text.strip()
+    response = model.models.generate_content(
+        model="gemini-1.5-flash",
+        contents=prompt,
+    )
+    raw = response.text.strip()
     return re.sub(r"^```json\s*|^```\s*|```$", "", raw, flags=re.MULTILINE).strip()
 
 def analyze_articles(model, candidates):
@@ -583,8 +587,7 @@ async function loadDeepDive() {{
 # ========== メイン ==========
 
 def main():
-    genai.configure(api_key=os.environ["GEMINI_API_KEY"])
-    model = genai.GenerativeModel("gemini-1.5-flash")
+    model = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
 
     print(f"[{datetime.now().strftime('%H:%M:%S')}] RSS取得中...")
     all_articles = fetch_feeds(hours_back=24)
