@@ -5,12 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>デイリーニュースダイジェスト — 2026年05月08日（Fri）</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg: #0f1117; --bg2: #141824; --bg3: #1a1f2e;
-      --fg: #e8e4dc; --fg2: #b0aaa4; --fg3: #5a6070;
-      --accent: #6b9fff; --rule: #252a3a;
+      --bg: #f8f9fb; --bg2: #ffffff; --bg3: #f0f2f5;
+      --fg: #1a1d23; --fg2: #4a5168; --fg3: #9299aa;
+      --accent: #1a56db; --accent2: #0e9f6e;
+      --rule: #e5e7eb; --shadow: 0 1px 4px rgba(0,0,0,.07);
     }
     body { font-family:'Noto Sans JP',sans-serif; background:var(--bg); color:var(--fg); line-height:1.7; }
     a { color:var(--accent); text-decoration:none; }
@@ -19,132 +20,155 @@
     /* Header */
     .site-header {
       position:sticky; top:0; z-index:100;
-      background:var(--bg); border-bottom:1px solid var(--rule);
-      padding:16px 20px; display:flex; align-items:center; justify-content:space-between;
+      background:#fff; border-bottom:1px solid var(--rule);
+      padding:14px 24px; display:flex; align-items:center; justify-content:space-between;
+      box-shadow:var(--shadow);
     }
-    .site-logo { font-size:13px; font-weight:700; letter-spacing:.15em; color:var(--accent); }
+    .site-logo { font-size:15px; font-weight:700; color:var(--fg); letter-spacing:-.01em; }
+    .site-logo span { color:var(--accent); }
     .site-date { font-size:12px; color:var(--fg3); }
     .back-btn {
-      display:none; background:none; border:1px solid var(--rule);
-      color:var(--fg3); padding:5px 12px; border-radius:6px; cursor:pointer; font-size:12px;
+      display:none; background:#f0f2f5; border:none;
+      color:var(--fg2); padding:6px 14px; border-radius:20px; cursor:pointer; font-size:12px; font-weight:500;
     }
     .back-btn.visible { display:block; }
 
     /* Pages */
-    .page { display:none; max-width:760px; margin:0 auto; padding:24px 20px 60px; }
+    .page { display:none; max-width:780px; margin:0 auto; padding:28px 20px 80px; }
     .page.active { display:block; }
 
     /* Overall summary */
     .summary-card {
-      background:linear-gradient(135deg,var(--bg2),var(--bg3));
-      border:1px solid var(--rule); border-radius:12px;
-      padding:20px 24px; margin-bottom:24px;
+      background:linear-gradient(135deg, #1a56db 0%, #0e9f6e 100%);
+      border-radius:16px; padding:24px 28px; margin-bottom:28px;
+      box-shadow:0 4px 20px rgba(26,86,219,.2);
     }
     .summary-label {
-      font-size:10px; font-weight:700; letter-spacing:.2em;
-      color:var(--accent); text-transform:uppercase; margin-bottom:10px;
+      font-size:10px; font-weight:700; letter-spacing:.18em;
+      color:rgba(255,255,255,.7); text-transform:uppercase; margin-bottom:10px;
     }
-    .summary-text { font-size:14px; line-height:1.9; color:var(--fg2); }
+    .summary-text { font-size:14px; line-height:1.9; color:#fff; }
+
+    /* Section head */
+    .section-head {
+      font-size:12px; font-weight:700; color:var(--fg3);
+      letter-spacing:.08em; text-transform:uppercase;
+      margin-bottom:14px; padding-bottom:8px;
+      border-bottom:2px solid var(--rule);
+    }
 
     /* Category cards */
-    .section-head {
-      font-size:11px; font-weight:700; letter-spacing:.18em;
-      color:var(--fg3); text-transform:uppercase;
-      border-bottom:1px solid var(--rule); padding-bottom:8px; margin-bottom:14px;
-    }
-    .cat-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:28px; }
+    .cat-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:32px; }
+    @media(max-width:500px){ .cat-grid { grid-template-columns:1fr; } }
     .cat-card {
-      background:var(--bg2); border-radius:10px; padding:16px 18px;
-      cursor:pointer; transition:background .15s;
+      background:#fff; border-radius:14px; padding:18px 20px;
+      cursor:pointer; transition:all .2s; border:1px solid var(--rule);
+      box-shadow:var(--shadow);
     }
-    .cat-card:hover { background:var(--bg3); }
-    .cat-card-head { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
-    .cat-icon { font-size:20px; }
-    .cat-name { font-size:13px; font-weight:600; flex:1; }
+    .cat-card:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(0,0,0,.1); }
+    .cat-card-head { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+    .cat-icon { font-size:22px; }
+    .cat-name { font-size:13px; font-weight:700; flex:1; color:var(--fg); }
     .cat-count {
-      font-size:11px; color:var(--fg3);
-      background:var(--rule); padding:2px 8px; border-radius:10px;
+      font-size:11px; color:#fff; font-weight:600;
+      background:var(--accent); padding:2px 10px; border-radius:20px;
     }
-    .cat-trend { font-size:12px; color:var(--fg3); line-height:1.7; }
+    .cat-trend { font-size:12px; color:var(--fg2); line-height:1.75; }
 
     /* Article items */
     .article-item {
-      background:var(--bg2); border-radius:8px;
-      padding:14px 18px; margin-bottom:10px; cursor:pointer; transition:background .15s;
+      background:#fff; border-radius:12px; border:1px solid var(--rule);
+      padding:16px 20px; margin-bottom:10px; cursor:pointer;
+      transition:all .15s; box-shadow:var(--shadow);
     }
-    .article-item:hover { background:var(--bg3); }
-    .article-meta { display:flex; gap:10px; font-size:11px; color:var(--fg3); margin-bottom:5px; flex-wrap:wrap; }
-    .art-stars { color:#c8a400; letter-spacing:-1px; }
-    .article-title { font-size:14px; font-weight:500; color:var(--fg); line-height:1.5; margin-bottom:5px; }
-    .article-summary { font-size:12px; color:var(--fg3); line-height:1.65; }
-    .no-news { text-align:center; color:var(--fg3); padding:40px; }
+    .article-item:hover { transform:translateY(-1px); box-shadow:0 4px 16px rgba(0,0,0,.1); }
+    .article-meta { display:flex; gap:10px; font-size:11px; color:var(--fg3); margin-bottom:6px; flex-wrap:wrap; align-items:center; }
+    .art-cat { font-weight:600; font-size:11px; padding:2px 8px; border-radius:4px; background:var(--bg3); }
+    .art-stars { color:#f59e0b; letter-spacing:-1px; }
+    .article-title { font-size:14px; font-weight:600; color:var(--fg); line-height:1.55; margin-bottom:6px; }
+    .article-summary { font-size:12.5px; color:var(--fg2); line-height:1.7; }
+    .no-news { text-align:center; color:var(--fg3); padding:60px 20px; font-size:14px; }
 
     /* Category page */
-    .cat-page-head { margin-bottom:20px; }
-    .cat-page-icon { font-size:28px; margin-bottom:6px; }
-    .cat-page-name { font-size:20px; font-weight:700; margin-bottom:16px; }
+    .cat-page-icon { font-size:32px; margin-bottom:4px; }
+    .cat-page-name { font-size:22px; font-weight:700; margin-bottom:18px; color:var(--fg); }
     .cat-summary-box {
-      background:var(--bg2); border:1px solid var(--rule);
-      border-radius:10px; padding:16px 18px; margin-bottom:20px;
+      background:#fff; border:1px solid var(--rule);
+      border-radius:12px; padding:18px 22px; margin-bottom:24px;
+      box-shadow:var(--shadow);
     }
     .cat-summary-label {
       font-size:10px; font-weight:700; letter-spacing:.18em;
-      color:var(--accent); text-transform:uppercase; margin-bottom:8px;
+      color:var(--accent); text-transform:uppercase; margin-bottom:10px;
     }
-    .cat-summary-text { font-size:13px; color:var(--fg2); line-height:1.85; }
+    .cat-summary-text { font-size:13.5px; color:var(--fg2); line-height:1.85; }
 
     /* Article detail */
-    .detail-cat { font-size:11px; font-weight:600; margin-bottom:8px; }
-    .detail-title { font-size:18px; font-weight:700; line-height:1.5; margin-bottom:6px; }
+    .detail-cat { font-size:11px; font-weight:700; margin-bottom:8px; }
+    .detail-title { font-size:20px; font-weight:700; line-height:1.5; margin-bottom:6px; color:var(--fg); }
     .detail-orig { font-size:11px; color:var(--fg3); font-style:italic; margin-bottom:12px; }
-    .detail-meta { font-size:11px; color:var(--fg3); margin-bottom:16px; display:flex; gap:12px; }
+    .detail-meta { font-size:12px; color:var(--fg3); margin-bottom:18px; display:flex; gap:14px; flex-wrap:wrap; }
     .detail-body {
-      background:var(--bg2); border:1px solid var(--rule);
-      border-radius:10px; padding:16px 18px;
-      font-size:13.5px; line-height:1.85; color:#9098a8; margin-bottom:16px;
+      background:#fff; border:1px solid var(--rule);
+      border-radius:12px; padding:20px 22px;
+      font-size:14px; line-height:1.9; color:var(--fg2); margin-bottom:16px;
+      box-shadow:var(--shadow);
     }
     .detail-orig-body {
-      margin-top:12px; padding-top:10px; border-top:1px solid var(--rule);
-      font-size:12px; color:#3a4050;
+      margin-top:14px; padding-top:12px; border-top:1px solid var(--rule);
+      font-size:12px; color:var(--fg3); line-height:1.7;
     }
-    .detail-orig-label { font-size:10px; color:var(--fg3); margin-bottom:4px; letter-spacing:.1em; }
+    .detail-orig-label { font-size:10px; color:var(--fg3); margin-bottom:4px; letter-spacing:.1em; font-weight:600; }
     .source-link {
-      display:inline-flex; align-items:center; gap:5px;
-      font-size:11px; color:var(--accent); margin-top:10px;
-      border:1px solid #1a2f5a; border-radius:5px; padding:4px 10px;
+      display:inline-flex; align-items:center; gap:6px;
+      font-size:12px; color:var(--accent); margin-top:12px;
+      border:1px solid #c3d5fa; border-radius:6px; padding:5px 12px;
+      background:#eef2ff;
     }
+
+    /* World trend card */
+    .trend-card {
+      background:#fff; border:1px solid var(--rule);
+      border-radius:16px; padding:22px 26px; margin-bottom:16px;
+      box-shadow:var(--shadow); border-left:4px solid #f59e0b;
+    }
+    .trend-label {
+      font-size:10px; font-weight:700; letter-spacing:.18em;
+      color:#d97706; text-transform:uppercase; margin-bottom:10px;
+    }
+    .trend-text { font-size:14px; line-height:1.9; color:var(--fg2); }
 
     /* Deep dive */
     .deep-card {
-      background:linear-gradient(135deg,var(--bg2),#1a2030);
-      border:1px solid #2a3a5a; border-radius:12px; padding:20px 22px;
+      background:linear-gradient(135deg, #eef2ff, #f0fdf4);
+      border:1px solid #c3d5fa; border-radius:14px; padding:22px 24px;
     }
     .deep-label {
-      font-size:10px; font-weight:700; letter-spacing:.2em;
+      font-size:10px; font-weight:700; letter-spacing:.18em;
       color:var(--accent); text-transform:uppercase; margin-bottom:12px;
     }
     .deep-text { font-size:13.5px; line-height:1.95; color:var(--fg2); }
     .deep-btn {
-      background:#1a2f5a; border:none; color:var(--accent);
-      padding:8px 16px; border-radius:6px; cursor:pointer; font-size:13px;
+      background:var(--accent); border:none; color:#fff;
+      padding:9px 20px; border-radius:8px; cursor:pointer; font-size:13px; font-weight:600;
     }
     .deep-loading { font-size:13px; color:var(--fg3); }
 
     /* Save bar */
     .save-bar {
       position:fixed; bottom:0; left:0; right:0;
-      background:var(--bg2); border-top:1px solid var(--rule);
-      padding:12px 20px; display:flex; align-items:center; justify-content:space-between;
-      z-index:200;
+      background:#fff; border-top:1px solid var(--rule);
+      padding:12px 24px; display:flex; align-items:center; justify-content:space-between;
+      z-index:200; box-shadow:0 -2px 12px rgba(0,0,0,.08);
     }
-    .save-count { font-size:13px; color:var(--fg3); }
+    .save-count { font-size:13px; color:var(--fg2); font-weight:500; }
     .save-btn {
-      background:var(--accent); border:none; color:#fff;
+      background:var(--accent2); border:none; color:#fff;
       padding:10px 24px; border-radius:8px; cursor:pointer;
-      font-size:14px; font-weight:700;
+      font-size:14px; font-weight:700; box-shadow:0 2px 8px rgba(14,159,110,.3);
     }
-    .save-btn:disabled { background:var(--fg3); cursor:not-allowed; }
-    .check-wrap { display:flex; align-items:center; gap:8px; margin-bottom:6px; }
+    .save-btn:disabled { background:var(--fg3); cursor:not-allowed; box-shadow:none; }
+    .check-wrap { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
     .check-wrap input[type=checkbox] { width:18px; height:18px; cursor:pointer; accent-color:var(--accent); }
     .check-label { font-size:12px; color:var(--fg3); cursor:pointer; }
 
@@ -164,183 +188,349 @@
 
 <!-- TOP PAGE -->
 <div class="page active" id="page-top">
+  <div class="trend-card">
+    <div class="trend-label">🌍 今日の世界トレンド</div>
+    <div class="trend-text">今日は**国際情勢の緊迫化**と**AI技術の急速な進化**が主要テーマです。
+
+国際情勢では、米イラン間のホルムズ海峡での交戦や停戦交渉の動向が市場に地政学的リスクと不確実性をもたらし、トランプ氏の関税政策に関する判決も注目されます。一方、テクノロジー分野では、GoogleやAppleによるAI搭載ウェアラブルデバイスの発表、アジアでのAI競争激化、そしてAI時代への産業構造変革が加速していることが顕著です。</div>
+  </div>
   <div class="summary-card">
-    <div class="summary-label">🌐 本日の全体サマリー</div>
-    <div class="summary-text">本日の市場は、為替とタイ経済、国際情勢の三軸で動向が見られます。円相場は政府・日銀による最大4兆円規模の市場介入への強い警戒感から値上がりし、三村財務官の投機けん制発言が続くなど、当局の動向が市場の主要関心事です。一方、タイ経済は中央銀行が成長予測を上方修正し、中東情勢の混乱を乗り切るなど堅調で、5月25日からの景気刺激策登録開始で国内消費が期待されます。しかし、味の素が中東情勢により約300億円の事業利益減少を試算するなど、一部企業には国際情勢の影響が見られます。</div>
+    <div class="summary-label">📋 本日の関連ニュースサマリー</div>
+    <div class="summary-text">本日の市場は、中東情勢の緊迫化がエネルギー安保に大きな影を落としています。イラン情勢やホルムズ海峡のシーレーンリスクが各国戦略に影響を与え、米国と中国のガス覇権争いや日本の再エネ戦略の時代遅れが指摘されています。為替市場では円相場が乱高下し、政府・日銀による追加4兆円規模の市場介入への警戒感から日銀の利上げ加速意識も浮上。一方で、アジア市場は中東の混乱に比較的耐え、タイ中央銀行が成長予測を上方修正。東京市場も中東和平期待から株価が初の6万2000円台を突破し活況を呈するも、味の素が中東情勢で約300億円の減益を試算するなど、企業業績への影響も懸念されます。</div>
   </div>
 
   <div class="section-head">カテゴリ別トレンド</div>
   <div class="cat-grid">
     
-        <div class="cat-card" onclick="showCategory('日タイ貿易/ビジネス')" style="border-left:4px solid #1d4ed8">
+        <div class="cat-card" onclick="showCategory('日タイ貿易/マクロ')" style="border-left:4px solid #7c3aed">
           <div class="cat-card-head">
             <span class="cat-icon">🤝</span>
-            <span class="cat-name">日タイ貿易/ビジネス</span>
-            <span class="cat-count">6件</span>
+            <span class="cat-name">日タイ貿易/マクロ</span>
+            <span class="cat-count">11件</span>
           </div>
-          <p class="cat-trend">現在のタイ市場は、中東情勢による地政学リスクに対応し、サプライチェーンの再編とリスクヘッジが急務です。観光分野では、インド市場開拓で多様化を図りつつ、旅行者のマナー向上や品質維持への政府の取り組みが加速。国内では景気刺激策が展開され、食品産業では輸出競争力強化のため品質管理が厳格化。実務では、これらリスクとチャンスへの迅速な対応が求められます。</p>
+          <p class="cat-trend">現在のトレンドと注目点は以下の通りです。
+
+日本は円安介入警戒感が強く、日銀の利上げ加速も視野に入り、為替・金利変動リスクに警戒が必須です。一方、タイ経済は成長予測を上方修正し堅調、観光客誘致を積極化し質向上も図ります。日タイ貿易は、日本の金融政策とタイの安定成長に注目です。</p>
         </div>
-        <div class="cat-card" onclick="showCategory('為替/金融')" style="border-left:4px solid #7c3aed">
+        <div class="cat-card" onclick="showCategory('エネルギー市場')" style="border-left:4px solid #0369a1">
           <div class="cat-card-head">
-            <span class="cat-icon">💹</span>
-            <span class="cat-name">為替/金融</span>
-            <span class="cat-count">4件</span>
+            <span class="cat-icon">⚡</span>
+            <span class="cat-name">エネルギー市場</span>
+            <span class="cat-count">8件</span>
           </div>
-          <p class="cat-trend">現在の為替市場は、円安に対する政府・日銀の介入警戒感が支配的です。追加4兆円規模介入の可能性が指摘され、当局は介入を明言せず投機を牽制。円相場は急変動が続き、実務上、断続的な介入リスクと当局発言に要警戒です。一方、タイ中銀の成長予測上方修正など、一部新興国経済の堅調さも注目点となっています。</p>
+          <p class="cat-trend">現在のエネルギー市場は、イラン危機やホルムズ海峡を巡る地政学リスクがシーレーン安保の最重要課題となっています。OPECの影響力低下で市場は断片化し、米国のガス強国化、アジアにおける再エネ・電化へのシフトが加速。実務担当者としては、多様な供給源確保と重要海上ルート保護を通じた経済安全保障の確立が喫緊の課題です。</p>
+        </div>
+        <div class="cat-card" onclick="showCategory('企業/ビジネス動向')" style="border-left:4px solid #be123c">
+          <div class="cat-card-head">
+            <span class="cat-icon">🏭</span>
+            <span class="cat-name">企業/ビジネス動向</span>
+            <span class="cat-count">1件</span>
+          </div>
+          <p class="cat-trend">味の素の事例は、地政学リスクがグローバル企業の事業利益に直接影響を与える現状を浮き彫りにします。サプライチェーンの脆弱性が顕在化しており、実務担当者には、外部環境変動の影響を具体的に試算し、事業計画に織り込むリスクマネジメントの強化、および対応策の早期策定が急務となります。</p>
         </div>
   </div>
 
-  <div class="section-head">全記事一覧（10件）</div>
+  <div class="section-head">全記事一覧（20件）</div>
   <div id="all-articles">
     
-        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="為替/金融" data-idx="0">
+        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="0">
           <div class="check-wrap">
             <input type="checkbox" id="chk-0" onchange="updateCount()" onclick="event.stopPropagation()">
             <label class="check-label" for="chk-0">保存する</label>
           </div>
           <div onclick="showArticle(0)">
             <div class="article-meta">
-              <span class="art-cat" style="color:#7c3aed">💹 為替/金融</span>
-              <span class="art-src">NHK – ビジネス</span>
+              <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
+              <span class="art-src">日経ビジネス</span>
               <span class="art-stars">★★★★★</span>
             </div>
-            <div class="article-title">円相場 ドルに対して値上がり 市場介入への警戒感続く</div>
-            <div class="article-summary">連休明けの7日の東京外国為替市場では、政府・日銀による市場介入への強い警戒感から、円相場がドルに対して値上がりした。USD/JPYの動きは日タイビジネスにも間接的に影響を与えるため、今後の動向が注目される。</div>
+            <div class="article-title">米国が狙うガス強国、「電化」中国と覇権争い　イラン戦争後のエネルギー安保　 (第2特集)</div>
+            <div class="article-summary">イラン戦争で中東のガス供給が停滞し、米国の天然ガスは世界最大のLNG輸出能力で2030年には一強となる見込み。日本は米国産ガス確保と最適なエネルギー安全保障構築を急ぐ。中国との覇権争いにも言及しており、アジアへの影響も示唆する。</div>
           </div>
         </div>
-        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="為替/金融" data-idx="1">
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="1">
           <div class="check-wrap">
             <input type="checkbox" id="chk-1" onchange="updateCount()" onclick="event.stopPropagation()">
             <label class="check-label" for="chk-1">保存する</label>
           </div>
           <div onclick="showArticle(1)">
             <div class="article-meta">
-              <span class="art-cat" style="color:#7c3aed">💹 為替/金融</span>
+              <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
               <span class="art-src">NHK – ビジネス</span>
               <span class="art-stars">★★★★★</span>
             </div>
             <div class="article-title">政府・日銀 追加で4兆円規模の市場介入の可能性 民間が分析</div>
-            <div class="article-summary">4月30日の市場介入後も円高が進んだ外国為替市場で、民間金融仲介会社は5月1日から6日の間に政府・日銀が追加で4兆円規模の市場介入を行った可能性を分析。USD/JPYの安定に向けた政府の動きが続くことを示唆する。</div>
+            <div class="article-summary">4月30日の政府・日銀による市場介入後も円高が急進。民間の金融仲介会社は、5月1日から6日の間に日銀統計から4兆円規模の追加市場介入が行われた可能性を分析。日本の為替市場の不安定さと当局の介入姿勢を示す。</div>
           </div>
         </div>
-        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="為替/金融" data-idx="2">
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="2">
           <div class="check-wrap">
             <input type="checkbox" id="chk-2" onchange="updateCount()" onclick="event.stopPropagation()">
             <label class="check-label" for="chk-2">保存する</label>
           </div>
           <div onclick="showArticle(2)">
             <div class="article-meta">
-              <span class="art-cat" style="color:#7c3aed">💹 為替/金融</span>
+              <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
               <span class="art-src">NHK – ビジネス</span>
               <span class="art-stars">★★★★★</span>
             </div>
-            <div class="article-title">三村財務官 連休中の円急騰 介入か明言せず 投機をけん制</div>
-            <div class="article-summary">連休中に円相場が急騰した外国為替市場について、三村財務官は7日、政府・日銀による市場介入の有無を明言せず、「特にコメントする必要はない」と述べた。投機的な動きが続く中で、市場をけん制する発言とみられ、USD/JPYの動向に引き続き注意が必要。</div>
+            <div class="article-title">円相場 ドルに対して値上がり 市場介入への警戒感続く</div>
+            <div class="article-summary">連休明けの5月7日の東京外国為替市場で、政府・日銀の市場介入への警戒感が根強く、円相場はドルに対して値上がりした。当局の動きが為替レートに大きな影響を与えている現状を示している。</div>
           </div>
         </div>
-        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="為替/金融" data-idx="3">
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="3">
           <div class="check-wrap">
             <input type="checkbox" id="chk-3" onchange="updateCount()" onclick="event.stopPropagation()">
             <label class="check-label" for="chk-3">保存する</label>
           </div>
           <div onclick="showArticle(3)">
             <div class="article-meta">
-              <span class="art-cat" style="color:#7c3aed">💹 為替/金融</span>
-              <span class="art-src">Bangkok Post – Business</span>
-              <span class="art-stars">★★★★☆</span>
+              <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
+              <span class="art-src">NHK – ビジネス</span>
+              <span class="art-stars">★★★★★</span>
             </div>
-            <div class="article-title">タイ中央銀行、成長予測を上方修正</div>
-            <div class="article-summary">タイ中央銀行は今年度の経済成長率予測を従来の1.5%から2.1%へ上方修正した。ピタイ総裁は、政府による4000億バーツの借入決定が改善の一因だと述べた。これはタイ経済の健全性を示し、日タイビジネスにも影響する。</div>
+            <div class="article-title">三村財務官 連休中の円急騰 介入か明言せず 投機をけん制</div>
+            <div class="article-summary">連休中の外国為替市場における円相場の急激な円高に対し、三村財務官は5月7日朝、市場介入の有無を明言せず「コメント不要」と回答。投機的な動きが継続しているとして市場をけん制する発言をした。</div>
           </div>
         </div>
-        <div class="article-item" style="border-left:3px solid #1d4ed8" data-cat="日タイ貿易/ビジネス" data-idx="4">
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="4">
           <div class="check-wrap">
             <input type="checkbox" id="chk-4" onchange="updateCount()" onclick="event.stopPropagation()">
             <label class="check-label" for="chk-4">保存する</label>
           </div>
           <div onclick="showArticle(4)">
             <div class="article-meta">
-              <span class="art-cat" style="color:#1d4ed8">🤝 日タイ貿易/ビジネス</span>
+              <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
               <span class="art-src">Bangkok Post – Business</span>
-              <span class="art-stars">★★★★☆</span>
+              <span class="art-stars">★★★★★</span>
             </div>
-            <div class="article-title">タイ市場、中東情勢の混乱を乗り切る</div>
-            <div class="article-summary">ムーディーズはタイ経済を楽観的に評価し、金融セクターの強さと国際準備高が要因とされた。アナリストは、タイ証券取引所（SET）が中東情勢下でも回復力を維持していると指摘。タイ経済の安定性は日タイビジネスにとって重要となる。</div>
+            <div class="article-title">タイ中央銀行が成長予測を上方修正</div>
+            <div class="article-summary">タイ中央銀行は2026年の経済成長率予測を従来の1.5%から2.1%に上方修正した。これは、政府による4,000億バーツの借入決定が一因とされており、タイ経済の回復期待が高まっている。</div>
           </div>
         </div>
-        <div class="article-item" style="border-left:3px solid #1d4ed8" data-cat="日タイ貿易/ビジネス" data-idx="5">
+        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="5">
           <div class="check-wrap">
             <input type="checkbox" id="chk-5" onchange="updateCount()" onclick="event.stopPropagation()">
             <label class="check-label" for="chk-5">保存する</label>
           </div>
           <div onclick="showArticle(5)">
             <div class="article-meta">
-              <span class="art-cat" style="color:#1d4ed8">🤝 日タイ貿易/ビジネス</span>
-              <span class="art-src">Bangkok Post – Business</span>
-              <span class="art-stars">★★★★☆</span>
+              <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
+              <span class="art-src">日経ビジネス</span>
+              <span class="art-stars">★★★★★</span>
             </div>
-            <div class="article-title">景気刺激策、5月25日に登録開始</div>
-            <div class="article-summary">タイ財務省は、景気刺激策「タイ助けタイプラス」スキームと国家福祉カードプログラムの登録を5月25日に開始すると発表。これにより国内経済の活性化が期待され、日タイビジネス環境にも良い影響を与える可能性がある。</div>
+            <div class="article-title">伊藤元海将が読む、石油備蓄では防げないホルムズ危機と「シーレーンリスク」 (分断時代の経済安保)</div>
+            <div class="article-summary">ホルムズ海峡の緊張が日本のエネルギー安全保障の脆弱性を改めて浮き彫りにした。海上自衛隊の元海将である伊藤俊幸氏は、石油備蓄だけでは防ぎきれないホルムズ危機とシーレーンリスクへの将来的な対処の必要性を読み解く。</div>
           </div>
         </div>
-        <div class="article-item" style="border-left:3px solid #1d4ed8" data-cat="日タイ貿易/ビジネス" data-idx="6">
+        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="6">
           <div class="check-wrap">
             <input type="checkbox" id="chk-6" onchange="updateCount()" onclick="event.stopPropagation()">
             <label class="check-label" for="chk-6">保存する</label>
           </div>
           <div onclick="showArticle(6)">
             <div class="article-meta">
-              <span class="art-cat" style="color:#1d4ed8">🤝 日タイ貿易/ビジネス</span>
-              <span class="art-src">Bangkok Post – Business</span>
-              <span class="art-stars">★★★☆☆</span>
+              <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
+              <span class="art-src">Google: crude oil Asia</span>
+              <span class="art-stars">★★★★★</span>
             </div>
-            <div class="article-title">インド人観光客誘致に向けた行動を呼びかけ</div>
-            <div class="article-summary">パタヤのインド人ビジネスコミュニティは、激しい競争と外国人ツアーオペレーターによる不正で信頼が損なわれたインドからの観光客誘致のため、タイ政府に行動を要請。タイの観光業は主要産業であり、日タイビジネス環境にも影響を及ぼす。</div>
+            <div class="article-title">OPEC後の原油市場：断片化、ホルムズリスク、そしてアジアのエネルギーシフト</div>
+            <div class="article-summary">OPEC後の原油市場は断片化し、ホルムズ海峡のリスクが増大。アジアのエネルギー情勢が変化している。この変化は原油価格や供給安定性に影響を与え、日本やタイを含むアジア各国にとって重要な課題となる。</div>
           </div>
         </div>
-        <div class="article-item" style="border-left:3px solid #1d4ed8" data-cat="日タイ貿易/ビジネス" data-idx="7">
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="7">
           <div class="check-wrap">
             <input type="checkbox" id="chk-7" onchange="updateCount()" onclick="event.stopPropagation()">
             <label class="check-label" for="chk-7">保存する</label>
           </div>
           <div onclick="showArticle(7)">
             <div class="article-meta">
-              <span class="art-cat" style="color:#1d4ed8">🤝 日タイ貿易/ビジネス</span>
-              <span class="art-src">NHK – ビジネス</span>
-              <span class="art-stars">★★★☆☆</span>
+              <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
+              <span class="art-src">Bangkok Post – Business</span>
+              <span class="art-stars">★★★★★</span>
             </div>
-            <div class="article-title">味の素 中東情勢の影響続けば事業利益が約300億円減少と試算</div>
-            <div class="article-summary">味の素は、中東情勢による包装資材や原料価格高騰を受け、今年度の事業利益が約300億円減少するとの試算を発表。この状況が続けば商品の値上げもあり得るとし、日本企業の海外事業、特に東南アジアでの展開にも間接的な影響を与える可能性。</div>
+            <div class="article-title">中東の混乱に耐えるタイ市場</div>
+            <div class="article-summary">ムーディーズはタイ経済の強固な金融セクターと国際準備高を評価しており、アナリストはタイ証券取引所（SET）が中東戦争中も回復力を維持していると指摘。中東情勢下でもタイ市場が堅調である背景を分析する。</div>
           </div>
         </div>
-        <div class="article-item" style="border-left:3px solid #1d4ed8" data-cat="日タイ貿易/ビジネス" data-idx="8">
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="8">
           <div class="check-wrap">
             <input type="checkbox" id="chk-8" onchange="updateCount()" onclick="event.stopPropagation()">
             <label class="check-label" for="chk-8">保存する</label>
           </div>
           <div onclick="showArticle(8)">
             <div class="article-meta">
-              <span class="art-cat" style="color:#1d4ed8">🤝 日タイ貿易/ビジネス</span>
-              <span class="art-src">newsclip: タイ経済・企業</span>
-              <span class="art-stars">★★★☆☆</span>
+              <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
+              <span class="art-src">NHK – ビジネス</span>
+              <span class="art-stars">★★★★★</span>
             </div>
-            <div class="article-title">タイ首相、外国人旅行者の不適切行為に厳格対処を直接指示 トゥクトゥク車内でわいせつ行為</div>
-            <div class="article-summary">タイのプーケット島で外国人観光客による不適切行為の動画が拡散され、タイ政府は法令厳格適用の方針を示した。タイ首相は外国人旅行者の不適切行為に厳格に対処するよう直接指示しており、観光業のイメージ維持と日タイビジネスへの影響を考慮する。</div>
+            <div class="article-title">日銀3月会合 イラン情勢で物価上昇リスク 利上げ加速意識も</div>
+            <div class="article-summary">日銀は3月の金融政策決定会合議事要旨を公表。イランへの軍事作戦開始後3週間で開かれた会合では、イラン情勢による物価上昇リスクが指摘され、利上げを加速させる必要性を意識すべきとの意見も出たことが判明した。</div>
           </div>
         </div>
-        <div class="article-item" style="border-left:3px solid #1d4ed8" data-cat="日タイ貿易/ビジネス" data-idx="9">
+        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="9">
           <div class="check-wrap">
             <input type="checkbox" id="chk-9" onchange="updateCount()" onclick="event.stopPropagation()">
             <label class="check-label" for="chk-9">保存する</label>
           </div>
           <div onclick="showArticle(9)">
             <div class="article-meta">
-              <span class="art-cat" style="color:#1d4ed8">🤝 日タイ貿易/ビジネス</span>
+              <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
+              <span class="art-src">日経ビジネス</span>
+              <span class="art-stars">★★★★★</span>
+            </div>
+            <div class="article-title">高市政権「戦略17分野」／防げないシーレーンリスク／SAAFで「ウルフパック戦術」（2026年5月8日版） (日経ビジネスAUDIOモーニング)</div>
+            <div class="article-summary">「サナエノミクス戦略17分野」と、伊藤元海将が石油備蓄では防げない「ホルムズ危機とシーレーンリスク」を読み解く。SAAFホールディングスを揺るがす「ウルフパック戦術」の問題についても触れられている。</div>
+          </div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="10">
+          <div class="check-wrap">
+            <input type="checkbox" id="chk-10" onchange="updateCount()" onclick="event.stopPropagation()">
+            <label class="check-label" for="chk-10">保存する</label>
+          </div>
+          <div onclick="showArticle(10)">
+            <div class="article-meta">
+              <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
+              <span class="art-src">Google: crude oil Asia</span>
+              <span class="art-stars">★★★★★</span>
+            </div>
+            <div class="article-title">ロシア産原油は東南アジアの生命線になりつつあるのか？</div>
+            <div class="article-summary">ロシア産原油が東南アジア諸国にとって生命線となりつつあるのか、という問いを投げかける記事。エネルギー供給の多様化と、地政学的要因が地域のエネルギー市場に与える影響について分析している。タイも東南アジアの一員として関連性が高い。</div>
+          </div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="11">
+          <div class="check-wrap">
+            <input type="checkbox" id="chk-11" onchange="updateCount()" onclick="event.stopPropagation()">
+            <label class="check-label" for="chk-11">保存する</label>
+          </div>
+          <div onclick="showArticle(11)">
+            <div class="article-meta">
+              <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
+              <span class="art-src">Bangkok Post – Business</span>
+              <span class="art-stars">★★★★★</span>
+            </div>
+            <div class="article-title">景気刺激策、5月25日に登録開始</div>
+            <div class="article-summary">タイ財務省は、5月25日に「タイチュアイタイプラス」スキームと国家福祉カードプログラムの登録を開始する予定。これは国民の生活支援と国内経済の活性化を目的とした政府の景気刺激策である。</div>
+          </div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="12">
+          <div class="check-wrap">
+            <input type="checkbox" id="chk-12" onchange="updateCount()" onclick="event.stopPropagation()">
+            <label class="check-label" for="chk-12">保存する</label>
+          </div>
+          <div onclick="showArticle(12)">
+            <div class="article-meta">
+              <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
+              <span class="art-src">NHK – アジア太平洋</span>
+              <span class="art-stars">★★★★★</span>
+            </div>
+            <div class="article-title">日EUハイレベル経済対話 重要海上ルート保護などで協力を</div>
+            <div class="article-summary">赤澤経済産業大臣は5月7日、ベルギーで日EUハイレベル経済対話に出席。イラン情勢によるホルムズ海峡の事実上の封鎖を念頭に、貿易の確保のため重要な海上ルート保護で協力していくことを確認した。</div>
+          </div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="13">
+          <div class="check-wrap">
+            <input type="checkbox" id="chk-13" onchange="updateCount()" onclick="event.stopPropagation()">
+            <label class="check-label" for="chk-13">保存する</label>
+          </div>
+          <div onclick="showArticle(13)">
+            <div class="article-meta">
+              <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
+              <span class="art-src">日経ビジネス</span>
+              <span class="art-stars">★★★★☆</span>
+            </div>
+            <div class="article-title">ビル・エモット氏「イラン危機が迫る再エネ戦略。日本の基本計画は時代遅れだ」 (賢人の警鐘)</div>
+            <div class="article-summary">イラン危機が日本のエネルギー安全保障の脆弱性を露呈。エネルギー輸入依存度が高い日本は、原発事故後化石燃料依存を深めたが、AI向けデータセンター建設で電力需要は急増する。再エネ戦略の見直しが喫緊の課題と指摘されている。</div>
+          </div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="14">
+          <div class="check-wrap">
+            <input type="checkbox" id="chk-14" onchange="updateCount()" onclick="event.stopPropagation()">
+            <label class="check-label" for="chk-14">保存する</label>
+          </div>
+          <div onclick="showArticle(14)">
+            <div class="article-meta">
+              <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
+              <span class="art-src">Google: crude oil Asia</span>
+              <span class="art-stars">★★★★☆</span>
+            </div>
+            <div class="article-title">戦争とエネルギー不足がアジアにおける中国の影響力を高める</div>
+            <div class="article-summary">戦争とエネルギー不足がアジアにおける中国の影響力を高めている。これは地域の地政学的バランスや各国のエネルギー安全保障戦略に大きな変化をもたらす可能性があり、タイを含む東南アジア諸国にも影響を及ぼす。</div>
+          </div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="15">
+          <div class="check-wrap">
+            <input type="checkbox" id="chk-15" onchange="updateCount()" onclick="event.stopPropagation()">
+            <label class="check-label" for="chk-15">保存する</label>
+          </div>
+          <div onclick="showArticle(15)">
+            <div class="article-meta">
+              <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
+              <span class="art-src">Bangkok Post – Business</span>
+              <span class="art-stars">★★★★☆</span>
+            </div>
+            <div class="article-title">より多くのインド人観光客を誘致するための行動を求める</div>
+            <div class="article-summary">パタヤのインド人ビジネスコミュニティは、激しい地域競争や不正な外国人ツアーオペレーターによって影響を受けているインド人観光客の信頼回復のため、タイ政府に行動を促した。タイ観光業の課題が浮き彫りになっている。</div>
+          </div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="16">
+          <div class="check-wrap">
+            <input type="checkbox" id="chk-16" onchange="updateCount()" onclick="event.stopPropagation()">
+            <label class="check-label" for="chk-16">保存する</label>
+          </div>
+          <div onclick="showArticle(16)">
+            <div class="article-meta">
+              <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+              <span class="art-src">NHK – ビジネス</span>
+              <span class="art-stars">★★★★☆</span>
+            </div>
+            <div class="article-title">味の素 中東情勢の影響続けば事業利益が約300億円減少と試算</div>
+            <div class="article-summary">食品大手「味の素」は、中東情勢による包装資材・原料価格上昇で、今年度の事業利益が約300億円減少する試算を公表。この状況が続けば商品の値上げもあり得るとし、中東情勢が日本企業のサプライチェーンに与える影響が示された。</div>
+          </div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="17">
+          <div class="check-wrap">
+            <input type="checkbox" id="chk-17" onchange="updateCount()" onclick="event.stopPropagation()">
+            <label class="check-label" for="chk-17">保存する</label>
+          </div>
+          <div onclick="showArticle(17)">
+            <div class="article-meta">
+              <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
+              <span class="art-src">NHK – ビジネス</span>
+              <span class="art-stars">★★★★☆</span>
+            </div>
+            <div class="article-title">株価 終値 初の6万2000円台で最高値更新 上昇幅3300円超と最大</div>
+            <div class="article-summary">連休明けの5月7日の東京株式市場では、イラン情勢の緊張緩和期待などから買い注文が広がり、日経平均株価は初の6万2000円台で最高値を更新。終値の上昇幅も3300円超と過去最大を記録した。</div>
+          </div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="18">
+          <div class="check-wrap">
+            <input type="checkbox" id="chk-18" onchange="updateCount()" onclick="event.stopPropagation()">
+            <label class="check-label" for="chk-18">保存する</label>
+          </div>
+          <div onclick="showArticle(18)">
+            <div class="article-meta">
+              <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
               <span class="art-src">newsclip: タイ経済・企業</span>
+              <span class="art-stars">★★★★☆</span>
+            </div>
+            <div class="article-title">タイ首相、外国人旅行者の不適切行為に厳格対処を直接指示　トゥクトゥク車内でわいせつ行為</div>
+            <div class="article-summary">タイ政府は、プーケット島で発生した外国人旅行者のトゥクトゥク車内でのわいせつ行為動画拡散を受け、プラユット首相が外国人旅行者の不適切行為に対して法令を厳格に適用するよう直接指示した。観光イメージの保護を強化する。</div>
+          </div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="19">
+          <div class="check-wrap">
+            <input type="checkbox" id="chk-19" onchange="updateCount()" onclick="event.stopPropagation()">
+            <label class="check-label" for="chk-19">保存する</label>
+          </div>
+          <div onclick="showArticle(19)">
+            <div class="article-meta">
+              <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
+              <span class="art-src">Bangkok Post – Business</span>
               <span class="art-stars">★★★☆☆</span>
             </div>
-            <div class="article-title">タイ政府、「落果ドリアン」の流通を一斉取り締まり 品質維持へ検査強化</div>
-            <div class="article-summary">タイ農業協同組合省は、ドリアンの品質確保のため東部チャンタブリー県の集荷・梱包施設での検査を強化。未熟果や落果ドリアン計1.4トンが発見されたことを受け、市場への流通防止と品質維持を目指す。タイの農産物輸出に影響し、日タイ貿易にも関連。</div>
+            <div class="article-title">中東和平への期待で東京がアジア株高を牽引</div>
+            <div class="article-summary">5月7日、東京の日経平均株価は急騰し、アジア株の上昇を牽引した。イラン戦争終結への期待が高まったことや、AI関連需要の復活が相場を押し上げた。アジア経済全体へのポジティブな影響が期待される。</div>
           </div>
         </div>
   </div>
@@ -375,15 +565,15 @@
 </div>
 
 <footer>
-  生成: 2026-05-08 10:34 JST　｜　ソース: RSS自動巡回 + Gemini AI　｜
-  取得: 45件 / 候補: 24件 / 掲載: 10件
+  生成: 2026-05-08 11:16 JST　｜　ソース: RSS自動巡回 + Gemini AI　｜
+  取得: 70件 / 候補: 40件 / 掲載: 20件
 </footer>
 
 <script>
-const ARTICLES = [{"title": "Bank of Thailand revises growth forecast upward", "title_ja": "タイ中央銀行、成長予測を上方修正", "body_ja": "タイ中央銀行は今年度の経済成長率を2.1%と見込んでおり、これは以前の1.5%という予測からの改善である。ピタイ・ラタナコーン総裁によると、政府が4000億バーツを借り入れる決定をしたことが一因となっている。", "summary_ja": "タイ中央銀行は今年度の経済成長率予測を従来の1.5%から2.1%へ上方修正した。ピタイ総裁は、政府による4000億バーツの借入決定が改善の一因だと述べた。これはタイ経済の健全性を示し、日タイビジネスにも影響する。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3251265/bank-of-thailand-revises-growth-forecast-upward", "published": "2026-05-07T05:32:00+00:00", "category": "為替/金融", "relevance_score": 4}, {"title": "円相場 ドルに対して値上がり 市場介入への警戒感続く", "title_ja": "円相場 ドルに対して値上がり 市場介入への警戒感続く", "body_ja": "連休明けの7日の東京外国為替市場、政府・日銀による市場介入への警戒感が根強い中、円相場は、ドルに対して値上がりしました。", "summary_ja": "連休明けの7日の東京外国為替市場では、政府・日銀による市場介入への強い警戒感から、円相場がドルに対して値上がりした。USD/JPYの動きは日タイビジネスにも間接的に影響を与えるため、今後の動向が注目される。", "source": "NHK – ビジネス", "link": "http://www3.nhk.or.jp/news/html/20260507/k10015116121000.html", "published": "2026-05-07T09:12:37+00:00", "category": "為替/金融", "relevance_score": 5}, {"title": "Thai markets weathering Middle East turmoil", "title_ja": "タイ市場、中東情勢の混乱を乗り切る", "body_ja": "ムーディーズによるタイ経済の楽観的な評価は、金融セクターの強さと国の国際準備高を反映している。アナリストによると、タイ証券取引所（SET）も中東での戦争中も回復力を維持している。", "summary_ja": "ムーディーズはタイ経済を楽観的に評価し、金融セクターの強さと国際準備高が要因とされた。アナリストは、タイ証券取引所（SET）が中東情勢下でも回復力を維持していると指摘。タイ経済の安定性は日タイビジネスにとって重要となる。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3251354/thai-markets-weathering-middle-east-turmoil", "published": "2026-05-07T11:11:00+00:00", "category": "日タイ貿易/ビジネス", "relevance_score": 4}, {"title": "政府・日銀 追加で4兆円規模の市場介入の可能性 民間が分析", "title_ja": "政府・日銀 追加で4兆円規模の市場介入の可能性 民間が分析", "body_ja": "4月30日に政府・日銀が市場介入に踏み切った外国為替市場では、その後も急激に円高が進む場面があり、民間の金融仲介会社は、日銀の統計から5月1日から6日の間で4兆円規模の市場介入が行われた可能性があると分析しています。", "summary_ja": "4月30日の市場介入後も円高が進んだ外国為替市場で、民間金融仲介会社は5月1日から6日の間に政府・日銀が追加で4兆円規模の市場介入を行った可能性を分析。USD/JPYの安定に向けた政府の動きが続くことを示唆する。", "source": "NHK – ビジネス", "link": "http://www3.nhk.or.jp/news/html/20260507/k10015116221000.html", "published": "2026-05-07T11:56:12+00:00", "category": "為替/金融", "relevance_score": 5}, {"title": "三村財務官 連休中の円急騰 介入か明言せず 投機をけん制", "title_ja": "三村財務官 連休中の円急騰 介入か明言せず 投機をけん制", "body_ja": "外国為替市場で連休中、円相場が急激に円高方向に動く場面があったことについて、財務省の三村財務官は7日朝、記者団の取材に対し「特にコメントする必要はない」と述べ、政府・日銀が市場介入を実施したかどうか明言を避けたうえで、投機的な動きはなお続いているとして市場をけん制しました。", "summary_ja": "連休中に円相場が急騰した外国為替市場について、三村財務官は7日、政府・日銀による市場介入の有無を明言せず、「特にコメントする必要はない」と述べた。投機的な動きが続く中で、市場をけん制する発言とみられ、USD/JPYの動向に引き続き注意が必要。", "source": "NHK – ビジネス", "link": "http://www3.nhk.or.jp/news/html/20260507/k10015115781000.html", "published": "2026-05-07T02:34:15+00:00", "category": "為替/金融", "relevance_score": 5}, {"title": "Call for action to lure more Indian tourists", "title_ja": "インド人観光客誘致に向けた行動を呼びかけ", "body_ja": "パタヤのインド人ビジネスコミュニティは、激しい地域競争や外国人ツアーオペレーターによる不正行為の影響を受けているインドからの観光客の信頼回復のため、タイ政府に行動を促した。", "summary_ja": "パタヤのインド人ビジネスコミュニティは、激しい競争と外国人ツアーオペレーターによる不正で信頼が損なわれたインドからの観光客誘致のため、タイ政府に行動を要請。タイの観光業は主要産業であり、日タイビジネス環境にも影響を及ぼす。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3251528/call-for-action-to-lure-more-indian-tourists", "published": "2026-05-07T23:40:00+00:00", "category": "日タイ貿易/ビジネス", "relevance_score": 3}, {"title": "Stimulus scheme to open registration on May 25", "title_ja": "景気刺激策、5月25日に登録開始", "body_ja": "財務省は、「タイ助けタイプラス（Thai Chuay Thai Plus）」スキームと国家福祉カードプログラムの登録を5月25日に開始する予定である。", "summary_ja": "タイ財務省は、景気刺激策「タイ助けタイプラス」スキームと国家福祉カードプログラムの登録を5月25日に開始すると発表。これにより国内経済の活性化が期待され、日タイビジネス環境にも良い影響を与える可能性がある。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3251349/stimulus-scheme-to-open-registration-on-may-25", "published": "2026-05-07T11:21:00+00:00", "category": "日タイ貿易/ビジネス", "relevance_score": 4}, {"title": "味の素 中東情勢の影響続けば事業利益が約300億円減少と試算", "title_ja": "味の素 中東情勢の影響続けば事業利益が約300億円減少と試算", "body_ja": "食品大手の「味の素」は、中東情勢を受けて包装資材や原料価格の上昇が見込まれるとして、本業のもうけを示す今年度の事業利益がおよそ300億円減少するという試算を明らかにしました。そのうえで今の状況が続けば、商品の値上げに踏み切る可能性もあるとしています。", "summary_ja": "味の素は、中東情勢による包装資材や原料価格高騰を受け、今年度の事業利益が約300億円減少するとの試算を発表。この状況が続けば商品の値上げもあり得るとし、日本企業の海外事業、特に東南アジアでの展開にも間接的な影響を与える可能性。", "source": "NHK – ビジネス", "link": "http://www3.nhk.or.jp/news/html/20260507/k10015116161000.html", "published": "2026-05-07T09:48:26+00:00", "category": "日タイ貿易/ビジネス", "relevance_score": 3}, {"title": "タイ首相、外国人旅行者の不適切行為に厳格対処を直接指示 トゥクトゥク車内でわいせつ行為", "title_ja": "タイ首相、外国人旅行者の不適切行為に厳格対処を直接指示 トゥクトゥク車内でわいせつ行為", "body_ja": "【タイ】南部ビーチリゾートのプーケット島で外国人の男女がトゥクトゥク車内でわいせつ行為に至り、動画がSNS上で拡散された問題を受け、タイ政府が不適切行為に対して法令を厳格に適用する姿勢を示した。アヌティン・チャーンウィー [&#8230;]", "summary_ja": "タイのプーケット島で外国人観光客による不適切行為の動画が拡散され、タイ政府は法令厳格適用の方針を示した。タイ首相は外国人旅行者の不適切行為に厳格に対処するよう直接指示しており、観光業のイメージ維持と日タイビジネスへの影響を考慮する。", "source": "newsclip: タイ経済・企業", "link": "https://newsclip.be/thai-news/thai-economy/37059", "published": "2026-05-07T15:07:13+00:00", "category": "日タイ貿易/ビジネス", "relevance_score": 3}, {"title": "タイ政府、「落果ドリアン」の流通を一斉取り締まり 品質維持へ検査強化", "title_ja": "タイ政府、「落果ドリアン」の流通を一斉取り締まり 品質維持へ検査強化", "body_ja": "【タイ】農業協同組合省が、ドリアンの品質確保に向けて東部チャンタブリー県の集荷・梱包施設での検査を強化している。同県内で未熟果や強風で落下した「落果ドリアン」計1.4トンが保管されていたことを受けたもので、市場への流通防 [&#8230;]", "summary_ja": "タイ農業協同組合省は、ドリアンの品質確保のため東部チャンタブリー県の集荷・梱包施設での検査を強化。未熟果や落果ドリアン計1.4トンが発見されたことを受け、市場への流通防止と品質維持を目指す。タイの農産物輸出に影響し、日タイ貿易にも関連。", "source": "newsclip: タイ経済・企業", "link": "https://newsclip.be/thai-news/thai-economy/37056", "published": "2026-05-07T15:05:15+00:00", "category": "日タイ貿易/ビジネス", "relevance_score": 3}];
-const CAT_ICONS  = {"ボイラー/産業設備": "🔧", "バイオマス/エネルギー": "🌿", "日タイ貿易/ビジネス": "🤝", "為替/金融": "💹", "その他": "📰"};
-const CAT_COLORS = {"ボイラー/産業設備": "#b45309", "バイオマス/エネルギー": "#2d7a4f", "日タイ貿易/ビジネス": "#1d4ed8", "為替/金融": "#7c3aed", "その他": "#555"};
-const CAT_SUMMARIES = {"為替/金融": "現在の為替市場は、円安に対する政府・日銀の介入警戒感が支配的です。追加4兆円規模介入の可能性が指摘され、当局は介入を明言せず投機を牽制。円相場は急変動が続き、実務上、断続的な介入リスクと当局発言に要警戒です。一方、タイ中銀の成長予測上方修正など、一部新興国経済の堅調さも注目点となっています。", "日タイ貿易/ビジネス": "現在のタイ市場は、中東情勢による地政学リスクに対応し、サプライチェーンの再編とリスクヘッジが急務です。観光分野では、インド市場開拓で多様化を図りつつ、旅行者のマナー向上や品質維持への政府の取り組みが加速。国内では景気刺激策が展開され、食品産業では輸出競争力強化のため品質管理が厳格化。実務では、これらリスクとチャンスへの迅速な対応が求められます。"};
+const ARTICLES = [{"title": "米国が狙うガス強国、「電化」中国と覇権争い　イラン戦争後のエネルギー安保　 (第2特集)", "title_ja": "米国が狙うガス強国、「電化」中国と覇権争い　イラン戦争後のエネルギー安保　 (第2特集)", "body_ja": "イラン戦争で中東の原油・ガス供給が停滞し、米国の天然ガスが存在感を高めた。米国のLNG輸出能力は世界最大で、2030年には圧倒的一強になる見込みだ。日本は米国産ガスを確保しつつ、最適なエネルギー安全保障の構築を急ぐ。", "summary_ja": "イラン戦争で中東のガス供給が停滞し、米国の天然ガスは世界最大のLNG輸出能力で2030年には一強となる見込み。日本は米国産ガス確保と最適なエネルギー安全保障構築を急ぐ。中国との覇権争いにも言及しており、アジアへの影響も示唆する。", "source": "日経ビジネス", "link": "https://business.nikkei.com/atcl/NBD/19/00117/00410/", "published": "2026-05-07T15:00:00+00:00", "category": "エネルギー市場", "relevance_score": 5}, {"title": "ビル・エモット氏「イラン危機が迫る再エネ戦略。日本の基本計画は時代遅れだ」 (賢人の警鐘)", "title_ja": "ビル・エモット氏「イラン危機が迫る再エネ戦略。日本の基本計画は時代遅れだ」 (賢人の警鐘)", "body_ja": "米国とイスラエル、イラン間の戦争は多くの問題を浮き彫りにしたが、紛争地帯から遠く離れた幸運な国々にとって、最大の懸念はエネルギー安全保障だ。エネルギーのほぼすべてを輸入に頼り、15年前の福島第1原発事故以降、化石燃料への依存を深めてきた日本の教訓は明白だ。減少傾向にあった電力需要は、計算処理や人工知能（AI）向けのデータセンター建設によって、今後急増する。", "summary_ja": "イラン危機が日本のエネルギー安全保障の脆弱性を露呈。エネルギー輸入依存度が高い日本は、原発事故後化石燃料依存を深めたが、AI向けデータセンター建設で電力需要は急増する。再エネ戦略の見直しが喫緊の課題と指摘されている。", "source": "日経ビジネス", "link": "https://business.nikkei.com/atcl/NBD/19/00121/00355/", "published": "2026-05-07T15:00:00+00:00", "category": "エネルギー市場", "relevance_score": 4}, {"title": "政府・日銀 追加で4兆円規模の市場介入の可能性 民間が分析", "title_ja": "政府・日銀 追加で4兆円規模の市場介入の可能性 民間が分析", "body_ja": "4月30日に政府・日銀が市場介入に踏み切った外国為替市場では、その後も急激に円高が進む場面があり、民間の金融仲介会社は、日銀の統計から5月1日から6日の間で4兆円規模の市場介入が行われた可能性があると分析しています。", "summary_ja": "4月30日の政府・日銀による市場介入後も円高が急進。民間の金融仲介会社は、5月1日から6日の間に日銀統計から4兆円規模の追加市場介入が行われた可能性を分析。日本の為替市場の不安定さと当局の介入姿勢を示す。", "source": "NHK – ビジネス", "link": "http://www3.nhk.or.jp/news/html/20260507/k10015116221000.html", "published": "2026-05-07T11:56:12+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 5}, {"title": "円相場 ドルに対して値上がり 市場介入への警戒感続く", "title_ja": "円相場 ドルに対して値上がり 市場介入への警戒感続く", "body_ja": "連休明けの7日の東京外国為替市場、政府・日銀による市場介入への警戒感が根強い中、円相場は、ドルに対して値上がりしました。", "summary_ja": "連休明けの5月7日の東京外国為替市場で、政府・日銀の市場介入への警戒感が根強く、円相場はドルに対して値上がりした。当局の動きが為替レートに大きな影響を与えている現状を示している。", "source": "NHK – ビジネス", "link": "http://www3.nhk.or.jp/news/html/20260507/k10015116121000.html", "published": "2026-05-07T09:12:37+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 5}, {"title": "三村財務官 連休中の円急騰 介入か明言せず 投機をけん制", "title_ja": "三村財務官 連休中の円急騰 介入か明言せず 投機をけん制", "body_ja": "外国為替市場で連休中、円相場が急激に円高方向に動く場面があったことについて、財務省の三村財務官は7日朝、記者団の取材に対し「特にコメントする必要はない」と述べ、政府・日銀が市場介入を実施したかどうか明言を避けたうえで、投機的な動きはなお続いているとして市場をけん制しました。", "summary_ja": "連休中の外国為替市場における円相場の急激な円高に対し、三村財務官は5月7日朝、市場介入の有無を明言せず「コメント不要」と回答。投機的な動きが継続しているとして市場をけん制する発言をした。", "source": "NHK – ビジネス", "link": "http://www3.nhk.or.jp/news/html/20260507/k10015115781000.html", "published": "2026-05-07T02:34:15+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 5}, {"title": "Bank of Thailand revises growth forecast upward", "title_ja": "タイ中央銀行が成長予測を上方修正", "body_ja": "タイ中央銀行のヴィタイ・ラタナコン総裁によると、政府が4,000億バーツを借り入れる決定をしたことなどを受け、今年の経済成長率予測を前回の1.5%から2.1%に引き上げた。", "summary_ja": "タイ中央銀行は2026年の経済成長率予測を従来の1.5%から2.1%に上方修正した。これは、政府による4,000億バーツの借入決定が一因とされており、タイ経済の回復期待が高まっている。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3251265/bank-of-thailand-revises-growth-forecast-upward", "published": "2026-05-07T05:32:00+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 5}, {"title": "伊藤元海将が読む、石油備蓄では防げないホルムズ危機と「シーレーンリスク」 (分断時代の経済安保)", "title_ja": "伊藤元海将が読む、石油備蓄では防げないホルムズ危機と「シーレーンリスク」 (分断時代の経済安保)", "body_ja": "ホルムズ海峡の緊張は、日本のエネルギーや安全保障における脆弱性を改めて浮き彫りにした。日本の備えは十分だったのか。そして将来、どのような対処が求められるのか。海上自衛隊の元海将の伊藤俊幸氏が読み解く。", "summary_ja": "ホルムズ海峡の緊張が日本のエネルギー安全保障の脆弱性を改めて浮き彫りにした。海上自衛隊の元海将である伊藤俊幸氏は、石油備蓄だけでは防ぎきれないホルムズ危機とシーレーンリスクへの将来的な対処の必要性を読み解く。", "source": "日経ビジネス", "link": "https://business.nikkei.com/atcl/gen/19/00800/042800021/", "published": "2026-05-07T20:00:00+00:00", "category": "エネルギー市場", "relevance_score": 5}, {"title": "Oil markets after OPEC: Fragmentation, Hormuz risk, and Asia’s energy shift - BLiTZ - Fears None But God", "title_ja": "OPEC後の原油市場：断片化、ホルムズリスク、そしてアジアのエネルギーシフト", "body_ja": "OPEC後の原油市場：断片化、ホルムズリスク、そしてアジアのエネルギーシフト", "summary_ja": "OPEC後の原油市場は断片化し、ホルムズ海峡のリスクが増大。アジアのエネルギー情勢が変化している。この変化は原油価格や供給安定性に影響を与え、日本やタイを含むアジア各国にとって重要な課題となる。", "source": "Google: crude oil Asia", "link": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxQcm1oSWJPcnI1ZTJIakRfb3VDQ0lTUDEyTUpHMDFrMHJITmR1eHIyejV1MTJiRHprLTVTbHUtVEZjdlY0bzBwRUhPNWJKVF9YN2dRNXdUSWJJWEJqTHF0X255VXRXSWplX3JOaGlzYzI0ei02c1hYQlpIQndINmJVaGZoYXc1QkNYdThqN0RtZm5iNktaWGVoVDNuZDdPejktVjVsQnhwYkk?oc=5", "published": "2026-05-07T10:29:51+00:00", "category": "エネルギー市場", "relevance_score": 5}, {"title": "Thai markets weathering Middle East turmoil", "title_ja": "中東の混乱に耐えるタイ市場", "body_ja": "アナリストによると、ムーディーズによるタイ経済の楽観的な評価は、金融セクターの強さと国の外貨準備高を反映しており、タイ証券取引所（SET）は中東戦争中も回復力を維持している。", "summary_ja": "ムーディーズはタイ経済の強固な金融セクターと国際準備高を評価しており、アナリストはタイ証券取引所（SET）が中東戦争中も回復力を維持していると指摘。中東情勢下でもタイ市場が堅調である背景を分析する。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3251354/thai-markets-weathering-middle-east-turmoil", "published": "2026-05-07T11:11:00+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 5}, {"title": "Tokyo leads Asia stock surge on Mideast peace hopes", "title_ja": "中東和平への期待で東京がアジア株高を牽引", "body_ja": "香港 — 木曜日、東京の日経平均株価は急騰し、アジア株の力強い上昇を牽引した。イラン戦争終結への期待が高まったことと、AI関連需要の復活が相場を押し上げた。", "summary_ja": "5月7日、東京の日経平均株価は急騰し、アジア株の上昇を牽引した。イラン戦争終結への期待が高まったことや、AI関連需要の復活が相場を押し上げた。アジア経済全体へのポジティブな影響が期待される。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3251248/tokyo-leads-asia-stock-surge-on-mideast-peace-hopes", "published": "2026-05-07T03:45:00+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 3}, {"title": "日銀3月会合 イラン情勢で物価上昇リスク 利上げ加速意識も", "title_ja": "日銀3月会合 イラン情勢で物価上昇リスク 利上げ加速意識も", "body_ja": "日銀は、政策金利の据え置きを決めたことし3月の金融政策決定会合の議事要旨を7日、公表しました。会合はイランへの軍事作戦が始まって3週間ほどで開かれましたが、物価上昇が一段と進むリスクが指摘されていたほか、利上げを加速させる必要性を意識すべきだといった意見も出ていました。", "summary_ja": "日銀は3月の金融政策決定会合議事要旨を公表。イランへの軍事作戦開始後3週間で開かれた会合では、イラン情勢による物価上昇リスクが指摘され、利上げを加速させる必要性を意識すべきとの意見も出たことが判明した。", "source": "NHK – ビジネス", "link": "http://www3.nhk.or.jp/news/html/20260507/k10015115951000.html", "published": "2026-05-07T05:24:44+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 5}, {"title": "高市政権「戦略17分野」／防げないシーレーンリスク／SAAFで「ウルフパック戦術」（2026年5月8日版） (日経ビジネスAUDIOモーニング)", "title_ja": "高市政権「戦略17分野」／防げないシーレーンリスク／SAAFで「ウルフパック戦術」（2026年5月8日版） (日経ビジネスAUDIOモーニング)", "body_ja": "［新連載］サナエノミクス「戦略17分野」の必然　米中発、産業政策の大競争／伊藤元海将が読む、石油備蓄では防げないホルムズ危機と「シーレーンリスク」／SAAF揺らす｢ウルフパック戦術｣　元社長が投資家と株買い占めか、認定巡り対立、他", "summary_ja": "「サナエノミクス戦略17分野」と、伊藤元海将が石油備蓄では防げない「ホルムズ危機とシーレーンリスク」を読み解く。SAAFホールディングスを揺るがす「ウルフパック戦術」の問題についても触れられている。", "source": "日経ビジネス", "link": "https://business.nikkei.com/atcl/audio/22/00001/050700870/", "published": "2026-05-07T20:00:00+00:00", "category": "エネルギー市場", "relevance_score": 5}, {"title": "War and Energy Shortages Boost China’s Influence in Asia - nytimes.com", "title_ja": "戦争とエネルギー不足がアジアにおける中国の影響力を高める", "body_ja": "War and Energy Shortages Boost China’s Influence in Asia", "summary_ja": "戦争とエネルギー不足がアジアにおける中国の影響力を高めている。これは地域の地政学的バランスや各国のエネルギー安全保障戦略に大きな変化をもたらす可能性があり、タイを含む東南アジア諸国にも影響を及ぼす。", "source": "Google: crude oil Asia", "link": "https://news.google.com/rss/articles/CBMiekFVX3lxTE5LMVF5bGxTYnNVMkNVVzhrWFRnQ0pHVjFVb2lod01hTFU2clN6dmFoMUR4QVNnMUdOQWRTZmQ2UUtndzQySDlaa3oybnpDcERrQ3NvSnhadWR5WkRvTW5yb3ZiVkVqWUN1YXhkUW85MXZ5OXdsUmhtWk13?oc=5", "published": "2026-05-07T13:15:57+00:00", "category": "エネルギー市場", "relevance_score": 4}, {"title": "Is Russian oil becoming a lifeline for Southeast Asia? - DW.com", "title_ja": "ロシア産原油は東南アジアの生命線になりつつあるのか？", "body_ja": "Is Russian oil becoming a lifeline for Southeast Asia?", "summary_ja": "ロシア産原油が東南アジア諸国にとって生命線となりつつあるのか、という問いを投げかける記事。エネルギー供給の多様化と、地政学的要因が地域のエネルギー市場に与える影響について分析している。タイも東南アジアの一員として関連性が高い。", "source": "Google: crude oil Asia", "link": "https://news.google.com/rss/articles/CBMijwFBVV95cUxQcURwRWZCMC00VV9USTRFZmlhMWhWc2VPelFmdjJYUWdiNFpwdVlpX2hka0p0YVZFeVRBcmc2eENaOUtBWk41VGhZbkRHMkZfOTl6TWFOSkdoMFJ2bEhaRzdKSnRsdXZya0Q2dGQtdmlxTTdUbHFCbnlRQ0pNUHRIeUZMMzdBVjRXcXVsRHcxY9IBjwFBVV95cUxQeXpfY0pqczN4dU5RV0NxQmo3NWN3WUV6UG5sMGk3SlJyUm80MEVOUXpWdGM5UTQwbWltdWgyS1hvS3RFWEh3OFdmd0JId1NzNVh4QlJsbkRTYUR6MDJtMzVqVW5TUWlUYlBNMFdzVjM2ckUtZHFqb0U2dVAxYWtXR3RkZi1oejliVVZJN3h0VQ?oc=5", "published": "2026-05-07T13:29:51+00:00", "category": "エネルギー市場", "relevance_score": 5}, {"title": "Call for action to lure more Indian tourists", "title_ja": "より多くのインド人観光客を誘致するための行動を求める", "body_ja": "パタヤのインド人ビジネスコミュニティは、タイ政府に対し、激しい地域競争や外国人ツアーオペレーターによる不正行為によって影響を受けているインド亜大陸からの観光客の信頼を回復するための行動を促した。", "summary_ja": "パタヤのインド人ビジネスコミュニティは、激しい地域競争や不正な外国人ツアーオペレーターによって影響を受けているインド人観光客の信頼回復のため、タイ政府に行動を促した。タイ観光業の課題が浮き彫りになっている。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3251528/call-for-action-to-lure-more-indian-tourists", "published": "2026-05-07T23:40:00+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 4}, {"title": "Stimulus scheme to open registration on May 25", "title_ja": "景気刺激策、5月25日に登録開始", "body_ja": "財務省は、「タイチュアイタイプラス」スキームと国家福祉カードプログラムの登録を5月25日に開始する予定である。", "summary_ja": "タイ財務省は、5月25日に「タイチュアイタイプラス」スキームと国家福祉カードプログラムの登録を開始する予定。これは国民の生活支援と国内経済の活性化を目的とした政府の景気刺激策である。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3251349/stimulus-scheme-to-open-registration-on-may-25", "published": "2026-05-07T11:21:00+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 5}, {"title": "日EUハイレベル経済対話 重要海上ルート保護などで協力を", "title_ja": "日EUハイレベル経済対話 重要海上ルート保護などで協力を", "body_ja": "赤澤経済産業大臣は7日、訪問先のベルギーでEU＝ヨーロッパ連合との閣僚級の会合「ハイレベル経済対話」に出席しました。イラン情勢の緊迫で事実上の封鎖が続くホルムズ海峡を念頭に、貿易の流れを確保するため、重要な海上ルートの保護などに向けて協力していくことを確認しました。", "summary_ja": "赤澤経済産業大臣は5月7日、ベルギーで日EUハイレベル経済対話に出席。イラン情勢によるホルムズ海峡の事実上の封鎖を念頭に、貿易の確保のため重要な海上ルート保護で協力していくことを確認した。", "source": "NHK – アジア太平洋", "link": "http://www3.nhk.or.jp/news/html/20260508/k10015116421000.html", "published": "2026-05-07T20:22:28+00:00", "category": "エネルギー市場", "relevance_score": 5}, {"title": "味の素 中東情勢の影響続けば事業利益が約300億円減少と試算", "title_ja": "味の素 中東情勢の影響続けば事業利益が約300億円減少と試算", "body_ja": "食品大手の「味の素」は、中東情勢を受けて包装資材や原料価格の上昇が見込まれるとして、本業のもうけを示す今年度の事業利益がおよそ300億円減少するという試算を明らかにしました。そのうえで今の状況が続けば、商品の値上げに踏み切る可能性もあるとしています。", "summary_ja": "食品大手「味の素」は、中東情勢による包装資材・原料価格上昇で、今年度の事業利益が約300億円減少する試算を公表。この状況が続けば商品の値上げもあり得るとし、中東情勢が日本企業のサプライチェーンに与える影響が示された。", "source": "NHK – ビジネス", "link": "http://www3.nhk.or.jp/news/html/20260507/k10015116161000.html", "published": "2026-05-07T09:48:26+00:00", "category": "企業/ビジネス動向", "relevance_score": 4}, {"title": "株価 終値 初の6万2000円台で最高値更新 上昇幅3300円超と最大", "title_ja": "株価 終値 初の6万2000円台で最高値更新 上昇幅3300円超と最大", "body_ja": "連休明けの7日の東京株式市場、イラン情勢をめぐる緊張緩和への期待などを背景に買い注文が広がり、日経平均株価は初めて6万2000円台で取り引きを終え、最高値を更新しました。また株価の上昇幅は3300円を超え、終値としてこれまでで最大となりました。", "summary_ja": "連休明けの5月7日の東京株式市場では、イラン情勢の緊張緩和期待などから買い注文が広がり、日経平均株価は初の6万2000円台で最高値を更新。終値の上昇幅も3300円超と過去最大を記録した。", "source": "NHK – ビジネス", "link": "http://www3.nhk.or.jp/news/html/20260507/k10015115711000.html", "published": "2026-05-07T07:35:12+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 4}, {"title": "タイ首相、外国人旅行者の不適切行為に厳格対処を直接指示　トゥクトゥク車内でわいせつ行為", "title_ja": "タイ首相、外国人旅行者の不適切行為に厳格対処を直接指示　トゥクトゥク車内でわいせつ行為", "body_ja": "【タイ】南部ビーチリゾートのプーケット島で外国人の男女がトゥクトゥク車内でわいせつ行為に至り、動画がSNS上で拡散された問題を受け、タイ政府が不適切行為に対して法令を厳格に適用する姿勢を示した。アヌティン・チャーンウィー [&#8230;]", "summary_ja": "タイ政府は、プーケット島で発生した外国人旅行者のトゥクトゥク車内でのわいせつ行為動画拡散を受け、プラユット首相が外国人旅行者の不適切行為に対して法令を厳格に適用するよう直接指示した。観光イメージの保護を強化する。", "source": "newsclip: タイ経済・企業", "link": "https://newsclip.be/thai-news/thai-economy/37059", "published": "2026-05-07T15:07:13+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 4}];
+const CAT_ICONS  = {"ボイラー/産業設備": "🔧", "バイオマス/再生可能エネルギー": "🌿", "エネルギー市場": "⚡", "日タイ貿易/マクロ": "🤝", "企業/ビジネス動向": "🏭", "その他": "📰"};
+const CAT_COLORS = {"ボイラー/産業設備": "#b45309", "バイオマス/再生可能エネルギー": "#2d7a4f", "エネルギー市場": "#0369a1", "日タイ貿易/マクロ": "#7c3aed", "企業/ビジネス動向": "#be123c", "その他": "#555"};
+const CAT_SUMMARIES = {"エネルギー市場": "現在のエネルギー市場は、イラン危機やホルムズ海峡を巡る地政学リスクがシーレーン安保の最重要課題となっています。OPECの影響力低下で市場は断片化し、米国のガス強国化、アジアにおける再エネ・電化へのシフトが加速。実務担当者としては、多様な供給源確保と重要海上ルート保護を通じた経済安全保障の確立が喫緊の課題です。", "日タイ貿易/マクロ": "現在のトレンドと注目点は以下の通りです。\n\n日本は円安介入警戒感が強く、日銀の利上げ加速も視野に入り、為替・金利変動リスクに警戒が必須です。一方、タイ経済は成長予測を上方修正し堅調、観光客誘致を積極化し質向上も図ります。日タイ貿易は、日本の金融政策とタイの安定成長に注目です。", "企業/ビジネス動向": "味の素の事例は、地政学リスクがグローバル企業の事業利益に直接影響を与える現状を浮き彫りにします。サプライチェーンの脆弱性が顕在化しており、実務担当者には、外部環境変動の影響を具体的に試算し、事業計画に織り込むリスクマネジメントの強化、および対応策の早期策定が急務となります。"};
 const GEMINI_KEY = ""; // ← 深掘り分析を使う場合は aistudio.google.com のAPIキーを入力
 const GAS_URL = "https://script.google.com/macros/s/AKfycbz9Nc874Azvh8zqv5BySUGToK01aIkInocGYeqxgyyiJ-fN0YCqIW4h2E9NRkYBQ8bO/exec";
 
