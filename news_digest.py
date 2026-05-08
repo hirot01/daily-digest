@@ -94,7 +94,7 @@ def keyword_score(a):
 
 def gemini(model, prompt):
     response = model.models.generate_content(
-        model="gemini-2.5-flash-preview-04-17",
+        model="gemini-2.5-flash",
         contents=prompt,
     )
     raw = response.text.strip()
@@ -587,7 +587,10 @@ async function loadDeepDive() {{
 # ========== メイン ==========
 
 def main():
-    model = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
+    model = genai.Client(
+        api_key=os.environ["GEMINI_API_KEY"],
+        http_options={"api_version": "v1"},
+    )
 
     print(f"[{datetime.now().strftime('%H:%M:%S')}] RSS取得中...")
     all_articles = fetch_feeds(hours_back=24)
