@@ -13,20 +13,28 @@ from pathlib import Path
 # ========== 設定 ==========
 
 KEYWORDS = [
-    # タイ関連（広め）
+    # タイ関連
     "Thailand", "Thai", "タイ", "Bangkok", "バンコク",
     # ボイラー・産業設備
     "boiler", "ボイラー", "stoker", "steam", "industrial",
-    # バイオマス・エネルギー
-    "biomass", "バイオマス", "EFB", "palm", "renewable energy",
-    "energy", "エネルギー", "fuel", "combustion",
-    # 日タイ貿易
+    # バイオマス・再生可能エネルギー
+    "biomass", "バイオマス", "EFB", "palm", "renewable energy", "再生可能エネルギー",
+    "solar", "wind power", "太陽光", "風力", "FIT", "FIP", "廃棄物発電",
+    # エネルギー市場（普遍的キーワードのみ・地政学はGeminiに判断させる）
+    "energy", "エネルギー", "fuel", "crude oil", "原油", "LNG", "天然ガス",
+    "oil price", "原油価格", "OPEC", "petroleum", "石油",
+    "energy security", "エネルギー安全保障", "energy market", "電力",
+    "geopolitics", "地政学", "supply chain", "サプライチェーン",
+    # 日タイ貿易・マクロ
     "Japan", "日本", "JTEPA", "trade", "export", "import", "貿易", "輸出", "輸入",
+    "GDP", "経済政策", "金融政策", "日銀", "BOT", "中央銀行",
     # 為替
     "JPY", "THB", "yen", "baht", "円", "バーツ", "為替", "exchange rate",
-    "USD", "dollar", "ドル",
+    "USD", "dollar", "ドル", "円安", "円高",
     # アジア経済
     "ASEAN", "Southeast Asia", "東南アジア", "Asia",
+    # 企業・ビジネス
+    "企業", "投資", "M&A", "工場", "製造", "supply chain", "サプライチェーン",
 ]
 
 RSS_FEEDS = [
@@ -46,18 +54,45 @@ RSS_FEEDS = [
     # newsclip.be（タイ日本語ニュース）
     {"name": "newsclip: タイ経済・企業",  "url": "https://newsclip.be/category/thai-news/thai-economy/feed", "lang": "ja"},
     {"name": "newsclip: 業界事情",        "url": "https://newsclip.be/category/business/products/feed",      "lang": "ja"},
+    # 日本語専門紙
+    {"name": "日刊工業新聞",              "url": "https://www.nikkan.co.jp/rss/", "lang": "ja"},
+    {"name": "日経ビジネス",              "url": "https://business.nikkei.com/rss/sns/nb.rdf", "lang": "ja"},
+    # Google News追加キーワード
+    {"name": "Google: バイオマス 日本",   "url": "https://news.google.com/rss/search?q=%E3%83%90%E3%82%A4%E3%82%AA%E3%83%9E%E3%82%B9+%E6%97%A5%E6%9C%AC+%E7%99%BA%E9%9B%BB&hl=ja&gl=JP&ceid=JP:ja", "lang": "ja"},
+    {"name": "Google: 再生可能エネルギー","url": "https://news.google.com/rss/search?q=%E5%86%8D%E7%94%9F%E5%8F%AF%E8%83%BD%E3%82%A8%E3%83%8D%E3%83%AB%E3%82%AE%E3%83%BC+%E3%82%BF%E3%82%A4+%E6%97%A5%E6%9C%AC&hl=ja&gl=JP&ceid=JP:ja", "lang": "ja"},
+    {"name": "Google: 原油 アジア",       "url": "https://news.google.com/rss/search?q=%E5%8E%9F%E6%B2%B9+%E3%82%A2%E3%82%B8%E3%82%A2+%E3%83%9B%E3%83%AB%E3%83%A0%E3%82%BA&hl=ja&gl=JP&ceid=JP:ja", "lang": "ja"},
+    {"name": "Google: crude oil Asia",    "url": "https://news.google.com/rss/search?q=crude+oil+Asia+energy+market&hl=en&gl=US&ceid=US:en", "lang": "en"},
+    # 世界トレンド用（Google Newsトップ）
+    {"name": "Google News: トップ日本語",  "url": "https://news.google.com/rss?hl=ja&gl=JP&ceid=JP:ja", "lang": "ja", "trend": True},
+    {"name": "Google News: Top English",   "url": "https://news.google.com/rss?hl=en&gl=US&ceid=US:en", "lang": "en", "trend": True},
 ]
 
-CAT_ICONS  = {"ボイラー/産業設備": "🔧", "バイオマス/エネルギー": "🌿", "日タイ貿易/ビジネス": "🤝", "為替/金融": "💹", "その他": "📰"}
-CAT_COLORS = {"ボイラー/産業設備": "#b45309", "バイオマス/エネルギー": "#2d7a4f", "日タイ貿易/ビジネス": "#1d4ed8", "為替/金融": "#7c3aed", "その他": "#555"}
+CAT_ICONS  = {
+    "ボイラー/産業設備":       "🔧",
+    "バイオマス/再生可能エネルギー": "🌿",
+    "エネルギー市場":          "⚡",
+    "日タイ貿易/マクロ":       "🤝",
+    "企業/ビジネス動向":       "🏭",
+    "その他": "📰"
+}
+CAT_COLORS = {
+    "ボイラー/産業設備":       "#b45309",
+    "バイオマス/再生可能エネルギー": "#2d7a4f",
+    "エネルギー市場":          "#0369a1",
+    "日タイ貿易/マクロ":       "#7c3aed",
+    "企業/ビジネス動向":       "#be123c",
+    "その他": "#555"
+}
 
 # ========== RSS取得 ==========
 
 def fetch_feeds(hours_back=24):
     cutoff = datetime.now(timezone.utc) - timedelta(hours=hours_back)
     articles = []
+    trend_articles = []
     for fi in RSS_FEEDS:
         count = 0
+        is_trend = fi.get("trend", False)
         try:
             feed = feedparser.parse(fi["url"])
             total = len(feed.entries)
@@ -73,18 +108,22 @@ def fetch_feeds(hours_back=24):
                     continue
                 title   = entry.get("title", "")
                 summary = re.sub(r"<[^>]+>", "", entry.get("summary", entry.get("description", "")))[:500]
-                articles.append({
+                item = {
                     "source": fi["name"], "lang": fi["lang"],
                     "title": title, "body": summary,
                     "link": entry.get("link", ""),
                     "published": published.isoformat(),
-                })
+                }
+                if is_trend:
+                    trend_articles.append(item)
+                else:
+                    articles.append(item)
                 count += 1
             status = feed.get("status", "?")
             print(f"  [{status}] {fi['name']}: {count}件採用 / {total}件取得")
         except Exception as e:
             print(f"  [ERR] {fi['name']}: {e}")
-    return articles
+    return articles, trend_articles
 
 def keyword_score(a):
     text = (a["title"] + " " + a["body"]).lower()
@@ -92,13 +131,23 @@ def keyword_score(a):
 
 # ========== Gemini 呼び出し ==========
 
-def gemini(model, prompt):
-    response = model.models.generate_content(
-        model="gemini-2.5-flash",
-        contents=prompt,
-    )
-    raw = response.text.strip()
-    return re.sub(r"^```json\s*|^```\s*|```$", "", raw, flags=re.MULTILINE).strip()
+def gemini(model, prompt, max_retries=4):
+    import time
+    for attempt in range(max_retries):
+        try:
+            response = model.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=prompt,
+            )
+            raw = response.text.strip()
+            return re.sub(r"^```json\s*|^```\s*|```$", "", raw, flags=re.MULTILINE).strip()
+        except Exception as e:
+            wait = 30 * (attempt + 1)
+            print(f"  [RETRY {attempt+1}/{max_retries}] Gemini error: {e} → {wait}秒待機")
+            if attempt < max_retries - 1:
+                time.sleep(wait)
+            else:
+                raise
 
 def analyze_articles(model, candidates):
     """記事の選別・翻訳・日本語要約・カテゴリ分類を一括実行"""
@@ -110,16 +159,18 @@ def analyze_articles(model, candidates):
 
 【追跡トピック】
 1. タイのボイラー業界・産業設備
-2. バイオマス燃料・再生可能エネルギー（特に東南アジア）
-3. 日タイビジネス・貿易・投資
-4. 為替（USD/JPY、THB/JPY）
+2. バイオマス・再生可能エネルギー（太陽光・風力・廃棄物含む、東南アジア・日本）
+3. エネルギー市場（原油・LNG・中東情勢・ホルムズ・アジアへの影響）
+4. 日タイ貿易・マクロ経済（為替・経済政策・貿易統計・国際情勢）
+5. 企業・ビジネス動向（個別企業・案件・サプライチェーン）
 
 【指示】
 - 関連性が低い記事は除外
 - title_ja: タイトルの日本語訳（元が日本語ならそのまま）
 - body_ja: 本文の日本語訳（元が日本語ならそのまま）
 - summary_ja: 100〜150字の日本語要約（数字・固有名詞を保持）
-- category: "ボイラー/産業設備" | "バイオマス/エネルギー" | "日タイ貿易/ビジネス" | "為替/金融"
+- category: "ボイラー/産業設備" | "バイオマス/再生可能エネルギー" | "エネルギー市場" | "日タイ貿易/マクロ" | "企業/ビジネス動向"
+  ※ エネルギー市場=原油・LNG・ガス・電力価格・エネルギー安全保障・産油国動向など時々の国際エネルギー情勢全般、日タイ貿易/マクロ=為替・経済政策・貿易統計・国際情勢、企業/ビジネス動向=個別企業・案件・業界ニュース
 - relevance_score: 1〜5
 
 JSONのみ返答（マークダウン不要）:
@@ -157,6 +208,21 @@ def generate_overall_summary(model, articles):
 {article_list}"""
     return gemini(model, prompt)
 
+def generate_world_trend(model, trend_articles):
+    """Google Newsトップから世界トレンドを生成"""
+    if not trend_articles:
+        return ""
+    # 芸能・スポーツを除いたタイトル一覧
+    titles = [a["title"] for a in trend_articles[:40]]
+    titles_text = "\n".join(f"・{t}" for t in titles)
+    prompt = f"""以下は今日のGoogle Newsトップ記事の見出し一覧です。
+芸能・スポーツ・天気・地域ニュースを除外し、ビジネス・経済・政治・国際情勢・テクノロジーに関わる
+今日の主要トレンドを150字程度で分析してください。
+「今日は〇〇と〇〇が主要テーマです」のように、大局的な視点でまとめてください。
+
+{titles_text}"""
+    return gemini(model, prompt)
+
 def generate_cat_summaries(model, articles):
     """カテゴリ別トレンド分析を生成"""
     from collections import defaultdict
@@ -176,7 +242,7 @@ def generate_cat_summaries(model, articles):
 
 # ========== HTML生成 ==========
 
-def build_html(articles, overall_summary, cat_summaries, all_count, candidate_count):
+def build_html(articles, overall_summary, world_trend, cat_summaries, all_count, candidate_count):
     today    = datetime.now(tz=timezone(timedelta(hours=9)))
     date_str = today.strftime("%Y年%m月%d日（%a）")
 
@@ -240,12 +306,13 @@ def build_html(articles, overall_summary, cat_summaries, all_count, candidate_co
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>デイリーニュースダイジェスト — {date_str}</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
     *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
     :root {{
-      --bg: #0f1117; --bg2: #141824; --bg3: #1a1f2e;
-      --fg: #e8e4dc; --fg2: #b0aaa4; --fg3: #5a6070;
-      --accent: #6b9fff; --rule: #252a3a;
+      --bg: #f8f9fb; --bg2: #ffffff; --bg3: #f0f2f5;
+      --fg: #1a1d23; --fg2: #4a5168; --fg3: #9299aa;
+      --accent: #1a56db; --accent2: #0e9f6e;
+      --rule: #e5e7eb; --shadow: 0 1px 4px rgba(0,0,0,.07);
     }}
     body {{ font-family:'Noto Sans JP',sans-serif; background:var(--bg); color:var(--fg); line-height:1.7; }}
     a {{ color:var(--accent); text-decoration:none; }}
@@ -254,132 +321,155 @@ def build_html(articles, overall_summary, cat_summaries, all_count, candidate_co
     /* Header */
     .site-header {{
       position:sticky; top:0; z-index:100;
-      background:var(--bg); border-bottom:1px solid var(--rule);
-      padding:16px 20px; display:flex; align-items:center; justify-content:space-between;
+      background:#fff; border-bottom:1px solid var(--rule);
+      padding:14px 24px; display:flex; align-items:center; justify-content:space-between;
+      box-shadow:var(--shadow);
     }}
-    .site-logo {{ font-size:13px; font-weight:700; letter-spacing:.15em; color:var(--accent); }}
+    .site-logo {{ font-size:15px; font-weight:700; color:var(--fg); letter-spacing:-.01em; }}
+    .site-logo span {{ color:var(--accent); }}
     .site-date {{ font-size:12px; color:var(--fg3); }}
     .back-btn {{
-      display:none; background:none; border:1px solid var(--rule);
-      color:var(--fg3); padding:5px 12px; border-radius:6px; cursor:pointer; font-size:12px;
+      display:none; background:#f0f2f5; border:none;
+      color:var(--fg2); padding:6px 14px; border-radius:20px; cursor:pointer; font-size:12px; font-weight:500;
     }}
     .back-btn.visible {{ display:block; }}
 
     /* Pages */
-    .page {{ display:none; max-width:760px; margin:0 auto; padding:24px 20px 60px; }}
+    .page {{ display:none; max-width:780px; margin:0 auto; padding:28px 20px 80px; }}
     .page.active {{ display:block; }}
 
     /* Overall summary */
     .summary-card {{
-      background:linear-gradient(135deg,var(--bg2),var(--bg3));
-      border:1px solid var(--rule); border-radius:12px;
-      padding:20px 24px; margin-bottom:24px;
+      background:linear-gradient(135deg, #1a56db 0%, #0e9f6e 100%);
+      border-radius:16px; padding:24px 28px; margin-bottom:28px;
+      box-shadow:0 4px 20px rgba(26,86,219,.2);
     }}
     .summary-label {{
-      font-size:10px; font-weight:700; letter-spacing:.2em;
-      color:var(--accent); text-transform:uppercase; margin-bottom:10px;
+      font-size:10px; font-weight:700; letter-spacing:.18em;
+      color:rgba(255,255,255,.7); text-transform:uppercase; margin-bottom:10px;
     }}
-    .summary-text {{ font-size:14px; line-height:1.9; color:var(--fg2); }}
+    .summary-text {{ font-size:14px; line-height:1.9; color:#fff; }}
+
+    /* Section head */
+    .section-head {{
+      font-size:12px; font-weight:700; color:var(--fg3);
+      letter-spacing:.08em; text-transform:uppercase;
+      margin-bottom:14px; padding-bottom:8px;
+      border-bottom:2px solid var(--rule);
+    }}
 
     /* Category cards */
-    .section-head {{
-      font-size:11px; font-weight:700; letter-spacing:.18em;
-      color:var(--fg3); text-transform:uppercase;
-      border-bottom:1px solid var(--rule); padding-bottom:8px; margin-bottom:14px;
-    }}
-    .cat-grid {{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:28px; }}
+    .cat-grid {{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:32px; }}
+    @media(max-width:500px){{ .cat-grid {{ grid-template-columns:1fr; }} }}
     .cat-card {{
-      background:var(--bg2); border-radius:10px; padding:16px 18px;
-      cursor:pointer; transition:background .15s;
+      background:#fff; border-radius:14px; padding:18px 20px;
+      cursor:pointer; transition:all .2s; border:1px solid var(--rule);
+      box-shadow:var(--shadow);
     }}
-    .cat-card:hover {{ background:var(--bg3); }}
-    .cat-card-head {{ display:flex; align-items:center; gap:8px; margin-bottom:8px; }}
-    .cat-icon {{ font-size:20px; }}
-    .cat-name {{ font-size:13px; font-weight:600; flex:1; }}
+    .cat-card:hover {{ transform:translateY(-2px); box-shadow:0 6px 20px rgba(0,0,0,.1); }}
+    .cat-card-head {{ display:flex; align-items:center; gap:10px; margin-bottom:10px; }}
+    .cat-icon {{ font-size:22px; }}
+    .cat-name {{ font-size:13px; font-weight:700; flex:1; color:var(--fg); }}
     .cat-count {{
-      font-size:11px; color:var(--fg3);
-      background:var(--rule); padding:2px 8px; border-radius:10px;
+      font-size:11px; color:#fff; font-weight:600;
+      background:var(--accent); padding:2px 10px; border-radius:20px;
     }}
-    .cat-trend {{ font-size:12px; color:var(--fg3); line-height:1.7; }}
+    .cat-trend {{ font-size:12px; color:var(--fg2); line-height:1.75; }}
 
     /* Article items */
     .article-item {{
-      background:var(--bg2); border-radius:8px;
-      padding:14px 18px; margin-bottom:10px; cursor:pointer; transition:background .15s;
+      background:#fff; border-radius:12px; border:1px solid var(--rule);
+      padding:16px 20px; margin-bottom:10px; cursor:pointer;
+      transition:all .15s; box-shadow:var(--shadow);
     }}
-    .article-item:hover {{ background:var(--bg3); }}
-    .article-meta {{ display:flex; gap:10px; font-size:11px; color:var(--fg3); margin-bottom:5px; flex-wrap:wrap; }}
-    .art-stars {{ color:#c8a400; letter-spacing:-1px; }}
-    .article-title {{ font-size:14px; font-weight:500; color:var(--fg); line-height:1.5; margin-bottom:5px; }}
-    .article-summary {{ font-size:12px; color:var(--fg3); line-height:1.65; }}
-    .no-news {{ text-align:center; color:var(--fg3); padding:40px; }}
+    .article-item:hover {{ transform:translateY(-1px); box-shadow:0 4px 16px rgba(0,0,0,.1); }}
+    .article-meta {{ display:flex; gap:10px; font-size:11px; color:var(--fg3); margin-bottom:6px; flex-wrap:wrap; align-items:center; }}
+    .art-cat {{ font-weight:600; font-size:11px; padding:2px 8px; border-radius:4px; background:var(--bg3); }}
+    .art-stars {{ color:#f59e0b; letter-spacing:-1px; }}
+    .article-title {{ font-size:14px; font-weight:600; color:var(--fg); line-height:1.55; margin-bottom:6px; }}
+    .article-summary {{ font-size:12.5px; color:var(--fg2); line-height:1.7; }}
+    .no-news {{ text-align:center; color:var(--fg3); padding:60px 20px; font-size:14px; }}
 
     /* Category page */
-    .cat-page-head {{ margin-bottom:20px; }}
-    .cat-page-icon {{ font-size:28px; margin-bottom:6px; }}
-    .cat-page-name {{ font-size:20px; font-weight:700; margin-bottom:16px; }}
+    .cat-page-icon {{ font-size:32px; margin-bottom:4px; }}
+    .cat-page-name {{ font-size:22px; font-weight:700; margin-bottom:18px; color:var(--fg); }}
     .cat-summary-box {{
-      background:var(--bg2); border:1px solid var(--rule);
-      border-radius:10px; padding:16px 18px; margin-bottom:20px;
+      background:#fff; border:1px solid var(--rule);
+      border-radius:12px; padding:18px 22px; margin-bottom:24px;
+      box-shadow:var(--shadow);
     }}
     .cat-summary-label {{
       font-size:10px; font-weight:700; letter-spacing:.18em;
-      color:var(--accent); text-transform:uppercase; margin-bottom:8px;
+      color:var(--accent); text-transform:uppercase; margin-bottom:10px;
     }}
-    .cat-summary-text {{ font-size:13px; color:var(--fg2); line-height:1.85; }}
+    .cat-summary-text {{ font-size:13.5px; color:var(--fg2); line-height:1.85; }}
 
     /* Article detail */
-    .detail-cat {{ font-size:11px; font-weight:600; margin-bottom:8px; }}
-    .detail-title {{ font-size:18px; font-weight:700; line-height:1.5; margin-bottom:6px; }}
+    .detail-cat {{ font-size:11px; font-weight:700; margin-bottom:8px; }}
+    .detail-title {{ font-size:20px; font-weight:700; line-height:1.5; margin-bottom:6px; color:var(--fg); }}
     .detail-orig {{ font-size:11px; color:var(--fg3); font-style:italic; margin-bottom:12px; }}
-    .detail-meta {{ font-size:11px; color:var(--fg3); margin-bottom:16px; display:flex; gap:12px; }}
+    .detail-meta {{ font-size:12px; color:var(--fg3); margin-bottom:18px; display:flex; gap:14px; flex-wrap:wrap; }}
     .detail-body {{
-      background:var(--bg2); border:1px solid var(--rule);
-      border-radius:10px; padding:16px 18px;
-      font-size:13.5px; line-height:1.85; color:#9098a8; margin-bottom:16px;
+      background:#fff; border:1px solid var(--rule);
+      border-radius:12px; padding:20px 22px;
+      font-size:14px; line-height:1.9; color:var(--fg2); margin-bottom:16px;
+      box-shadow:var(--shadow);
     }}
     .detail-orig-body {{
-      margin-top:12px; padding-top:10px; border-top:1px solid var(--rule);
-      font-size:12px; color:#3a4050;
+      margin-top:14px; padding-top:12px; border-top:1px solid var(--rule);
+      font-size:12px; color:var(--fg3); line-height:1.7;
     }}
-    .detail-orig-label {{ font-size:10px; color:var(--fg3); margin-bottom:4px; letter-spacing:.1em; }}
+    .detail-orig-label {{ font-size:10px; color:var(--fg3); margin-bottom:4px; letter-spacing:.1em; font-weight:600; }}
     .source-link {{
-      display:inline-flex; align-items:center; gap:5px;
-      font-size:11px; color:var(--accent); margin-top:10px;
-      border:1px solid #1a2f5a; border-radius:5px; padding:4px 10px;
+      display:inline-flex; align-items:center; gap:6px;
+      font-size:12px; color:var(--accent); margin-top:12px;
+      border:1px solid #c3d5fa; border-radius:6px; padding:5px 12px;
+      background:#eef2ff;
     }}
+
+    /* World trend card */
+    .trend-card {{
+      background:#fff; border:1px solid var(--rule);
+      border-radius:16px; padding:22px 26px; margin-bottom:16px;
+      box-shadow:var(--shadow); border-left:4px solid #f59e0b;
+    }}
+    .trend-label {{
+      font-size:10px; font-weight:700; letter-spacing:.18em;
+      color:#d97706; text-transform:uppercase; margin-bottom:10px;
+    }}
+    .trend-text {{ font-size:14px; line-height:1.9; color:var(--fg2); }}
 
     /* Deep dive */
     .deep-card {{
-      background:linear-gradient(135deg,var(--bg2),#1a2030);
-      border:1px solid #2a3a5a; border-radius:12px; padding:20px 22px;
+      background:linear-gradient(135deg, #eef2ff, #f0fdf4);
+      border:1px solid #c3d5fa; border-radius:14px; padding:22px 24px;
     }}
     .deep-label {{
-      font-size:10px; font-weight:700; letter-spacing:.2em;
+      font-size:10px; font-weight:700; letter-spacing:.18em;
       color:var(--accent); text-transform:uppercase; margin-bottom:12px;
     }}
     .deep-text {{ font-size:13.5px; line-height:1.95; color:var(--fg2); }}
     .deep-btn {{
-      background:#1a2f5a; border:none; color:var(--accent);
-      padding:8px 16px; border-radius:6px; cursor:pointer; font-size:13px;
+      background:var(--accent); border:none; color:#fff;
+      padding:9px 20px; border-radius:8px; cursor:pointer; font-size:13px; font-weight:600;
     }}
     .deep-loading {{ font-size:13px; color:var(--fg3); }}
 
     /* Save bar */
     .save-bar {{
       position:fixed; bottom:0; left:0; right:0;
-      background:var(--bg2); border-top:1px solid var(--rule);
-      padding:12px 20px; display:flex; align-items:center; justify-content:space-between;
-      z-index:200;
+      background:#fff; border-top:1px solid var(--rule);
+      padding:12px 24px; display:flex; align-items:center; justify-content:space-between;
+      z-index:200; box-shadow:0 -2px 12px rgba(0,0,0,.08);
     }}
-    .save-count {{ font-size:13px; color:var(--fg3); }}
+    .save-count {{ font-size:13px; color:var(--fg2); font-weight:500; }}
     .save-btn {{
-      background:var(--accent); border:none; color:#fff;
+      background:var(--accent2); border:none; color:#fff;
       padding:10px 24px; border-radius:8px; cursor:pointer;
-      font-size:14px; font-weight:700;
+      font-size:14px; font-weight:700; box-shadow:0 2px 8px rgba(14,159,110,.3);
     }}
-    .save-btn:disabled {{ background:var(--fg3); cursor:not-allowed; }}
-    .check-wrap {{ display:flex; align-items:center; gap:8px; margin-bottom:6px; }}
+    .save-btn:disabled {{ background:var(--fg3); cursor:not-allowed; box-shadow:none; }}
+    .check-wrap {{ display:flex; align-items:center; gap:8px; margin-bottom:8px; }}
     .check-wrap input[type=checkbox] {{ width:18px; height:18px; cursor:pointer; accent-color:var(--accent); }}
     .check-label {{ font-size:12px; color:var(--fg3); cursor:pointer; }}
 
@@ -399,8 +489,12 @@ def build_html(articles, overall_summary, cat_summaries, all_count, candidate_co
 
 <!-- TOP PAGE -->
 <div class="page active" id="page-top">
+  {f'''<div class="trend-card">
+    <div class="trend-label">🌍 今日の世界トレンド</div>
+    <div class="trend-text">{world_trend}</div>
+  </div>''' if world_trend else ''}
   <div class="summary-card">
-    <div class="summary-label">🌐 本日の全体サマリー</div>
+    <div class="summary-label">📋 本日の関連ニュースサマリー</div>
     <div class="summary-text">{overall_summary}</div>
   </div>
 
@@ -593,8 +687,8 @@ def main():
     )
 
     print(f"[{datetime.now().strftime('%H:%M:%S')}] RSS取得中...")
-    all_articles = fetch_feeds(hours_back=24)
-    print(f"  → {len(all_articles)}件取得")
+    all_articles, trend_articles = fetch_feeds(hours_back=24)
+    print(f"  → 通常記事: {len(all_articles)}件 / トレンド記事: {len(trend_articles)}件")
 
     candidates = [a for a in all_articles if keyword_score(a) > 0]
     candidates.sort(key=keyword_score, reverse=True)
@@ -608,10 +702,13 @@ def main():
     print(f"[{datetime.now().strftime('%H:%M:%S')}] 全体サマリー生成中...")
     overall_summary = generate_overall_summary(model, articles)
 
+    print(f"[{datetime.now().strftime('%H:%M:%S')}] 世界トレンド分析中...")
+    world_trend = generate_world_trend(model, trend_articles)
+
     print(f"[{datetime.now().strftime('%H:%M:%S')}] カテゴリ分析中...")
     cat_summaries = generate_cat_summaries(model, articles)
 
-    html = build_html(articles, overall_summary, cat_summaries, len(all_articles), len(candidates))
+    html = build_html(articles, overall_summary, world_trend, cat_summaries, len(all_articles), len(candidates))
 
     date_tag = datetime.now().strftime("%Y%m%d")
     out = Path(f"digest_{date_tag}.html")
