@@ -55,7 +55,8 @@ RSS_FEEDS = [
     {"name": "newsclip: タイ経済・企業",  "url": "https://newsclip.be/category/thai-news/thai-economy/feed", "lang": "ja"},
     {"name": "newsclip: 業界事情",        "url": "https://newsclip.be/category/business/products/feed",      "lang": "ja"},
     # 日本語専門紙
-    {"name": "日刊工業新聞",              "url": "https://www.nikkan.co.jp/rss/", "lang": "ja"},
+    {"name": "日刊工業新聞",              "url": "https://www.nikkan.co.jp/rss/nksrdf.rdf", "lang": "ja"},
+    {"name": "ニュースイッチ",             "url": "https://newswitch.jp/feed/", "lang": "ja"},
     {"name": "日経ビジネス",              "url": "https://business.nikkei.com/rss/sns/nb.rdf", "lang": "ja"},
     # Google News追加キーワード
     {"name": "Google: バイオマス 日本",   "url": "https://news.google.com/rss/search?q=%E3%83%90%E3%82%A4%E3%82%AA%E3%83%9E%E3%82%B9+%E6%97%A5%E6%9C%AC+%E7%99%BA%E9%9B%BB&hl=ja&gl=JP&ceid=JP:ja", "lang": "ja"},
@@ -158,11 +159,11 @@ def analyze_articles(model, candidates):
 以下の記事リストを分析し、関連する記事だけをJSONで返してください。
 
 【追跡トピック】
-1. タイのボイラー業界・産業設備
+1. タイのボイラー業界・産業設備・熱利用
 2. バイオマス・再生可能エネルギー（太陽光・風力・廃棄物含む、東南アジア・日本）
-3. エネルギー市場（原油・LNG・中東情勢・ホルムズ・アジアへの影響）
+3. エネルギー市場（原油・LNG・ガス・電力価格・エネルギー安全保障・産油国動向など時々の国際エネルギー情勢全般）
 4. 日タイ貿易・マクロ経済（為替・経済政策・貿易統計・国際情勢）
-5. 企業・ビジネス動向（個別企業・案件・サプライチェーン）
+5. 企業・ビジネス動向（日本・タイ・東南アジアの製造業・産業・M&A・サプライチェーン含む）
 
 【指示】
 - 関連性が低い記事は除外
