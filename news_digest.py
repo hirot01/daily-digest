@@ -94,7 +94,7 @@ def keyword_score(a):
 
 def gemini(model, prompt):
     response = model.models.generate_content(
-        model="gemini-2.0-flash-lite",
+        model="gemini-2.5-flash-preview-04-17",
         contents=prompt,
     )
     raw = response.text.strip()
