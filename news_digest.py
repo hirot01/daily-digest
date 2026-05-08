@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 """
-news_digest.py — 毎日ニュース自動巡回スクリプト v2
-機能: RSS巡回 → Geminiで翻訳・全体サマリー・カテゴリ分析 → インタラクティブHTML出力
+news_digest.py — 毎日ニュース自動巡回スクリプト v3.1
+機能: RSS巡回 → Geminiで翻訳・全体サマリー・カテゴリ分析・世界トレンド → インタラクティブHTML出力
+変更履歴:
+  v3.1 - ソース別件数制限撤廃・候補上限60件・保存済みバッジ表示
+  v3.0 - カテゴリ5分類・デザイン刷新・世界トレンド枠追加・RSSソース追加・Geminiリトライ機能
+  v2.0 - Gemini API対応・全体サマリー・カテゴリ別分析・日本語翻訳・スプレッドシート保存
+  v1.0 - 初版（Claude API・シンプルHTML出力）
 """
 
 import feedparser
@@ -97,7 +102,7 @@ def fetch_feeds(hours_back=24):
         try:
             feed = feedparser.parse(fi["url"])
             total = len(feed.entries)
-            for entry in feed.entries[:20]:
+            for entry in feed.entries:
                 published = None
                 for attr in ["published_parsed", "updated_parsed"]:
                     if hasattr(entry, attr) and getattr(entry, attr):
@@ -473,6 +478,12 @@ def build_html(articles, overall_summary, world_trend, cat_summaries, all_count,
     .check-wrap {{ display:flex; align-items:center; gap:8px; margin-bottom:8px; }}
     .check-wrap input[type=checkbox] {{ width:18px; height:18px; cursor:pointer; accent-color:var(--accent); }}
     .check-label {{ font-size:12px; color:var(--fg3); cursor:pointer; }}
+    .saved-badge {{
+      display:inline-flex; align-items:center; gap:4px;
+      font-size:11px; font-weight:600; color:var(--accent2);
+      background:#f0fdf4; border:1px solid #bbf7d0;
+      padding:2px 8px; border-radius:20px; margin-bottom:8px;
+    }}
 
     footer {{
       text-align:center; font-size:11px; color:var(--fg3);
@@ -617,13 +628,33 @@ function updateCount() {{
   document.getElementById('save-btn').disabled = checked === 0;
 }}
 
+// 保存済みIDをセッション内で管理
+const savedIds = new Set();
+
+function markAsSaved(idx) {{
+  savedIds.add(idx);
+  const item = document.querySelector(`[data-idx="${{idx}}"]`);
+  if (!item) return;
+  // チェックボックスを非表示にして保存済みバッジを表示
+  const wrap = item.querySelector('.check-wrap');
+  if (wrap) wrap.style.display = 'none';
+  if (!item.querySelector('.saved-badge')) {{
+    const badge = document.createElement('div');
+    badge.className = 'saved-badge';
+    badge.textContent = '✅ 保存済み';
+    item.insertBefore(badge, item.firstChild);
+  }}
+}}
+
 async function saveChecked() {{
   const checkboxes = document.querySelectorAll('#all-articles input[type=checkbox]:checked');
   if (checkboxes.length === 0) return;
   const articles = [];
+  const idxList = [];
   checkboxes.forEach(cb => {{
     const idx = parseInt(cb.id.replace('chk-', ''));
     articles.push(ARTICLES[idx]);
+    idxList.push(idx);
   }});
   const btn = document.getElementById('save-btn');
   btn.disabled = true;
@@ -636,7 +667,8 @@ async function saveChecked() {{
       body: JSON.stringify({{ articles }})
     }});
     btn.textContent = '✅ 保存しました';
-    checkboxes.forEach(cb => {{ cb.checked = false; }});
+    // 保存済みバッジを付与
+    idxList.forEach(idx => markAsSaved(idx));
     updateCount();
     setTimeout(() => {{
       btn.textContent = '📥 スプレッドシートに保存';
@@ -693,7 +725,7 @@ def main():
 
     candidates = [a for a in all_articles if keyword_score(a) > 0]
     candidates.sort(key=keyword_score, reverse=True)
-    candidates = candidates[:40]
+    candidates = candidates[:60]
     print(f"  → キーワード候補: {len(candidates)}件")
 
     print(f"[{datetime.now().strftime('%H:%M:%S')}] Geminiで分析・翻訳中...")
