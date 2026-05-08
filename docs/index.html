@@ -5,182 +5,511 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>デイリーニュースダイジェスト — 2026年05月08日（Fri）</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&family=Noto+Sans+JP:wght@400;500&display=swap');
-
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@700&display=swap');
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --ink: #1a1a2e;
-      --paper: #faf8f3;
-      --accent: #c8570a;
-      --accent2: #2d6a4f;
-      --rule: #d4c5a9;
-      --muted: #7a6f5e;
-      --card-bg: #ffffff;
+      --bg: #0f1117; --bg2: #141824; --bg3: #1a1f2e;
+      --fg: #e8e4dc; --fg2: #b0aaa4; --fg3: #5a6070;
+      --accent: #6b9fff; --rule: #252a3a;
+    }
+    body { font-family:'Noto Sans JP',sans-serif; background:var(--bg); color:var(--fg); line-height:1.7; }
+    a { color:var(--accent); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+
+    /* Header */
+    .site-header {
+      position:sticky; top:0; z-index:100;
+      background:var(--bg); border-bottom:1px solid var(--rule);
+      padding:16px 20px; display:flex; align-items:center; justify-content:space-between;
+    }
+    .site-logo { font-size:13px; font-weight:700; letter-spacing:.15em; color:var(--accent); }
+    .site-date { font-size:12px; color:var(--fg3); }
+    .back-btn {
+      display:none; background:none; border:1px solid var(--rule);
+      color:var(--fg3); padding:5px 12px; border-radius:6px; cursor:pointer; font-size:12px;
+    }
+    .back-btn.visible { display:block; }
+
+    /* Pages */
+    .page { display:none; max-width:760px; margin:0 auto; padding:24px 20px 60px; }
+    .page.active { display:block; }
+
+    /* Overall summary */
+    .summary-card {
+      background:linear-gradient(135deg,var(--bg2),var(--bg3));
+      border:1px solid var(--rule); border-radius:12px;
+      padding:20px 24px; margin-bottom:24px;
+    }
+    .summary-label {
+      font-size:10px; font-weight:700; letter-spacing:.2em;
+      color:var(--accent); text-transform:uppercase; margin-bottom:10px;
+    }
+    .summary-text { font-size:14px; line-height:1.9; color:var(--fg2); }
+
+    /* Category cards */
+    .section-head {
+      font-size:11px; font-weight:700; letter-spacing:.18em;
+      color:var(--fg3); text-transform:uppercase;
+      border-bottom:1px solid var(--rule); padding-bottom:8px; margin-bottom:14px;
+    }
+    .cat-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:28px; }
+    .cat-card {
+      background:var(--bg2); border-radius:10px; padding:16px 18px;
+      cursor:pointer; transition:background .15s;
+    }
+    .cat-card:hover { background:var(--bg3); }
+    .cat-card-head { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+    .cat-icon { font-size:20px; }
+    .cat-name { font-size:13px; font-weight:600; flex:1; }
+    .cat-count {
+      font-size:11px; color:var(--fg3);
+      background:var(--rule); padding:2px 8px; border-radius:10px;
+    }
+    .cat-trend { font-size:12px; color:var(--fg3); line-height:1.7; }
+
+    /* Article items */
+    .article-item {
+      background:var(--bg2); border-radius:8px;
+      padding:14px 18px; margin-bottom:10px; cursor:pointer; transition:background .15s;
+    }
+    .article-item:hover { background:var(--bg3); }
+    .article-meta { display:flex; gap:10px; font-size:11px; color:var(--fg3); margin-bottom:5px; flex-wrap:wrap; }
+    .art-stars { color:#c8a400; letter-spacing:-1px; }
+    .article-title { font-size:14px; font-weight:500; color:var(--fg); line-height:1.5; margin-bottom:5px; }
+    .article-summary { font-size:12px; color:var(--fg3); line-height:1.65; }
+    .no-news { text-align:center; color:var(--fg3); padding:40px; }
+
+    /* Category page */
+    .cat-page-head { margin-bottom:20px; }
+    .cat-page-icon { font-size:28px; margin-bottom:6px; }
+    .cat-page-name { font-size:20px; font-weight:700; margin-bottom:16px; }
+    .cat-summary-box {
+      background:var(--bg2); border:1px solid var(--rule);
+      border-radius:10px; padding:16px 18px; margin-bottom:20px;
+    }
+    .cat-summary-label {
+      font-size:10px; font-weight:700; letter-spacing:.18em;
+      color:var(--accent); text-transform:uppercase; margin-bottom:8px;
+    }
+    .cat-summary-text { font-size:13px; color:var(--fg2); line-height:1.85; }
+
+    /* Article detail */
+    .detail-cat { font-size:11px; font-weight:600; margin-bottom:8px; }
+    .detail-title { font-size:18px; font-weight:700; line-height:1.5; margin-bottom:6px; }
+    .detail-orig { font-size:11px; color:var(--fg3); font-style:italic; margin-bottom:12px; }
+    .detail-meta { font-size:11px; color:var(--fg3); margin-bottom:16px; display:flex; gap:12px; }
+    .detail-body {
+      background:var(--bg2); border:1px solid var(--rule);
+      border-radius:10px; padding:16px 18px;
+      font-size:13.5px; line-height:1.85; color:#9098a8; margin-bottom:16px;
+    }
+    .detail-orig-body {
+      margin-top:12px; padding-top:10px; border-top:1px solid var(--rule);
+      font-size:12px; color:#3a4050;
+    }
+    .detail-orig-label { font-size:10px; color:var(--fg3); margin-bottom:4px; letter-spacing:.1em; }
+    .source-link {
+      display:inline-flex; align-items:center; gap:5px;
+      font-size:11px; color:var(--accent); margin-top:10px;
+      border:1px solid #1a2f5a; border-radius:5px; padding:4px 10px;
     }
 
-    body {
-      font-family: 'Noto Sans JP', sans-serif;
-      background: var(--paper);
-      color: var(--ink);
-      line-height: 1.7;
-      padding: 0 16px 60px;
+    /* Deep dive */
+    .deep-card {
+      background:linear-gradient(135deg,var(--bg2),#1a2030);
+      border:1px solid #2a3a5a; border-radius:12px; padding:20px 22px;
     }
-
-    header {
-      border-bottom: 3px double var(--ink);
-      padding: 32px 0 20px;
-      margin-bottom: 32px;
-      text-align: center;
+    .deep-label {
+      font-size:10px; font-weight:700; letter-spacing:.2em;
+      color:var(--accent); text-transform:uppercase; margin-bottom:12px;
     }
-
-    header .masthead {
-      font-family: 'Noto Serif JP', serif;
-      font-size: clamp(1.4rem, 4vw, 2.2rem);
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      color: var(--ink);
+    .deep-text { font-size:13.5px; line-height:1.95; color:var(--fg2); }
+    .deep-btn {
+      background:#1a2f5a; border:none; color:var(--accent);
+      padding:8px 16px; border-radius:6px; cursor:pointer; font-size:13px;
     }
+    .deep-loading { font-size:13px; color:var(--fg3); }
 
-    header .sub {
-      font-size: 0.85rem;
-      color: var(--muted);
-      margin-top: 6px;
-      letter-spacing: 0.08em;
+    /* Save bar */
+    .save-bar {
+      position:fixed; bottom:0; left:0; right:0;
+      background:var(--bg2); border-top:1px solid var(--rule);
+      padding:12px 20px; display:flex; align-items:center; justify-content:space-between;
+      z-index:200;
     }
-
-    .stats-bar {
-      display: flex;
-      justify-content: center;
-      gap: 24px;
-      font-size: 0.8rem;
-      color: var(--muted);
-      margin-top: 12px;
-      padding-top: 12px;
-      border-top: 1px solid var(--rule);
+    .save-count { font-size:13px; color:var(--fg3); }
+    .save-btn {
+      background:var(--accent); border:none; color:#fff;
+      padding:10px 24px; border-radius:8px; cursor:pointer;
+      font-size:14px; font-weight:700;
     }
-
-    .stats-bar span { display: flex; align-items: center; gap: 4px; }
-
-    main {
-      max-width: 860px;
-      margin: 0 auto;
-    }
-
-    .category {
-      margin-bottom: 40px;
-    }
-
-    .category h2 {
-      font-family: 'Noto Serif JP', serif;
-      font-size: 1.15rem;
-      font-weight: 700;
-      border-left: 4px solid var(--accent);
-      padding-left: 12px;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .category h2 .count {
-      font-size: 0.75rem;
-      font-family: 'Noto Sans JP', sans-serif;
-      font-weight: 400;
-      color: var(--muted);
-      background: var(--rule);
-      padding: 2px 8px;
-      border-radius: 10px;
-    }
-
-    .card {
-      background: var(--card-bg);
-      border: 1px solid var(--rule);
-      border-radius: 6px;
-      padding: 16px 20px;
-      margin-bottom: 12px;
-      transition: box-shadow 0.2s;
-    }
-
-    .card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
-
-    .card-meta {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 0.75rem;
-      color: var(--muted);
-      margin-bottom: 6px;
-      flex-wrap: wrap;
-    }
-
-    .source {
-      font-weight: 500;
-      color: var(--accent2);
-    }
-
-    .stars {
-      color: #c8a400;
-      letter-spacing: -1px;
-    }
-
-    .card h3 {
-      font-size: 0.95rem;
-      font-weight: 500;
-      margin-bottom: 8px;
-      line-height: 1.5;
-    }
-
-    .card h3 a {
-      color: var(--ink);
-      text-decoration: none;
-    }
-
-    .card h3 a:hover { color: var(--accent); text-decoration: underline; }
-
-    .summary-ja {
-      font-size: 0.875rem;
-      color: #3a3530;
-      line-height: 1.75;
-      border-top: 1px solid var(--rule);
-      padding-top: 8px;
-      margin-top: 4px;
-    }
-
-    .no-news {
-      text-align: center;
-      color: var(--muted);
-      padding: 40px;
-      font-size: 0.9rem;
-    }
+    .save-btn:disabled { background:var(--fg3); cursor:not-allowed; }
+    .check-wrap { display:flex; align-items:center; gap:8px; margin-bottom:6px; }
+    .check-wrap input[type=checkbox] { width:18px; height:18px; cursor:pointer; accent-color:var(--accent); }
+    .check-label { font-size:12px; color:var(--fg3); cursor:pointer; }
 
     footer {
-      text-align: center;
-      font-size: 0.75rem;
-      color: var(--muted);
-      margin-top: 48px;
-      padding-top: 16px;
-      border-top: 1px solid var(--rule);
+      text-align:center; font-size:11px; color:var(--fg3);
+      padding:20px; border-top:1px solid var(--rule); margin-top:40px;
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="masthead">📋 デイリーニュースダイジェスト</div>
-    <div class="sub">2026年05月08日（Fri）　｜　GTB・バイオマス・日タイビジネス・為替</div>
-    <div class="stats-bar">
-      <span>📡 取得記事数: 43件</span>
-      <span>🔍 キーワード候補: 0件</span>
-      <span>✅ 掲載: 0件</span>
+
+<header class="site-header">
+  <div class="site-logo">📋 Daily Digest</div>
+  <div class="site-date">2026年05月08日（Fri）</div>
+  <button class="back-btn" id="backBtn" onclick="goBack()">← 戻る</button>
+</header>
+
+<!-- TOP PAGE -->
+<div class="page active" id="page-top">
+  <div class="summary-card">
+    <div class="summary-label">🌐 本日の全体サマリー</div>
+    <div class="summary-text">本日の市場は、為替とタイ経済、国際情勢の三軸で動向が見られます。円相場は政府・日銀による最大4兆円規模の市場介入への強い警戒感から値上がりし、三村財務官の投機けん制発言が続くなど、当局の動向が市場の主要関心事です。一方、タイ経済は中央銀行が成長予測を上方修正し、中東情勢の混乱を乗り切るなど堅調で、5月25日からの景気刺激策登録開始で国内消費が期待されます。しかし、味の素が中東情勢により約300億円の事業利益減少を試算するなど、一部企業には国際情勢の影響が見られます。</div>
+  </div>
+
+  <div class="section-head">カテゴリ別トレンド</div>
+  <div class="cat-grid">
+    
+        <div class="cat-card" onclick="showCategory('日タイ貿易/ビジネス')" style="border-left:4px solid #1d4ed8">
+          <div class="cat-card-head">
+            <span class="cat-icon">🤝</span>
+            <span class="cat-name">日タイ貿易/ビジネス</span>
+            <span class="cat-count">6件</span>
+          </div>
+          <p class="cat-trend">現在のタイ市場は、中東情勢による地政学リスクに対応し、サプライチェーンの再編とリスクヘッジが急務です。観光分野では、インド市場開拓で多様化を図りつつ、旅行者のマナー向上や品質維持への政府の取り組みが加速。国内では景気刺激策が展開され、食品産業では輸出競争力強化のため品質管理が厳格化。実務では、これらリスクとチャンスへの迅速な対応が求められます。</p>
+        </div>
+        <div class="cat-card" onclick="showCategory('為替/金融')" style="border-left:4px solid #7c3aed">
+          <div class="cat-card-head">
+            <span class="cat-icon">💹</span>
+            <span class="cat-name">為替/金融</span>
+            <span class="cat-count">4件</span>
+          </div>
+          <p class="cat-trend">現在の為替市場は、円安に対する政府・日銀の介入警戒感が支配的です。追加4兆円規模介入の可能性が指摘され、当局は介入を明言せず投機を牽制。円相場は急変動が続き、実務上、断続的な介入リスクと当局発言に要警戒です。一方、タイ中銀の成長予測上方修正など、一部新興国経済の堅調さも注目点となっています。</p>
+        </div>
+  </div>
+
+  <div class="section-head">全記事一覧（10件）</div>
+  <div id="all-articles">
+    
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="為替/金融" data-idx="0">
+          <div class="check-wrap">
+            <input type="checkbox" id="chk-0" onchange="updateCount()" onclick="event.stopPropagation()">
+            <label class="check-label" for="chk-0">保存する</label>
+          </div>
+          <div onclick="showArticle(0)">
+            <div class="article-meta">
+              <span class="art-cat" style="color:#7c3aed">💹 為替/金融</span>
+              <span class="art-src">NHK – ビジネス</span>
+              <span class="art-stars">★★★★★</span>
+            </div>
+            <div class="article-title">円相場 ドルに対して値上がり 市場介入への警戒感続く</div>
+            <div class="article-summary">連休明けの7日の東京外国為替市場では、政府・日銀による市場介入への強い警戒感から、円相場がドルに対して値上がりした。USD/JPYの動きは日タイビジネスにも間接的に影響を与えるため、今後の動向が注目される。</div>
+          </div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="為替/金融" data-idx="1">
+          <div class="check-wrap">
+            <input type="checkbox" id="chk-1" onchange="updateCount()" onclick="event.stopPropagation()">
+            <label class="check-label" for="chk-1">保存する</label>
+          </div>
+          <div onclick="showArticle(1)">
+            <div class="article-meta">
+              <span class="art-cat" style="color:#7c3aed">💹 為替/金融</span>
+              <span class="art-src">NHK – ビジネス</span>
+              <span class="art-stars">★★★★★</span>
+            </div>
+            <div class="article-title">政府・日銀 追加で4兆円規模の市場介入の可能性 民間が分析</div>
+            <div class="article-summary">4月30日の市場介入後も円高が進んだ外国為替市場で、民間金融仲介会社は5月1日から6日の間に政府・日銀が追加で4兆円規模の市場介入を行った可能性を分析。USD/JPYの安定に向けた政府の動きが続くことを示唆する。</div>
+          </div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="為替/金融" data-idx="2">
+          <div class="check-wrap">
+            <input type="checkbox" id="chk-2" onchange="updateCount()" onclick="event.stopPropagation()">
+            <label class="check-label" for="chk-2">保存する</label>
+          </div>
+          <div onclick="showArticle(2)">
+            <div class="article-meta">
+              <span class="art-cat" style="color:#7c3aed">💹 為替/金融</span>
+              <span class="art-src">NHK – ビジネス</span>
+              <span class="art-stars">★★★★★</span>
+            </div>
+            <div class="article-title">三村財務官 連休中の円急騰 介入か明言せず 投機をけん制</div>
+            <div class="article-summary">連休中に円相場が急騰した外国為替市場について、三村財務官は7日、政府・日銀による市場介入の有無を明言せず、「特にコメントする必要はない」と述べた。投機的な動きが続く中で、市場をけん制する発言とみられ、USD/JPYの動向に引き続き注意が必要。</div>
+          </div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="為替/金融" data-idx="3">
+          <div class="check-wrap">
+            <input type="checkbox" id="chk-3" onchange="updateCount()" onclick="event.stopPropagation()">
+            <label class="check-label" for="chk-3">保存する</label>
+          </div>
+          <div onclick="showArticle(3)">
+            <div class="article-meta">
+              <span class="art-cat" style="color:#7c3aed">💹 為替/金融</span>
+              <span class="art-src">Bangkok Post – Business</span>
+              <span class="art-stars">★★★★☆</span>
+            </div>
+            <div class="article-title">タイ中央銀行、成長予測を上方修正</div>
+            <div class="article-summary">タイ中央銀行は今年度の経済成長率予測を従来の1.5%から2.1%へ上方修正した。ピタイ総裁は、政府による4000億バーツの借入決定が改善の一因だと述べた。これはタイ経済の健全性を示し、日タイビジネスにも影響する。</div>
+          </div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #1d4ed8" data-cat="日タイ貿易/ビジネス" data-idx="4">
+          <div class="check-wrap">
+            <input type="checkbox" id="chk-4" onchange="updateCount()" onclick="event.stopPropagation()">
+            <label class="check-label" for="chk-4">保存する</label>
+          </div>
+          <div onclick="showArticle(4)">
+            <div class="article-meta">
+              <span class="art-cat" style="color:#1d4ed8">🤝 日タイ貿易/ビジネス</span>
+              <span class="art-src">Bangkok Post – Business</span>
+              <span class="art-stars">★★★★☆</span>
+            </div>
+            <div class="article-title">タイ市場、中東情勢の混乱を乗り切る</div>
+            <div class="article-summary">ムーディーズはタイ経済を楽観的に評価し、金融セクターの強さと国際準備高が要因とされた。アナリストは、タイ証券取引所（SET）が中東情勢下でも回復力を維持していると指摘。タイ経済の安定性は日タイビジネスにとって重要となる。</div>
+          </div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #1d4ed8" data-cat="日タイ貿易/ビジネス" data-idx="5">
+          <div class="check-wrap">
+            <input type="checkbox" id="chk-5" onchange="updateCount()" onclick="event.stopPropagation()">
+            <label class="check-label" for="chk-5">保存する</label>
+          </div>
+          <div onclick="showArticle(5)">
+            <div class="article-meta">
+              <span class="art-cat" style="color:#1d4ed8">🤝 日タイ貿易/ビジネス</span>
+              <span class="art-src">Bangkok Post – Business</span>
+              <span class="art-stars">★★★★☆</span>
+            </div>
+            <div class="article-title">景気刺激策、5月25日に登録開始</div>
+            <div class="article-summary">タイ財務省は、景気刺激策「タイ助けタイプラス」スキームと国家福祉カードプログラムの登録を5月25日に開始すると発表。これにより国内経済の活性化が期待され、日タイビジネス環境にも良い影響を与える可能性がある。</div>
+          </div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #1d4ed8" data-cat="日タイ貿易/ビジネス" data-idx="6">
+          <div class="check-wrap">
+            <input type="checkbox" id="chk-6" onchange="updateCount()" onclick="event.stopPropagation()">
+            <label class="check-label" for="chk-6">保存する</label>
+          </div>
+          <div onclick="showArticle(6)">
+            <div class="article-meta">
+              <span class="art-cat" style="color:#1d4ed8">🤝 日タイ貿易/ビジネス</span>
+              <span class="art-src">Bangkok Post – Business</span>
+              <span class="art-stars">★★★☆☆</span>
+            </div>
+            <div class="article-title">インド人観光客誘致に向けた行動を呼びかけ</div>
+            <div class="article-summary">パタヤのインド人ビジネスコミュニティは、激しい競争と外国人ツアーオペレーターによる不正で信頼が損なわれたインドからの観光客誘致のため、タイ政府に行動を要請。タイの観光業は主要産業であり、日タイビジネス環境にも影響を及ぼす。</div>
+          </div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #1d4ed8" data-cat="日タイ貿易/ビジネス" data-idx="7">
+          <div class="check-wrap">
+            <input type="checkbox" id="chk-7" onchange="updateCount()" onclick="event.stopPropagation()">
+            <label class="check-label" for="chk-7">保存する</label>
+          </div>
+          <div onclick="showArticle(7)">
+            <div class="article-meta">
+              <span class="art-cat" style="color:#1d4ed8">🤝 日タイ貿易/ビジネス</span>
+              <span class="art-src">NHK – ビジネス</span>
+              <span class="art-stars">★★★☆☆</span>
+            </div>
+            <div class="article-title">味の素 中東情勢の影響続けば事業利益が約300億円減少と試算</div>
+            <div class="article-summary">味の素は、中東情勢による包装資材や原料価格高騰を受け、今年度の事業利益が約300億円減少するとの試算を発表。この状況が続けば商品の値上げもあり得るとし、日本企業の海外事業、特に東南アジアでの展開にも間接的な影響を与える可能性。</div>
+          </div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #1d4ed8" data-cat="日タイ貿易/ビジネス" data-idx="8">
+          <div class="check-wrap">
+            <input type="checkbox" id="chk-8" onchange="updateCount()" onclick="event.stopPropagation()">
+            <label class="check-label" for="chk-8">保存する</label>
+          </div>
+          <div onclick="showArticle(8)">
+            <div class="article-meta">
+              <span class="art-cat" style="color:#1d4ed8">🤝 日タイ貿易/ビジネス</span>
+              <span class="art-src">newsclip: タイ経済・企業</span>
+              <span class="art-stars">★★★☆☆</span>
+            </div>
+            <div class="article-title">タイ首相、外国人旅行者の不適切行為に厳格対処を直接指示 トゥクトゥク車内でわいせつ行為</div>
+            <div class="article-summary">タイのプーケット島で外国人観光客による不適切行為の動画が拡散され、タイ政府は法令厳格適用の方針を示した。タイ首相は外国人旅行者の不適切行為に厳格に対処するよう直接指示しており、観光業のイメージ維持と日タイビジネスへの影響を考慮する。</div>
+          </div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #1d4ed8" data-cat="日タイ貿易/ビジネス" data-idx="9">
+          <div class="check-wrap">
+            <input type="checkbox" id="chk-9" onchange="updateCount()" onclick="event.stopPropagation()">
+            <label class="check-label" for="chk-9">保存する</label>
+          </div>
+          <div onclick="showArticle(9)">
+            <div class="article-meta">
+              <span class="art-cat" style="color:#1d4ed8">🤝 日タイ貿易/ビジネス</span>
+              <span class="art-src">newsclip: タイ経済・企業</span>
+              <span class="art-stars">★★★☆☆</span>
+            </div>
+            <div class="article-title">タイ政府、「落果ドリアン」の流通を一斉取り締まり 品質維持へ検査強化</div>
+            <div class="article-summary">タイ農業協同組合省は、ドリアンの品質確保のため東部チャンタブリー県の集荷・梱包施設での検査を強化。未熟果や落果ドリアン計1.4トンが発見されたことを受け、市場への流通防止と品質維持を目指す。タイの農産物輸出に影響し、日タイ貿易にも関連。</div>
+          </div>
+        </div>
+  </div>
+</div>
+
+<!-- CATEGORY PAGE -->
+<div class="page" id="page-cat">
+  <div class="cat-page-head">
+    <div class="cat-page-icon" id="cat-icon"></div>
+    <div class="cat-page-name" id="cat-name"></div>
+    <div class="cat-summary-box">
+      <div class="cat-summary-label">📊 カテゴリトレンド分析</div>
+      <div class="cat-summary-text" id="cat-summary-text"></div>
     </div>
-  </header>
+    <div class="section-head" id="cat-count-head"></div>
+    <div id="cat-articles"></div>
+  </div>
+</div>
 
-  <main>
-    <p class="no-news">本日、関連ニュースは見つかりませんでした。</p>
-  </main>
+<!-- ARTICLE PAGE -->
+<div class="page" id="page-article">
+  <div class="detail-cat" id="det-cat"></div>
+  <div class="detail-title" id="det-title"></div>
+  <div class="detail-orig" id="det-orig"></div>
+  <div class="detail-meta" id="det-meta"></div>
+  <div class="section-head" id="det-body-label"></div>
+  <div class="detail-body" id="det-body"></div>
+  <div class="deep-card">
+    <div class="deep-label">🔬 AI 深掘り分析</div>
+    <div id="deep-content"><button class="deep-btn" onclick="loadDeepDive()">分析を生成</button></div>
+  </div>
+</div>
 
-  <footer>
-    生成: 2026-05-08 09:57 JST　｜　ソース: RSS自動巡回 + Claude AI要約
-  </footer>
+<footer>
+  生成: 2026-05-08 10:34 JST　｜　ソース: RSS自動巡回 + Gemini AI　｜
+  取得: 45件 / 候補: 24件 / 掲載: 10件
+</footer>
+
+<script>
+const ARTICLES = [{"title": "Bank of Thailand revises growth forecast upward", "title_ja": "タイ中央銀行、成長予測を上方修正", "body_ja": "タイ中央銀行は今年度の経済成長率を2.1%と見込んでおり、これは以前の1.5%という予測からの改善である。ピタイ・ラタナコーン総裁によると、政府が4000億バーツを借り入れる決定をしたことが一因となっている。", "summary_ja": "タイ中央銀行は今年度の経済成長率予測を従来の1.5%から2.1%へ上方修正した。ピタイ総裁は、政府による4000億バーツの借入決定が改善の一因だと述べた。これはタイ経済の健全性を示し、日タイビジネスにも影響する。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3251265/bank-of-thailand-revises-growth-forecast-upward", "published": "2026-05-07T05:32:00+00:00", "category": "為替/金融", "relevance_score": 4}, {"title": "円相場 ドルに対して値上がり 市場介入への警戒感続く", "title_ja": "円相場 ドルに対して値上がり 市場介入への警戒感続く", "body_ja": "連休明けの7日の東京外国為替市場、政府・日銀による市場介入への警戒感が根強い中、円相場は、ドルに対して値上がりしました。", "summary_ja": "連休明けの7日の東京外国為替市場では、政府・日銀による市場介入への強い警戒感から、円相場がドルに対して値上がりした。USD/JPYの動きは日タイビジネスにも間接的に影響を与えるため、今後の動向が注目される。", "source": "NHK – ビジネス", "link": "http://www3.nhk.or.jp/news/html/20260507/k10015116121000.html", "published": "2026-05-07T09:12:37+00:00", "category": "為替/金融", "relevance_score": 5}, {"title": "Thai markets weathering Middle East turmoil", "title_ja": "タイ市場、中東情勢の混乱を乗り切る", "body_ja": "ムーディーズによるタイ経済の楽観的な評価は、金融セクターの強さと国の国際準備高を反映している。アナリストによると、タイ証券取引所（SET）も中東での戦争中も回復力を維持している。", "summary_ja": "ムーディーズはタイ経済を楽観的に評価し、金融セクターの強さと国際準備高が要因とされた。アナリストは、タイ証券取引所（SET）が中東情勢下でも回復力を維持していると指摘。タイ経済の安定性は日タイビジネスにとって重要となる。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3251354/thai-markets-weathering-middle-east-turmoil", "published": "2026-05-07T11:11:00+00:00", "category": "日タイ貿易/ビジネス", "relevance_score": 4}, {"title": "政府・日銀 追加で4兆円規模の市場介入の可能性 民間が分析", "title_ja": "政府・日銀 追加で4兆円規模の市場介入の可能性 民間が分析", "body_ja": "4月30日に政府・日銀が市場介入に踏み切った外国為替市場では、その後も急激に円高が進む場面があり、民間の金融仲介会社は、日銀の統計から5月1日から6日の間で4兆円規模の市場介入が行われた可能性があると分析しています。", "summary_ja": "4月30日の市場介入後も円高が進んだ外国為替市場で、民間金融仲介会社は5月1日から6日の間に政府・日銀が追加で4兆円規模の市場介入を行った可能性を分析。USD/JPYの安定に向けた政府の動きが続くことを示唆する。", "source": "NHK – ビジネス", "link": "http://www3.nhk.or.jp/news/html/20260507/k10015116221000.html", "published": "2026-05-07T11:56:12+00:00", "category": "為替/金融", "relevance_score": 5}, {"title": "三村財務官 連休中の円急騰 介入か明言せず 投機をけん制", "title_ja": "三村財務官 連休中の円急騰 介入か明言せず 投機をけん制", "body_ja": "外国為替市場で連休中、円相場が急激に円高方向に動く場面があったことについて、財務省の三村財務官は7日朝、記者団の取材に対し「特にコメントする必要はない」と述べ、政府・日銀が市場介入を実施したかどうか明言を避けたうえで、投機的な動きはなお続いているとして市場をけん制しました。", "summary_ja": "連休中に円相場が急騰した外国為替市場について、三村財務官は7日、政府・日銀による市場介入の有無を明言せず、「特にコメントする必要はない」と述べた。投機的な動きが続く中で、市場をけん制する発言とみられ、USD/JPYの動向に引き続き注意が必要。", "source": "NHK – ビジネス", "link": "http://www3.nhk.or.jp/news/html/20260507/k10015115781000.html", "published": "2026-05-07T02:34:15+00:00", "category": "為替/金融", "relevance_score": 5}, {"title": "Call for action to lure more Indian tourists", "title_ja": "インド人観光客誘致に向けた行動を呼びかけ", "body_ja": "パタヤのインド人ビジネスコミュニティは、激しい地域競争や外国人ツアーオペレーターによる不正行為の影響を受けているインドからの観光客の信頼回復のため、タイ政府に行動を促した。", "summary_ja": "パタヤのインド人ビジネスコミュニティは、激しい競争と外国人ツアーオペレーターによる不正で信頼が損なわれたインドからの観光客誘致のため、タイ政府に行動を要請。タイの観光業は主要産業であり、日タイビジネス環境にも影響を及ぼす。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3251528/call-for-action-to-lure-more-indian-tourists", "published": "2026-05-07T23:40:00+00:00", "category": "日タイ貿易/ビジネス", "relevance_score": 3}, {"title": "Stimulus scheme to open registration on May 25", "title_ja": "景気刺激策、5月25日に登録開始", "body_ja": "財務省は、「タイ助けタイプラス（Thai Chuay Thai Plus）」スキームと国家福祉カードプログラムの登録を5月25日に開始する予定である。", "summary_ja": "タイ財務省は、景気刺激策「タイ助けタイプラス」スキームと国家福祉カードプログラムの登録を5月25日に開始すると発表。これにより国内経済の活性化が期待され、日タイビジネス環境にも良い影響を与える可能性がある。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3251349/stimulus-scheme-to-open-registration-on-may-25", "published": "2026-05-07T11:21:00+00:00", "category": "日タイ貿易/ビジネス", "relevance_score": 4}, {"title": "味の素 中東情勢の影響続けば事業利益が約300億円減少と試算", "title_ja": "味の素 中東情勢の影響続けば事業利益が約300億円減少と試算", "body_ja": "食品大手の「味の素」は、中東情勢を受けて包装資材や原料価格の上昇が見込まれるとして、本業のもうけを示す今年度の事業利益がおよそ300億円減少するという試算を明らかにしました。そのうえで今の状況が続けば、商品の値上げに踏み切る可能性もあるとしています。", "summary_ja": "味の素は、中東情勢による包装資材や原料価格高騰を受け、今年度の事業利益が約300億円減少するとの試算を発表。この状況が続けば商品の値上げもあり得るとし、日本企業の海外事業、特に東南アジアでの展開にも間接的な影響を与える可能性。", "source": "NHK – ビジネス", "link": "http://www3.nhk.or.jp/news/html/20260507/k10015116161000.html", "published": "2026-05-07T09:48:26+00:00", "category": "日タイ貿易/ビジネス", "relevance_score": 3}, {"title": "タイ首相、外国人旅行者の不適切行為に厳格対処を直接指示 トゥクトゥク車内でわいせつ行為", "title_ja": "タイ首相、外国人旅行者の不適切行為に厳格対処を直接指示 トゥクトゥク車内でわいせつ行為", "body_ja": "【タイ】南部ビーチリゾートのプーケット島で外国人の男女がトゥクトゥク車内でわいせつ行為に至り、動画がSNS上で拡散された問題を受け、タイ政府が不適切行為に対して法令を厳格に適用する姿勢を示した。アヌティン・チャーンウィー [&#8230;]", "summary_ja": "タイのプーケット島で外国人観光客による不適切行為の動画が拡散され、タイ政府は法令厳格適用の方針を示した。タイ首相は外国人旅行者の不適切行為に厳格に対処するよう直接指示しており、観光業のイメージ維持と日タイビジネスへの影響を考慮する。", "source": "newsclip: タイ経済・企業", "link": "https://newsclip.be/thai-news/thai-economy/37059", "published": "2026-05-07T15:07:13+00:00", "category": "日タイ貿易/ビジネス", "relevance_score": 3}, {"title": "タイ政府、「落果ドリアン」の流通を一斉取り締まり 品質維持へ検査強化", "title_ja": "タイ政府、「落果ドリアン」の流通を一斉取り締まり 品質維持へ検査強化", "body_ja": "【タイ】農業協同組合省が、ドリアンの品質確保に向けて東部チャンタブリー県の集荷・梱包施設での検査を強化している。同県内で未熟果や強風で落下した「落果ドリアン」計1.4トンが保管されていたことを受けたもので、市場への流通防 [&#8230;]", "summary_ja": "タイ農業協同組合省は、ドリアンの品質確保のため東部チャンタブリー県の集荷・梱包施設での検査を強化。未熟果や落果ドリアン計1.4トンが発見されたことを受け、市場への流通防止と品質維持を目指す。タイの農産物輸出に影響し、日タイ貿易にも関連。", "source": "newsclip: タイ経済・企業", "link": "https://newsclip.be/thai-news/thai-economy/37056", "published": "2026-05-07T15:05:15+00:00", "category": "日タイ貿易/ビジネス", "relevance_score": 3}];
+const CAT_ICONS  = {"ボイラー/産業設備": "🔧", "バイオマス/エネルギー": "🌿", "日タイ貿易/ビジネス": "🤝", "為替/金融": "💹", "その他": "📰"};
+const CAT_COLORS = {"ボイラー/産業設備": "#b45309", "バイオマス/エネルギー": "#2d7a4f", "日タイ貿易/ビジネス": "#1d4ed8", "為替/金融": "#7c3aed", "その他": "#555"};
+const CAT_SUMMARIES = {"為替/金融": "現在の為替市場は、円安に対する政府・日銀の介入警戒感が支配的です。追加4兆円規模介入の可能性が指摘され、当局は介入を明言せず投機を牽制。円相場は急変動が続き、実務上、断続的な介入リスクと当局発言に要警戒です。一方、タイ中銀の成長予測上方修正など、一部新興国経済の堅調さも注目点となっています。", "日タイ貿易/ビジネス": "現在のタイ市場は、中東情勢による地政学リスクに対応し、サプライチェーンの再編とリスクヘッジが急務です。観光分野では、インド市場開拓で多様化を図りつつ、旅行者のマナー向上や品質維持への政府の取り組みが加速。国内では景気刺激策が展開され、食品産業では輸出競争力強化のため品質管理が厳格化。実務では、これらリスクとチャンスへの迅速な対応が求められます。"};
+const GEMINI_KEY = ""; // ← 深掘り分析を使う場合は aistudio.google.com のAPIキーを入力
+const GAS_URL = "https://script.google.com/macros/s/AKfycbz9Nc874Azvh8zqv5BySUGToK01aIkInocGYeqxgyyiJ-fN0YCqIW4h2E9NRkYBQ8bO/exec";
+
+let history = ["top"];
+let currentArticleIdx = null;
+
+function showPage(id) {
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  document.getElementById("page-" + id).classList.add("active");
+  document.getElementById("backBtn").classList.toggle("visible", id !== "top");
+  window.scrollTo(0, 0);
+}
+
+function goBack() {
+  history.pop();
+  const prev = history[history.length - 1];
+  if (prev === "top") showPage("top");
+  else if (prev && prev.startsWith("cat:")) showCategory(prev.slice(4), false);
+}
+
+function showCategory(cat, push=true) {
+  if (push) history.push("cat:" + cat);
+  document.getElementById("cat-icon").textContent = CAT_ICONS[cat] || "📰";
+  document.getElementById("cat-name").textContent = cat;
+  document.getElementById("cat-summary-text").textContent = CAT_SUMMARIES[cat] || "";
+  const arts = ARTICLES.filter(a => a.category === cat).sort((a,b) => b.relevance_score - a.relevance_score);
+  document.getElementById("cat-count-head").textContent = arts.length + "件の記事";
+  document.getElementById("cat-articles").innerHTML = arts.map(a => {
+    const idx = ARTICLES.indexOf(a);
+    const color = CAT_COLORS[cat] || "#555";
+    const stars = "★".repeat(a.relevance_score||3) + "☆".repeat(5-(a.relevance_score||3));
+    return `<div class="article-item" onclick="showArticle(${idx})" style="border-left:3px solid ${color}">
+      <div class="article-meta">
+        <span class="art-src">${a.source}</span>
+        <span class="art-stars">${stars}</span>
+      </div>
+      <div class="article-title">${a.title_ja || a.title}</div>
+      <div class="article-summary">${a.summary_ja || ""}</div>
+    </div>`;
+  }).join("");
+  showPage("cat");
+}
+
+function showArticle(idx, push=true) {
+  if (push) history.push("article:" + idx);
+  currentArticleIdx = idx;
+  const a = ARTICLES[idx];
+  const cat = a.category || "その他";
+  const color = CAT_COLORS[cat] || "#555";
+  document.getElementById("det-cat").innerHTML = `<span style="color:${color}">${CAT_ICONS[cat]||"📰"} ${cat}</span>`;
+  document.getElementById("det-title").textContent = a.title_ja || a.title;
+  document.getElementById("det-orig").textContent = a.title_ja && a.title_ja !== a.title ? "原題: " + a.title : "";
+  document.getElementById("det-meta").innerHTML = `<span>${a.source}</span><span>${(a.published||"").slice(0,16).replace("T"," ")}</span>`;
+  const isTranslated = a.body_ja && a.body_ja !== a.body;
+  document.getElementById("det-body-label").textContent = isTranslated ? "記事本文（日本語訳）" : "記事本文";
+  document.getElementById("det-body").innerHTML =
+    (a.body_ja || a.body || "") +
+    (isTranslated ? `<div class="detail-orig-body"><div class="detail-orig-label">ORIGINAL</div>${a.body}</div>` : "") +
+    `<br><a href="${a.link}" target="_blank" rel="noopener" class="source-link">🔗 元記事を開く</a>`;
+  document.getElementById("deep-content").innerHTML = '<button class="deep-btn" onclick="loadDeepDive()">分析を生成</button>';
+  showPage("article");
+}
+
+function updateCount() {
+  const checked = document.querySelectorAll('#all-articles input[type=checkbox]:checked').length;
+  document.getElementById('save-count').textContent = `チェックした記事: ${checked}件`;
+  document.getElementById('save-btn').disabled = checked === 0;
+}
+
+async function saveChecked() {
+  const checkboxes = document.querySelectorAll('#all-articles input[type=checkbox]:checked');
+  if (checkboxes.length === 0) return;
+  const articles = [];
+  checkboxes.forEach(cb => {
+    const idx = parseInt(cb.id.replace('chk-', ''));
+    articles.push(ARTICLES[idx]);
+  });
+  const btn = document.getElementById('save-btn');
+  btn.disabled = true;
+  btn.textContent = '保存中...';
+  try {
+    await fetch(GAS_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ articles })
+    });
+    btn.textContent = '✅ 保存しました';
+    checkboxes.forEach(cb => { cb.checked = false; });
+    updateCount();
+    setTimeout(() => {
+      btn.textContent = '📥 スプレッドシートに保存';
+    }, 3000);
+  } catch(e) {
+    btn.textContent = 'エラー: ' + e.message;
+    btn.disabled = false;
+  }
+}
+
+async function loadDeepDive() {
+  const a = ARTICLES[currentArticleIdx];
+  document.getElementById("deep-content").innerHTML = '<div class="deep-loading">⟳ 分析中...</div>';
+  if (!GEMINI_KEY) {
+    document.getElementById("deep-content").innerHTML =
+      '<div class="deep-loading">※ 深掘り分析にはAPIキーが必要です。HTMLファイル内の GEMINI_KEY を設定してください。</div>';
+    return;
+  }
+  try {
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`, {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ contents:[{ parts:[{ text:
+        `以下のニュース記事を深掘り分析してください（250〜300字、文章形式）。\n①市場・業界への示唆\n②タイのボイラー・バイオマス事業または日タイ貿易への影響\n③今後の注目点\n\n【タイトル】${a.title_ja||a.title}\n【本文】${a.body_ja||a.body}\n【カテゴリ】${a.category}`
+      }]}]})
+    });
+    const data = await res.json();
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "分析に失敗しました。";
+    document.getElementById("deep-content").innerHTML = `<div class="deep-text">${text}</div>`;
+  } catch(e) {
+    document.getElementById("deep-content").innerHTML = `<div class="deep-loading">エラー: ${e.message}</div>`;
+  }
+}
+</script>
+
+<div class="save-bar">
+  <div class="save-count" id="save-count">チェックした記事: 0件</div>
+  <button class="save-btn" id="save-btn" onclick="saveChecked()" disabled>📥 スプレッドシートに保存</button>
+</div>
 </body>
 </html>
