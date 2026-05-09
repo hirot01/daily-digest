@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>デイリーニュースダイジェスト — 2026年05月09日（Sat）</title>
+  <title>デイリーニュースダイジェスト — 2026年05月10日（Sun）</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -166,9 +166,12 @@
     }
     .deep-text { font-size:13.5px; line-height:1.95; color:var(--fg2); }
     .deep-btn {
-      background:var(--accent); border:none; color:#fff;
-      padding:9px 20px; border-radius:8px; cursor:pointer; font-size:13px; font-weight:600;
+      background:#1a56db; border:none; color:#fff;
+      padding:10px 22px; border-radius:8px; cursor:pointer; font-size:13px; font-weight:600;
+      display:inline-flex; align-items:center; gap:6px;
+      box-shadow:0 2px 8px rgba(26,86,219,.25); transition:all .15s;
     }
+    .deep-btn:hover { background:#1e40af; transform:translateY(-1px); }
     .deep-loading { font-size:13px; color:var(--fg3); }
 
     /* Save bar */
@@ -208,7 +211,7 @@
   <div class="nav-center">
     <button class="nav-arrow" id="prevBtn" onclick="goToDate('prev')" title="前日">‹</button>
     <button class="date-btn" onclick="toggleCalendar()" title="カレンダー">
-      📅 2026年05月09日（Sat）
+      📅 2026年05月10日（Sun）
     </button>
     <button class="nav-arrow" id="nextBtn" onclick="goToDate('next')" title="翌日">›</button>
   </div>
@@ -241,153 +244,150 @@
 <div class="page active" id="page-top">
   <div class="trend-card">
     <div class="trend-label">🌍 今日の世界トレンド</div>
-    <div class="trend-text">今日は**国際情勢の緊迫**と、**経済・テクノロジーの動向**が主要テーマです。
-
-中東での米イラン武力衝突懸念や露ウ停戦提案など国際政治の緊張が続く一方、米国は好調な雇用で株価が最高値を更新。半導体株高が経済を牽引し、AIインフレやサイバー攻撃、新製品・サービス発表がテクノロジー界の動向を左右しています。公衆衛生上の国際連携や米国防総省のUFO資料公開も関心を呼んでいます。</div>
+    <div class="trend-text">今日は**イランを巡る中東情勢の緊迫化と国際関係の動向**、そして**テクノロジー戦略と産業構造の変化**が主要テーマです。イランの石油流出や米軍のタンカー攻撃で中東の緊張が高まり、ロシアの軍事力低下や日中関係の動向も注視されます。国内ではAI・半導体分野のリスキリング支援、自動車産業の苦境など、技術革新と国際競争の中での経済・産業転換が今日の主要な動きです。</div>
   </div>
   <div class="summary-card">
     <div class="summary-label">📋 本日の関連ニュースサマリー</div>
-    <div class="summary-text">日タイビジネスでは、地政学リスク継続と市場活性化が進んでいます。中東情勢起因の原油高警戒やアジアへの供給不安、供給源多様化は継続的な動きです。タイではThaifex 2026の1300億バーツ目標、空港旅客サービス料が2026年から1120バーツへ53%引き上げられるなど、市場活性化が続くでしょう。タイの新中央鉄道路線の前進や銀行手数料7月までの標準化、米トランプ大統領の中国訪問計画は新たなトピックです。ソニーとTSMCの提携合意、ニンテンドースイッチ2の1万円値上げは半導体市場の変化と企業戦略の進展を表し、円安継続下での対応が求められます。</div>
+    <div class="summary-text">エネルギー市場では原油高を巡る地政学リスクが継続し、中国の4月輸出額14%増とその影響、東南アジアのホルムズ危機脆弱性やロシア傾倒が懸念される。今日新たに、トランプ大統領の5月14日からの中国訪問と習主席会談、10%関税措置の控訴が報じられ、米中関係の動きが具体化した。企業動向では、ソニーGが通期当期益1兆1600億円、ニコンが30年度売上1兆円を目指す新中計を発表。NTTデータグループ・ドコモFGの社長交代も新たなトピックだ。三菱自もASEAN回復で増収増益を見込むなど、各社の具体的な業績見通しが示され、進展が見られる。</div>
   </div>
 
   <div class="section-head">カテゴリ別トレンド</div>
   <div class="cat-grid">
     
-        <div class="cat-card" onclick="showCategory('日タイ貿易/マクロ')" style="border-left:4px solid #7c3aed">
-          <div class="cat-card-head">
-            <span class="cat-icon">🤝</span>
-            <span class="cat-name">日タイ貿易/マクロ</span>
-            <span class="cat-count">14件</span>
-          </div>
-          <p class="cat-trend">継続トレンドとして、国際情勢の不安定化（米中対立、中東・ウクライナ情勢）、資源・サプライチェーンリスク、そして円安基調が継続しています。
-新規動向では、タイがタイフェックス目標設定、空港利用料大幅値上げ、銀行手数料標準化など、貿易・観光・国内経済の具体的な動きを加速。米雇用統計の詳細や過去の貿易摩擦判決も報じられ、マクロ経済の多角的な情報が増加しています。</p>
-        </div>
         <div class="cat-card" onclick="showCategory('企業/ビジネス動向')" style="border-left:4px solid #be123c">
           <div class="cat-card-head">
             <span class="cat-icon">🏭</span>
             <span class="cat-name">企業/ビジネス動向</span>
-            <span class="cat-count">12件</span>
+            <span class="cat-count">4件</span>
           </div>
-          <p class="cat-trend">継続トレンドとして、中東情勢が企業業績（トヨタ、三菱自）やグローバルサプライチェーンに与える影響、及び半導体価格高騰が引き続き顕著です。
-
-新規動向としては、5Gが企業収益に貢献し始め（AIS、True）、新中央鉄道のようなインフラ投資が具体化。ソニーのTSMCとの技術提携、ニコン等の新成長戦略、富士通・日立の家電ブランド戦略に見られるように、企業が新技術開発と事業構造改革へ注力する動きが鮮明になっています。</p>
+          <p class="cat-trend">継続トレンドとして、企業業績発表が続く中、三菱自がASEAN販売回復を見込む。新規動向は、ソニーGのゲーム・センサー改善、ニコンの露光装置・3Dプリンター重点戦略、NTTデータの経営刷新と成長投資加速など、各社が特定事業や技術領域に注力し、将来への「攻め」の経営戦略を明確化している点が目立つ。</p>
+        </div>
+        <div class="cat-card" onclick="showCategory('日タイ貿易/マクロ')" style="border-left:4px solid #7c3aed">
+          <div class="cat-card-head">
+            <span class="cat-icon">🤝</span>
+            <span class="cat-name">日タイ貿易/マクロ</span>
+            <span class="cat-count">3件</span>
+          </div>
+          <p class="cat-trend">新規動向として、ロシア・ウクライナ軍事侵攻とトランプ政権の対中関税控訴・訪中が浮上。継続トレンドは、中東情勢緊迫化による原油高と供給網混乱、それらが日本の自動車産業等に与える業績影響、及びロシア産原油の東南アジアへの影響だ。</p>
         </div>
         <div class="cat-card" onclick="showCategory('エネルギー市場')" style="border-left:4px solid #0369a1">
           <div class="cat-card-head">
             <span class="cat-icon">⚡</span>
             <span class="cat-name">エネルギー市場</span>
-            <span class="cat-count">6件</span>
+            <span class="cat-count">2件</span>
           </div>
-          <p class="cat-trend">中東情勢緊迫化による原油高騰圧力とアジアへの打撃は継続トレンド。供給源多様化（ナイジェリア、ロシア、ブラジル）が加速する。新規動向は、インド企業の燃料価格据え置きによる巨額損失とブラジルの緊急供給源化計画の具体化。供給不安が実体経済へ波及し、長期的なサプライチェーン再編の動きが顕著だ。</p>
+          <p class="cat-trend">**継続トレンド：** 中東情勢由来の原油高と供給不安、それがアジアへ与える打撃、及び東南アジアのロシア原油傾倒による脆弱性は継続的な懸念。
+
+**新規動向：** これに加え、本日の記事では中国の輸出増加にも関わらず、原油高がその持続性に影を落とし始めた点が新たに焦点化。供給不安がサプライチェーンだけでなく、国際貿易構造全体に具体的な打撃を与え始める兆候が見られる。</p>
         </div>
   </div>
 
-  <div class="section-head">全記事一覧（32件）</div>
+  <div class="section-head">全記事一覧（9件）</div>
   <div id="all-articles">
     
-        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="0">
+        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="0">
           <div class="check-wrap">
             <input type="checkbox" id="chk-0" onchange="updateCount()" onclick="event.stopPropagation()">
             <label class="check-label" for="chk-0">保存する</label>
           </div>
           <div onclick="showArticle(0)">
             <div class="article-meta">
-              <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
-              <span class="art-src">Bangkok Post – Business</span>
+              <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
+              <span class="art-src">Google: 原油 アジア</span>
               <span class="art-stars">★★★★★</span>
             </div>
-            <div class="article-title">CMAN、世界のサプライチェーン混乱の中、地域拡大計画を推進</div>
-            <div class="article-summary">タイの石灰製品大手CMANは、世界的なエネルギー混乱下での収益維持のため事業戦略を調整し、地域拡大を推進。グローバルサプライチェーンの課題に対応している。</div>
+            <div class="article-title">東南アジア、ホルムズ危機で露呈したもろさ 原油調達でロシア傾倒も [米・イスラエルのイラン攻撃 イラン情勢]</div>
+            <div class="article-summary">東南アジアはホルムズ危機により原油調達の脆弱性を露呈し、ロシアへの依存度を高めている。米・イスラエルによるイラン攻撃とイラン情勢が背景にあり、東南アジアのエネルギー安全保障に大きな影響を与える。</div>
           </div>
         </div>
-        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="1">
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="1">
           <div class="check-wrap">
             <input type="checkbox" id="chk-1" onchange="updateCount()" onclick="event.stopPropagation()">
             <label class="check-label" for="chk-1">保存する</label>
           </div>
           <div onclick="showArticle(1)">
             <div class="article-meta">
-              <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
-              <span class="art-src">日経ビジネス</span>
+              <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+              <span class="art-src">日刊工業新聞</span>
               <span class="art-stars">★★★★★</span>
             </div>
-            <div class="article-title">産油国ナイジェリアがホルムズ危機で大注目　日本の新たな調達先に (菅野泰夫のズームイン・ズームアウト)</div>
-            <div class="article-summary">中東情勢悪化でホルムズ海峡が事実上封鎖される中、産油国ナイジェリアが原油の代替調達先として注目されている。日本にとっても新たな供給源となる可能性があり、エネルギー安全保障の観点から重要性が増す。</div>
+            <div class="article-title">三菱自の通期予想は増収増益　ASEANなどで販売回復見込む</div>
+            <div class="article-summary">三菱自動車は通期予想で増収増益を見込み、特にASEAN地域での販売回復を期待している。日本の自動車メーカーによる東南アジア市場の動向を示唆し、地域の経済および製造業に与える影響は大きい。</div>
           </div>
         </div>
-        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="2">
+        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="2">
           <div class="check-wrap">
             <input type="checkbox" id="chk-2" onchange="updateCount()" onclick="event.stopPropagation()">
             <label class="check-label" for="chk-2">保存する</label>
           </div>
           <div onclick="showArticle(2)">
             <div class="article-meta">
-              <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
-              <span class="art-src">Bangkok Post – Business</span>
-              <span class="art-stars">★★★★★</span>
+              <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
+              <span class="art-src">NHK – アジア太平洋</span>
+              <span class="art-stars">★★★★☆</span>
             </div>
-            <div class="article-title">緊急債務令の理解</div>
-            <div class="article-summary">タイのチャーンヴィーラクーン首相は、エネルギー危機への対応と国のエネルギー転換支援のため、財務省に資金借入を許可する緊急債務令を発令。首相として6人目。</div>
+            <div class="article-title">中国 4月の輸出額は14％余増加 原油高の影響が今後の焦点に</div>
+            <div class="article-summary">中国の4月輸出額は前年比14%超増加し、東南アジア向けが大きく伸びた。今後、イラン情勢による原油価格高止まりが経済にどう影響するかが焦点。東南アジアの貿易動向とエネルギー市場の国際情勢が注目される。</div>
           </div>
         </div>
-        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="3">
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="3">
           <div class="check-wrap">
             <input type="checkbox" id="chk-3" onchange="updateCount()" onclick="event.stopPropagation()">
             <label class="check-label" for="chk-3">保存する</label>
           </div>
           <div onclick="showArticle(3)">
             <div class="article-meta">
-              <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
-              <span class="art-src">NHK – ビジネス</span>
-              <span class="art-stars">★★★★★</span>
+              <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
+              <span class="art-src">NHK – アジア太平洋</span>
+              <span class="art-stars">★★★★☆</span>
             </div>
-            <div class="article-title">三菱自動車工業 中東影響も今年度は2.5倍の増益見通し</div>
-            <div class="article-summary">三菱自動車工業は今年度、中東情勢で営業利益が300億円減少するも、東南アジアでの販売回復により最終利益は前年度比2.5倍の増益を見込む。日本企業の東南アジア事業と国際情勢の影響を示唆。</div>
+            <div class="article-title">トランプ政権 10％関税措置の違法判断を不服として控訴</div>
+            <div class="article-summary">米トランプ政権が2月に発動した10%関税措置について、国際貿易裁判所が違法判断を下した。これに対しトランプ政権は不服として連邦控訴裁判所に控訴。この貿易政策は国際貿易全体に影響を及ぼし、マクロ経済動向を左右する可能性がある。</div>
           </div>
         </div>
-        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="4">
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="4">
           <div class="check-wrap">
             <input type="checkbox" id="chk-4" onchange="updateCount()" onclick="event.stopPropagation()">
             <label class="check-label" for="chk-4">保存する</label>
           </div>
           <div onclick="showArticle(4)">
             <div class="article-meta">
-              <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
-              <span class="art-src">Google: 原油 アジア</span>
-              <span class="art-stars">★★★★★</span>
+              <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
+              <span class="art-src">NHK – アジア太平洋</span>
+              <span class="art-stars">★★★★☆</span>
             </div>
-            <div class="article-title">原油一段高に警戒広がる、在庫減に現物不足 最大の打撃はアジアに - 日本経済新聞</div>
-            <div class="article-summary">原油価格の一段高への警戒感が広がっており、在庫減少と現物不足が背景。この状況はアジア地域に最大の打撃を与える可能性があり、エネルギー市場の動向が注目される。</div>
+            <div class="article-title">トランプ大統領 5月14日から中国訪問 習主席と会談へ</div>
+            <div class="article-summary">トランプ米大統領は5月14、15日に中国を訪問し、習近平国家主席と首脳会談を行う。経済・貿易関係、台湾問題に加え、イラン情勢についても意見交換がされる見通し。国際情勢および貿易動向に影響を与える重要な会談となる。</div>
           </div>
         </div>
-        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="5">
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="5">
           <div class="check-wrap">
             <input type="checkbox" id="chk-5" onchange="updateCount()" onclick="event.stopPropagation()">
             <label class="check-label" for="chk-5">保存する</label>
           </div>
           <div onclick="showArticle(5)">
             <div class="article-meta">
-              <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
-              <span class="art-src">Google: crude oil Asia</span>
-              <span class="art-stars">★★★★★</span>
+              <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
+              <span class="art-src">NHK – アジア太平洋</span>
+              <span class="art-stars">★★★☆☆</span>
             </div>
-            <div class="article-title">ロシア産原油は東南アジアの命綱となるのか？</div>
-            <div class="article-summary">東南アジアにおけるロシア産原油の輸入が拡大し、地域のエネルギー供給の「命綱」となり得るかどうかが注目されている。エネルギー安全保障と国際的な原油調達戦略に影響。</div>
+            <div class="article-title">【随時更新】ロシア ウクライナに軍事侵攻（5月10日の動き）</div>
+            <div class="article-summary">ロシアによるウクライナ軍事侵攻が続き、各地で戦闘が発生し多数の市民が国外へ避難。ウクライナ情勢は関係各国の外交や国際的な経済動向に影響を与える国際情勢の重大な要素であり、今後の推移が注視される。</div>
           </div>
         </div>
-        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="6">
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="6">
           <div class="check-wrap">
             <input type="checkbox" id="chk-6" onchange="updateCount()" onclick="event.stopPropagation()">
             <label class="check-label" for="chk-6">保存する</label>
           </div>
           <div onclick="showArticle(6)">
             <div class="article-meta">
-              <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
-              <span class="art-src">NHK – アジア太平洋</span>
-              <span class="art-stars">★★★★★</span>
+              <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+              <span class="art-src">日刊工業新聞</span>
+              <span class="art-stars">★★★☆☆</span>
             </div>
-            <div class="article-title">米イラン 海峡付近で衝突 協議めぐる米提案にイランの出方は</div>
-            <div class="article-summary">5月8日朝、米イランがホルムズ海峡付近で衝突。双方の主張が対立する中、トランプ大統領は停戦維持と協議での早期合意を要求。中東情勢緊迫化とエネルギー安全保障への影響が懸念される。</div>
+            <div class="article-title">ソニーG、通期見通し当期益1兆1600億円　ゲーム・イメージセンサー事業改善</div>
+            <div class="article-summary">ソニーグループは、通期の当期利益見通しを1兆1600億円と発表。ゲームおよびイメージセンサー事業の改善が見込まれる。日本の大手製造業の業績動向として注目され、関連サプライチェーンへの影響も考えられる。</div>
           </div>
         </div>
         <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="7">
@@ -398,371 +398,26 @@
           <div onclick="showArticle(7)">
             <div class="article-meta">
               <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
-              <span class="art-src">NHK – ビジネス</span>
-              <span class="art-stars">★★★★★</span>
+              <span class="art-src">日刊工業新聞</span>
+              <span class="art-stars">★★★☆☆</span>
             </div>
-            <div class="article-title">トヨタ 初の売り上げ50兆円超 今年度も減益へ 中東情勢が影響</div>
-            <div class="article-summary">トヨタ自動車の2025年度決算は売上高が初の50兆円超えも減益。今年度も営業利益3兆円と減益を見込み、中東情勢悪化が6700億円の押し下げ要因となる見通し。関税措置も影響。</div>
+            <div class="article-title">ニコンの新中計、30年度に売上収益1兆円　露光装置・3Dプリンターに重点</div>
+            <div class="article-summary">ニコンは2030年度までに売上収益1兆円を目指す新中期経営計画を発表。露光装置と3Dプリンター事業に重点を置く方針。日本の主要製造業における事業戦略であり、将来の産業動向を示す重要な動きと言える。</div>
           </div>
         </div>
-        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="8">
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="8">
           <div class="check-wrap">
             <input type="checkbox" id="chk-8" onchange="updateCount()" onclick="event.stopPropagation()">
             <label class="check-label" for="chk-8">保存する</label>
           </div>
           <div onclick="showArticle(8)">
             <div class="article-meta">
-              <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
-              <span class="art-src">Google: crude oil Asia</span>
-              <span class="art-stars">★★★★★</span>
-            </div>
-            <div class="article-title">ブラジルはどのようにして2026年にアジアの緊急石油供給源になったのか</div>
-            <div class="article-summary">2026年にブラジルがアジア地域にとって緊急の石油供給源となった経緯が報じられている。アジアのエネルギー安全保障における原油調達先の多様化を示す重要な動向。</div>
-          </div>
-        </div>
-        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="9">
-          <div class="check-wrap">
-            <input type="checkbox" id="chk-9" onchange="updateCount()" onclick="event.stopPropagation()">
-            <label class="check-label" for="chk-9">保存する</label>
-          </div>
-          <div onclick="showArticle(9)">
-            <div class="article-meta">
-              <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
-              <span class="art-src">Bangkok Post – Business</span>
-              <span class="art-stars">★★★★☆</span>
-            </div>
-            <div class="article-title">タイフェックス2026食品見本市、1300億バーツの貿易目標を設定</div>
-            <div class="article-summary">タイフェックス・アヌーガ・アジア2026は、今年1300億バーツ超の貿易額創出を目指す。国際的な食品貿易プラットフォームとしての役割を強化し、タイの世界食品貿易ハブ化を支援する。</div>
-          </div>
-        </div>
-        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="10">
-          <div class="check-wrap">
-            <input type="checkbox" id="chk-10" onchange="updateCount()" onclick="event.stopPropagation()">
-            <label class="check-label" for="chk-10">保存する</label>
-          </div>
-          <div onclick="showArticle(10)">
-            <div class="article-meta">
-              <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
-              <span class="art-src">Bangkok Post – Business</span>
-              <span class="art-stars">★★★★☆</span>
-            </div>
-            <div class="article-title">アバディーン、タイへのコミットメントを再確認し、グローバル投資商品を拡大</div>
-            <div class="article-summary">英国大手資産運用会社アバディーン・インベストメンツは、複雑な世界情勢下でもアジア太平洋地域を長期成長の鍵と見なし、タイへのコミットメントを再確認。多様なグローバル投資商品を拡大する。</div>
-          </div>
-        </div>
-        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="11">
-          <div class="check-wrap">
-            <input type="checkbox" id="chk-11" onchange="updateCount()" onclick="event.stopPropagation()">
-            <label class="check-label" for="chk-11">保存する</label>
-          </div>
-          <div onclick="showArticle(11)">
-            <div class="article-meta">
-              <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
-              <span class="art-src">NHK – ビジネス</span>
-              <span class="art-stars">★★★★☆</span>
-            </div>
-            <div class="article-title">円相場 ドルに対して値下がり 市場介入警戒も</div>
-            <div class="article-summary">5月8日の東京外国為替市場で、米イラン交渉の不透明感から円売りドル買いが進み、円相場はドルに対し値下がりした。市場では政府・日銀による市場介入への警戒感が広まっている。</div>
-          </div>
-        </div>
-        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="12">
-          <div class="check-wrap">
-            <input type="checkbox" id="chk-12" onchange="updateCount()" onclick="event.stopPropagation()">
-            <label class="check-label" for="chk-12">保存する</label>
-          </div>
-          <div onclick="showArticle(12)">
-            <div class="article-meta">
-              <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
-              <span class="art-src">newsclip: タイ経済・企業</span>
-              <span class="art-stars">★★★★☆</span>
-            </div>
-            <div class="article-title">【更新：6月20日から1120バーツに】タイの主要空港6港、国際線旅客サービス料を2026年から53％引き上げへ</div>
-            <div class="article-summary">タイ主要空港6港の国際線旅客サービス料（PSC）が、6月20日から現行の730バーツから1120バーツへ53%引き上げられる。タイ空港公社社長が発表し、タイへの渡航・ビジネスコストに影響する見込み。</div>
-          </div>
-        </div>
-        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="13">
-          <div class="check-wrap">
-            <input type="checkbox" id="chk-13" onchange="updateCount()" onclick="event.stopPropagation()">
-            <label class="check-label" for="chk-13">保存する</label>
-          </div>
-          <div onclick="showArticle(13)">
-            <div class="article-meta">
-              <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
-              <span class="art-src">Google: crude oil Asia</span>
-              <span class="art-stars">★★★★☆</span>
-            </div>
-            <div class="article-title">インドの石油企業、世界的なエネルギーショックの中で燃料価格を据え置き、3000億ルピーの損失を計上</div>
-            <div class="article-summary">インドの石油企業は、世界的なエネルギーショック下で燃料価格を据え置くため、3000億ルピー（約5400億円）もの損失を計上した。アジア地域のエネルギー市場と政府の価格統制の課題を示す。</div>
-          </div>
-        </div>
-        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="14">
-          <div class="check-wrap">
-            <input type="checkbox" id="chk-14" onchange="updateCount()" onclick="event.stopPropagation()">
-            <label class="check-label" for="chk-14">保存する</label>
-          </div>
-          <div onclick="showArticle(14)">
-            <div class="article-meta">
-              <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
-              <span class="art-src">NHK – アジア太平洋</span>
-              <span class="art-stars">★★★★☆</span>
-            </div>
-            <div class="article-title">米トランプ大統領 5月14日から中国訪問 習主席と会談へ</div>
-            <div class="article-summary">トランプ米大統領は5月14日と15日に中国を訪問し、習近平国家主席と首脳会談を実施予定。経済・貿易、台湾問題、イラン情勢などについて協議し、国際情勢と米中関係に大きな影響を与える。</div>
-          </div>
-        </div>
-        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="15">
-          <div class="check-wrap">
-            <input type="checkbox" id="chk-15" onchange="updateCount()" onclick="event.stopPropagation()">
-            <label class="check-label" for="chk-15">保存する</label>
-          </div>
-          <div onclick="showArticle(15)">
-            <div class="article-meta">
-              <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
-              <span class="art-src">NHK – ビジネス</span>
-              <span class="art-stars">★★★★☆</span>
-            </div>
-            <div class="article-title">ソニー 次世代画像センサーの開発・製造でTSMCと提携合意</div>
-            <div class="article-summary">ソニーグループの半導体事業会社と世界最大の受託生産企業TSMCが、次世代画像センサーの開発・製造で提携に基本合意。日本の主要企業のビジネス動向とサプライチェーン強化の動き。</div>
-          </div>
-        </div>
-        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="16">
-          <div class="check-wrap">
-            <input type="checkbox" id="chk-16" onchange="updateCount()" onclick="event.stopPropagation()">
-            <label class="check-label" for="chk-16">保存する</label>
-          </div>
-          <div onclick="showArticle(16)">
-            <div class="article-meta">
-              <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
-              <span class="art-src">日刊工業新聞</span>
-              <span class="art-stars">★★★★☆</span>
-            </div>
-            <div class="article-title">ニコンの新中計、30年度に売上収益1兆円　露光装置・3Dプリンターに重点</div>
-            <div class="article-summary">ニコンは新たな中期経営計画で、2030年度に売上収益1兆円を目指し、露光装置と3Dプリンター事業に重点を置く方針。日本の産業設備分野における大手企業の戦略転換を示す。</div>
-          </div>
-        </div>
-        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="17">
-          <div class="check-wrap">
-            <input type="checkbox" id="chk-17" onchange="updateCount()" onclick="event.stopPropagation()">
-            <label class="check-label" for="chk-17">保存する</label>
-          </div>
-          <div onclick="showArticle(17)">
-            <div class="article-meta">
-              <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
-              <span class="art-src">日経ビジネス</span>
-              <span class="art-stars">★★★☆☆</span>
-            </div>
-            <div class="article-title">［動画］レアアース中国一強支配　データ解析で明らかに (特集インサイド)</div>
-            <div class="article-summary">EVモーターなどに使われるレアアースは、中国が世界の精錬の9割を握り一強支配。中東危機とは別の供給網要衝で、米中首脳会談の焦点。日本は代替調達や脱レアアース技術で中国依存脱却を急ぐ必要がある。</div>
-          </div>
-        </div>
-        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="18">
-          <div class="check-wrap">
-            <input type="checkbox" id="chk-18" onchange="updateCount()" onclick="event.stopPropagation()">
-            <label class="check-label" for="chk-18">保存する</label>
-          </div>
-          <div onclick="showArticle(18)">
-            <div class="article-meta">
-              <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
-              <span class="art-src">Bangkok Post – Business</span>
-              <span class="art-stars">★★★☆☆</span>
-            </div>
-            <div class="article-title">タイの銀行手数料、7月までに標準化へ</div>
-            <div class="article-summary">タイ銀行は今年7月までに銀行手数料の標準化を導入する計画で、個人および中小企業（SMEs）の金融コスト削減を図る。タイ経済のビジネス環境に影響を与える可能性がある。</div>
-          </div>
-        </div>
-        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="19">
-          <div class="check-wrap">
-            <input type="checkbox" id="chk-19" onchange="updateCount()" onclick="event.stopPropagation()">
-            <label class="check-label" for="chk-19">保存する</label>
-          </div>
-          <div onclick="showArticle(19)">
-            <div class="article-meta">
-              <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
-              <span class="art-src">Bangkok Post – Business</span>
-              <span class="art-stars">★★★☆☆</span>
-            </div>
-            <div class="article-title">AIS、Trueが5G成長を背景に健全な利益を報告</div>
-            <div class="article-summary">タイの通信大手AISとTrue Corporationは、今年第1四半期に5G事業の成長を背景に好調な純利益を報告した。タイの通信産業におけるビジネス動向を示す。</div>
-          </div>
-        </div>
-        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="20">
-          <div class="check-wrap">
-            <input type="checkbox" id="chk-20" onchange="updateCount()" onclick="event.stopPropagation()">
-            <label class="check-label" for="chk-20">保存する</label>
-          </div>
-          <div onclick="showArticle(20)">
-            <div class="article-meta">
-              <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
-              <span class="art-src">NHK – アジア太平洋</span>
-              <span class="art-stars">★★★☆☆</span>
-            </div>
-            <div class="article-title">トランプ大統領 EU自動車関税率25％への引き上げは7月まで猶予</div>
-            <div class="article-summary">トランプ米大統領は、EUからの自動車・トラック関税率を25%に引き上げる方針に対し、今年7月まで猶予する考えを示した。国際貿易政策の動向として注目される。</div>
-          </div>
-        </div>
-        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="21">
-          <div class="check-wrap">
-            <input type="checkbox" id="chk-21" onchange="updateCount()" onclick="event.stopPropagation()">
-            <label class="check-label" for="chk-21">保存する</label>
-          </div>
-          <div onclick="showArticle(21)">
-            <div class="article-meta">
-              <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
-              <span class="art-src">NHK – アジア太平洋</span>
-              <span class="art-stars">★★★☆☆</span>
-            </div>
-            <div class="article-title">米雇用統計 4月の農業分野以外の就業者 前月より大幅に増加</div>
-            <div class="article-summary">4月の米雇用統計で非農業部門就業者が前月比11.5万人の大幅増となり、市場予想を上回った。イラン情勢による物価上昇の中でも米国の雇用は堅調と見られ、国際マクロ経済に影響。</div>
-          </div>
-        </div>
-        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="22">
-          <div class="check-wrap">
-            <input type="checkbox" id="chk-22" onchange="updateCount()" onclick="event.stopPropagation()">
-            <label class="check-label" for="chk-22">保存する</label>
-          </div>
-          <div onclick="showArticle(22)">
-            <div class="article-meta">
-              <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
-              <span class="art-src">NHK – アジア太平洋</span>
-              <span class="art-stars">★★★☆☆</span>
-            </div>
-            <div class="article-title">茂木外相 モロッコ外相と会談 リン鉱石の安定供給へ協力確認</div>
-            <div class="article-summary">茂木外務大臣はモロッコのブリタ外相と会談し、半導体原料となるリン鉱石の日本への安定供給で協力することを確認。重要資源のサプライチェーン確保に向けた日本の取り組み。</div>
-          </div>
-        </div>
-        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="23">
-          <div class="check-wrap">
-            <input type="checkbox" id="chk-23" onchange="updateCount()" onclick="event.stopPropagation()">
-            <label class="check-label" for="chk-23">保存する</label>
-          </div>
-          <div onclick="showArticle(23)">
-            <div class="article-meta">
-              <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
-              <span class="art-src">NHK – アジア太平洋</span>
-              <span class="art-stars">★★★☆☆</span>
-            </div>
-            <div class="article-title">【詳細】ロシア ウクライナに軍事侵攻（5月8日の動き）</div>
-            <div class="article-summary">ロシアによるウクライナ侵攻が続き、各地で戦闘が発生し多数の市民が避難。5月8日の状況は、戦闘の激化と関係各国の外交動向が中心で、国際情勢とエネルギー市場への影響が続く。</div>
-          </div>
-        </div>
-        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="24">
-          <div class="check-wrap">
-            <input type="checkbox" id="chk-24" onchange="updateCount()" onclick="event.stopPropagation()">
-            <label class="check-label" for="chk-24">保存する</label>
-          </div>
-          <div onclick="showArticle(24)">
-            <div class="article-meta">
-              <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
-              <span class="art-src">NHK – アジア太平洋</span>
-              <span class="art-stars">★★★☆☆</span>
-            </div>
-            <div class="article-title">トランプ政権の10％関税「違法」と判断 米国際貿易裁判所</div>
-            <div class="article-summary">米国際貿易裁判所は、トランプ政権が2月に発動した10%の新たな関税措置を違法と判断。連邦最高裁が「相互関税」を無効とした代替措置であり、今後のトランプ政権の控訴の有無が焦点となる。</div>
-          </div>
-        </div>
-        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="25">
-          <div class="check-wrap">
-            <input type="checkbox" id="chk-25" onchange="updateCount()" onclick="event.stopPropagation()">
-            <label class="check-label" for="chk-25">保存する</label>
-          </div>
-          <div onclick="showArticle(25)">
-            <div class="article-meta">
-              <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
-              <span class="art-src">NHK – ビジネス</span>
-              <span class="art-stars">★★★☆☆</span>
-            </div>
-            <div class="article-title">大手企業の決算発表相次ぐ 各社の業績や見通しは【8日まとめ】</div>
-            <div class="article-summary">5月8日、日本大手企業の決算発表が相次ぎ、昨年度業績や今年度見通しが明らかにされた。中東情勢や米国の関税措置が企業業績に影響を与えていると分析されている。</div>
-          </div>
-        </div>
-        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="26">
-          <div class="check-wrap">
-            <input type="checkbox" id="chk-26" onchange="updateCount()" onclick="event.stopPropagation()">
-            <label class="check-label" for="chk-26">保存する</label>
-          </div>
-          <div onclick="showArticle(26)">
-            <div class="article-meta">
-              <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
-              <span class="art-src">NHK – ビジネス</span>
-              <span class="art-stars">★★★☆☆</span>
-            </div>
-            <div class="article-title">「ニンテンドースイッチ2」1万円値上げへ 半導体価格の上昇で</div>
-            <div class="article-summary">任天堂は新型ゲーム機「ニンテンドースイッチ2」の国内専用機種を1万円値上げすると発表。メモリなど半導体価格の高騰が要因で、日本の製造業におけるサプライチェーンコストの課題を浮き彫りに。</div>
-          </div>
-        </div>
-        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="27">
-          <div class="check-wrap">
-            <input type="checkbox" id="chk-27" onchange="updateCount()" onclick="event.stopPropagation()">
-            <label class="check-label" for="chk-27">保存する</label>
-          </div>
-          <div onclick="showArticle(27)">
-            <div class="article-meta">
               <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
               <span class="art-src">日刊工業新聞</span>
               <span class="art-stars">★★★☆☆</span>
             </div>
-            <div class="article-title">ソニーG、通期見通し当期益1兆1600億円　ゲーム・イメージセンサー事業改善</div>
-            <div class="article-summary">ソニーグループは通期見通しで当期利益1兆1600億円を計上。ゲーム事業とイメージセンサー事業の改善が貢献し、日本の大手企業の業績が回復基調にあることを示す。</div>
-          </div>
-        </div>
-        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="28">
-          <div class="check-wrap">
-            <input type="checkbox" id="chk-28" onchange="updateCount()" onclick="event.stopPropagation()">
-            <label class="check-label" for="chk-28">保存する</label>
-          </div>
-          <div onclick="showArticle(28)">
-            <div class="article-meta">
-              <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
-              <span class="art-src">日経ビジネス</span>
-              <span class="art-stars">★★★☆☆</span>
-            </div>
-            <div class="article-title">家電ブランド消す「富士通」と残す「日立」　消費者接点、希薄化リスクも (日の丸電機サバイバル)</div>
-            <div class="article-summary">富士通は2030年度に主力事業「Uvance」で売上高1.5兆円を目指す。日立との家電ブランド戦略の違いを比較しつつ、国内電機・IT各社がAI需要を追い風に構造改革を進める動向を示す。</div>
-          </div>
-        </div>
-        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="29">
-          <div class="check-wrap">
-            <input type="checkbox" id="chk-29" onchange="updateCount()" onclick="event.stopPropagation()">
-            <label class="check-label" for="chk-29">保存する</label>
-          </div>
-          <div onclick="showArticle(29)">
-            <div class="article-meta">
-              <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
-              <span class="art-src">Bangkok Post – Business</span>
-              <span class="art-stars">★★☆☆☆</span>
-            </div>
-            <div class="article-title">新中央鉄道路線が前進</div>
-            <div class="article-summary">タイのスパンブリーとアユタヤを結ぶ新鉄道路線プロジェクトが前進。タイ国有鉄道（SRT）が沿線住民からの意見聴取会を開催し、インフラ開発への動きが活発化している。</div>
-          </div>
-        </div>
-        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="30">
-          <div class="check-wrap">
-            <input type="checkbox" id="chk-30" onchange="updateCount()" onclick="event.stopPropagation()">
-            <label class="check-label" for="chk-30">保存する</label>
-          </div>
-          <div onclick="showArticle(30)">
-            <div class="article-meta">
-              <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
-              <span class="art-src">NHK – アジア太平洋</span>
-              <span class="art-stars">★★☆☆☆</span>
-            </div>
-            <div class="article-title">ASEAN ミャンマー受刑者釈放歓迎も暴力即時停止など求める</div>
-            <div class="article-summary">5月8日、フィリピンで開かれたASEAN首脳会議は、ミャンマー新政権による受刑者釈放を歓迎しつつ、暴力の即時停止を求める議長声明を採択。東南アジア地域の安定化に向けた動き。</div>
-          </div>
-        </div>
-        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="31">
-          <div class="check-wrap">
-            <input type="checkbox" id="chk-31" onchange="updateCount()" onclick="event.stopPropagation()">
-            <label class="check-label" for="chk-31">保存する</label>
-          </div>
-          <div onclick="showArticle(31)">
-            <div class="article-meta">
-              <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
-              <span class="art-src">NHK – アジア太平洋</span>
-              <span class="art-stars">★★☆☆☆</span>
-            </div>
-            <div class="article-title">香港政府 今年度の青少年交流事業 助成対象に日本含まれず</div>
-            <div class="article-summary">日中関係の長期化する悪化を受け、香港政府が助成する青少年交流事業から今年度初めて日本との交流が除外されたと現地メディアが報道。日本の国際関係に影響。</div>
+            <div class="article-title">NTTデータグループ社長に中山氏「成長投資を機動的に実行」、ドコモFG社長には廣井氏</div>
+            <div class="article-summary">NTTデータグループは中山氏を新社長に据え、「成長投資を機動的に実行する」方針。ドコモFG社長には廣井氏が就任。日本の大手IT企業の経営層交代と戦略方向性を示すもので、関連するビジネス動向に影響がある。</div>
           </div>
         </div>
   </div>
@@ -791,20 +446,23 @@
   <div class="section-head" id="det-body-label"></div>
   <div class="detail-body" id="det-body"></div>
   <div class="deep-card">
-    <div class="deep-label">🔬 AI 深掘り分析</div>
-    <div id="deep-content"><button class="deep-btn" onclick="loadDeepDive()">分析を生成</button></div>
+    <div class="deep-label">🔍 もっと調べる</div>
+    <p style="font-size:13px;color:var(--fg2);margin-bottom:12px;line-height:1.7;">
+      Perplexity AIがこの記事のトピックについてウェブ上の最新情報を収集・日本語でまとめます。
+    </p>
+    <button class="deep-btn" id="perplexity-btn" onclick="openPerplexity()">🔍 Perplexityで深掘り</button>
   </div>
 </div>
 
 <footer>
-  生成: 2026-05-09 09:34 JST　｜　ソース: RSS自動巡回 + Gemini AI　｜
-  取得: 75件 / 候補: 46件 / 掲載: 32件
+  生成: 2026-05-10 08:53 JST　｜　ソース: RSS自動巡回 + Gemini AI　｜
+  取得: 35件 / 候補: 12件 / 掲載: 9件
 </footer>
 
 <script>
-const ARTICLES = [{"title": "B130bn trade target set for Thaifex 2026 food exhibition", "title_ja": "タイフェックス2026食品見本市、1300億バーツの貿易目標を設定", "body_ja": "タイフェックス・アヌーガ・アジア2026は今年、1300億バーツを超える貿易額を生み出し、国際的な食品貿易プラットフォームとしての役割を強化し、タイが世界の食品貿易ハブとなる野望を支援すると期待されている。", "summary_ja": "タイフェックス・アヌーガ・アジア2026は、今年1300億バーツ超の貿易額創出を目指す。国際的な食品貿易プラットフォームとしての役割を強化し、タイの世界食品貿易ハブ化を支援する。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3252049/b130bn-trade-target-set-for-thaifex-2026-food-exhibition", "published": "2026-05-08T22:10:00+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 4}, {"title": "CMAN drives regional expansion plan amid global supply chain disruption", "title_ja": "CMAN、世界のサプライチェーン混乱の中、地域拡大計画を推進", "body_ja": "世界的な石灰および石灰誘導体製品の大手メーカーであるケメマン社（CMAN）は、世界的なエネルギー混乱の中で収益性を維持するため、戦略的な事業方向性を調整している。", "summary_ja": "タイの石灰製品大手CMANは、世界的なエネルギー混乱下での収益維持のため事業戦略を調整し、地域拡大を推進。グローバルサプライチェーンの課題に対応している。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3251805/cman-drives-regional-expansion-plan-amid-global-supply-chain-disruption", "published": "2026-05-08T06:12:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 5}, {"title": "Aberdeen Reiterates Thailand Commitment, Expands Global Investment Offerings", "title_ja": "アバディーン、タイへのコミットメントを再確認し、グローバル投資商品を拡大", "body_ja": "より複雑で不確実な世界情勢にもかかわらず、アジア太平洋地域は、構造的な富の拡大、人口構成の変化、多様な投資ソリューションへの需要増に支えられ、長期的な成長の主要地域であり続ける。この変化する状況の中で、英国最大級の資産運用会社であるアバディーン・インベストメンツ（以下「アバディーン」）は、その…", "summary_ja": "英国大手資産運用会社アバディーン・インベストメンツは、複雑な世界情勢下でもアジア太平洋地域を長期成長の鍵と見なし、タイへのコミットメントを再確認。多様なグローバル投資商品を拡大する。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3251795/aberdeen-reiterates-thailand-commitment-expands-global-investment-offerings", "published": "2026-05-08T06:00:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 4}, {"title": "円相場 ドルに対して値下がり 市場介入警戒も", "title_ja": "円相場 ドルに対して値下がり 市場介入警戒も", "body_ja": "8日の東京外国為替市場、アメリカとイランの戦闘停止をめぐる交渉について、先行きが不透明だという見方が広がったことから、円を売ってドルを買う動きが進み、円相場はドルに対して値下がりしました。", "summary_ja": "5月8日の東京外国為替市場で、米イラン交渉の不透明感から円売りドル買いが進み、円相場はドルに対し値下がりした。市場では政府・日銀による市場介入への警戒感が広まっている。", "source": "NHK – ビジネス", "link": "http://www3.nhk.or.jp/news/html/20260508/k10015116941000.html", "published": "2026-05-08T09:24:26+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 4}, {"title": "［動画］レアアース中国一強支配　データ解析で明らかに (特集インサイド)", "title_ja": "［動画］レアアース中国一強支配　データ解析で明らかに (特集インサイド)", "body_ja": "電気自動車（EV）のモーターなど身の回りの様々な製品に使われるレアアース（希土類）。足元の中東危機とは別の供給網の要衝で、調達の可否はハイテク産業に直結します。鉱山・精錬工場の株主を分析すると争奪戦は激しく、米中首脳会談でも焦点の一つです。非中国の供給網構築を急ぐ日米欧などの陣営の核には、豪の鉄鋼女王が鎮座します。世界のレアアース精錬の9割を握り、輸出規制で日本に揺さぶりをかける中国。代替調達、脱レアアース技術、南鳥島沖での生産。日本の取るべき戦略を探りました。", "summary_ja": "EVモーターなどに使われるレアアースは、中国が世界の精錬の9割を握り一強支配。中東危機とは別の供給網要衝で、米中首脳会談の焦点。日本は代替調達や脱レアアース技術で中国依存脱却を急ぐ必要がある。", "source": "日経ビジネス", "link": "https://business.nikkei.com/atcl/gen/19/00419/050700236/", "published": "2026-05-08T08:00:00+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 3}, {"title": "産油国ナイジェリアがホルムズ危機で大注目　日本の新たな調達先に (菅野泰夫のズームイン・ズームアウト)", "title_ja": "産油国ナイジェリアがホルムズ危機で大注目　日本の新たな調達先に (菅野泰夫のズームイン・ズームアウト)", "body_ja": "中東情勢の悪化により事実上の封鎖が続くホルムズ海峡。エネルギー輸送の要衝が閉ざされた今、原油の代替調達先として世界各地から熱視線が注がれているのが、西アフリカのナイジェリアだ。日本にとっても新たな供給源となり得る。", "summary_ja": "中東情勢悪化でホルムズ海峡が事実上封鎖される中、産油国ナイジェリアが原油の代替調達先として注目されている。日本にとっても新たな供給源となる可能性があり、エネルギー安全保障の観点から重要性が増す。", "source": "日経ビジネス", "link": "https://business.nikkei.com/atcl/gen/19/00216/050700072/", "published": "2026-05-08T08:00:00+00:00", "category": "エネルギー市場", "relevance_score": 5}, {"title": "Understanding emergency debt decrees", "title_ja": "緊急債務令の理解", "body_ja": "アヌティン・チャーンヴィーラクーンは、タイの首相として6人目となる緊急債務令を発令し、財務省が資金を借り入れることを許可した。今回はエネルギー危機の影響に対処し、国のエネルギー転換を支援するためである。", "summary_ja": "タイのチャーンヴィーラクーン首相は、エネルギー危機への対応と国のエネルギー転換支援のため、財務省に資金借入を許可する緊急債務令を発令。首相として6人目。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3252214/understanding-emergency-debt-decrees", "published": "2026-05-08T22:14:00+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 5}, {"title": "Standardised Thai bank fees expected by July", "title_ja": "タイの銀行手数料、7月までに標準化へ", "body_ja": "タイ銀行は今年7月に銀行手数料の標準化を導入する予定で、個人および中小企業（SMEs）の金融コスト削減を目指している。", "summary_ja": "タイ銀行は今年7月までに銀行手数料の標準化を導入する計画で、個人および中小企業（SMEs）の金融コスト削減を図る。タイ経済のビジネス環境に影響を与える可能性がある。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3251928/standardised-thai-bank-fees-expected-by-july", "published": "2026-05-08T13:41:00+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 3}, {"title": "New central train line moves forward", "title_ja": "新中央鉄道路線が前進", "body_ja": "スパンブリーとアユタヤを結ぶ新しい鉄道路線プロジェクトが具体化し、タイ国有鉄道（SRT）は沿線住民からの意見を聞くための初会合を開催した。", "summary_ja": "タイのスパンブリーとアユタヤを結ぶ新鉄道路線プロジェクトが前進。タイ国有鉄道（SRT）が沿線住民からの意見聴取会を開催し、インフラ開発への動きが活発化している。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3251868/new-central-train-line-moves-forward", "published": "2026-05-08T09:08:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 2}, {"title": "ASEAN ミャンマー受刑者釈放歓迎も暴力即時停止など求める", "title_ja": "ASEAN ミャンマー受刑者釈放歓迎も暴力即時停止など求める", "body_ja": "ASEAN＝東南アジア諸国連合の首脳会議が8日、フィリピンで開かれ、ミャンマー情勢をめぐり先月発足した軍の影響力が強い新政権が受刑者の釈放を発表したことを歓迎する一方、暴力の即時停止などを求める議長声明をまとめたことがわかりました。", "summary_ja": "5月8日、フィリピンで開かれたASEAN首脳会議は、ミャンマー新政権による受刑者釈放を歓迎しつつ、暴力の即時停止を求める議長声明を採択。東南アジア地域の安定化に向けた動き。", "source": "NHK – アジア太平洋", "link": "http://www3.nhk.or.jp/news/html/20260508/k10015117171000.html", "published": "2026-05-08T13:28:42+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 2}, {"title": "三菱自動車工業 中東影響も今年度は2.5倍の増益見通し", "title_ja": "三菱自動車工業 中東影響も今年度は2.5倍の増益見通し", "body_ja": "三菱自動車工業は今年度1年間の業績見通しを発表し、中東情勢の緊迫化の影響で営業利益が300億円押し下げられるものの、主力の東南アジアを中心に販売が回復することなどが見込まれることから、最終利益は、前の年度と比べて2倍を超える大幅な増益となる見通しだとしています。", "summary_ja": "三菱自動車工業は今年度、中東情勢で営業利益が300億円減少するも、東南アジアでの販売回復により最終利益は前年度比2.5倍の増益を見込む。日本企業の東南アジア事業と国際情勢の影響を示唆。", "source": "NHK – ビジネス", "link": "http://www3.nhk.or.jp/news/html/20260508/k10015117121000.html", "published": "2026-05-08T13:04:39+00:00", "category": "企業/ビジネス動向", "relevance_score": 5}, {"title": "【更新：6月20日から1120バーツに】タイの主要空港6港、国際線旅客サービス料を2026年から53％引き上げへ", "title_ja": "【更新：6月20日から1120バーツに】タイの主要空港6港、国際線旅客サービス料を2026年から53％引き上げへ", "body_ja": "更新：国際線出発時の旅客サービス料（PSC、空港使用料）が6月20日から現行の730バーツから1120バーツに引き上げられる。タイ空港公社（AOT）のパウィーナー・ジャリヤティティポン社長が明らかにした。", "summary_ja": "タイ主要空港6港の国際線旅客サービス料（PSC）が、6月20日から現行の730バーツから1120バーツへ53%引き上げられる。タイ空港公社社長が発表し、タイへの渡航・ビジネスコストに影響する見込み。", "source": "newsclip: タイ経済・企業", "link": "https://newsclip.be/thai-news/thai-economy/30998", "published": "2026-05-08T01:00:45+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 4}, {"title": "原油一段高に警戒広がる、在庫減に現物不足 最大の打撃はアジアに - 日本経済新聞", "title_ja": "原油一段高に警戒広がる、在庫減に現物不足 最大の打撃はアジアに - 日本経済新聞", "body_ja": "原油一段高に警戒広がる、在庫減に現物不足 最大の打撃はアジアに 日本経済新聞", "summary_ja": "原油価格の一段高への警戒感が広がっており、在庫減少と現物不足が背景。この状況はアジア地域に最大の打撃を与える可能性があり、エネルギー市場の動向が注目される。", "source": "Google: 原油 アジア", "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTE8tOEx3dDNMSnZOUlJmc2phQ1lieTUxWEhuQnIyUTNBR1BnR3BPc0dsZzE2c3ZobmtpNFNuTklPMUZGM3BMZzAzd2lpT3ltTEY3aldib3d1c1RPLTZJamZpWUxaVDhIaFpUR1RVTQ?oc=5", "published": "2026-05-08T02:00:00+00:00", "category": "エネルギー市場", "relevance_score": 5}, {"title": "Is Russian oil becoming a lifeline for Southeast Asia? - DW.com", "title_ja": "ロシア産原油は東南アジアの命綱となるのか？", "body_ja": "Is Russian oil becoming a lifeline for Southeast Asia? DW.com", "summary_ja": "東南アジアにおけるロシア産原油の輸入が拡大し、地域のエネルギー供給の「命綱」となり得るかどうかが注目されている。エネルギー安全保障と国際的な原油調達戦略に影響。", "source": "Google: crude oil Asia", "link": "https://news.google.com/rss/articles/CBMijwFBVV95cUxQcURwRWZCMC00VV9USTRFZmlhMWhWc2VPelFmdjJYUWdiNFpwdVlpX2hka0p0YVZFeVRBcmc2eENaOUtBWk41VGhZbkRHMkZfOTl6TWFOSkdoMFJ2bEhaRzdKSnRsdXZya0Q2dGQtdmlxTTdUbHFCbnlRQ0pNUHRIeUZMMzdBVjRXcXVsRHcxY9IBjwFBVV95cUxQeXpfY0pqczN4dU5RV0NxQmo3NWN3WUV6UG5sMGk3SlJyUm80MEVOUXpWdGM5UTQwbWltdWgyS1hvS3RFWEh3OFdmd0JId1NzNVh4QlJsbkRTYUR6MDJtMzVqVW5TUWlUYlBNMFdzVjM2ckUtZHFqb0U2dVAxYWtXR3RkZi1oejliVVZJN3h0VQ?oc=5", "published": "2026-05-08T12:55:04+00:00", "category": "エネルギー市場", "relevance_score": 5}, {"title": "India’s oil firms take Rs 30,000 crore hit to hold fuel prices steady amid global energy shock - The New Indian Express", "title_ja": "インドの石油企業、世界的なエネルギーショックの中で燃料価格を据え置き、3000億ルピーの損失を計上", "body_ja": "India’s oil firms take Rs 30,000 crore hit to hold fuel prices steady amid global energy shock The New Indian Express", "summary_ja": "インドの石油企業は、世界的なエネルギーショック下で燃料価格を据え置くため、3000億ルピー（約5400億円）もの損失を計上した。アジア地域のエネルギー市場と政府の価格統制の課題を示す。", "source": "Google: crude oil Asia", "link": "https://news.google.com/rss/articles/CBMi3wFBVV95cUxPdjk5U1doYmJTZjJqWjg2eE1nbFFPY0JhUFA0Wm1vOU05S3p0OVhwY1B4Z3lkU0ZwS2FkSGx1eFotS0ZnYmNOYnhHMUpWYzBmTjdwNVNkcHo1bHlqVVB3MjQtTUltOUJHWkNoajAxZkQxWUJDUHN3c2tmRGFGTkF5aHdKS0tOR1JnNGd0bm5zdjhrUEFRQU5fdw5TVmFTblY4cXpURU0zUGZXZjY4Y3U4Y1NyMEp1QVlLWXUtQTdfTUFCWDlFQk1nVEZCUWFYSFdDR0hvdEQ5VDR1Y1VxcWVn0gHsAUFVX3lxTE5GZ3FCZVUwS0JfZ1dOV0tFdG1sT1hfZWxvN25UY084VGYtazJBQ2VScF9vRzZhbWpyYmZkT0xuQzZsMHhVYjR0Qk5LdjI2UVpZUDhEdjMyNFF2QU5DSWRIMkJvTG5JcVJZT2hGcjA1M21JMmUxd2IteDZTTTBoYWQ0SWRrd0NuRVczOGJzd29KRnVSS0NGeTUwZHYwQmpsS05McGZwYUVBNWY3ODRNY0tiTXNtSTBHd2pzU09fS2lFMGpjTFBESXF1OTRsSkk1ZVZiREwtUmN0WmxZb1hhT1JYblVDcFduZDg3aDk2?oc=5", "published": "2026-05-08T09:51:40+00:00", "category": "エネルギー市場", "relevance_score": 4}, {"title": "AIS, True report healthy profits based on 5G growth", "title_ja": "AIS、Trueが5G成長を背景に健全な利益を報告", "body_ja": "アドバンスト・インフォ・サービス（AIS）とトゥルー・コーポレーションは今年第1四半期に好調な純利益を計上した。", "summary_ja": "タイの通信大手AISとTrue Corporationは、今年第1四半期に5G事業の成長を背景に好調な純利益を報告した。タイの通信産業におけるビジネス動向を示す。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3252189/ais-true-report-healthy-profits-based-on-5g-growth", "published": "2026-05-08T22:40:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 3}, {"title": "香港政府 今年度の青少年交流事業 助成対象に日本含まれず", "title_ja": "香港政府 今年度の青少年交流事業 助成対象に日本含まれず", "body_ja": "日中関係の悪化が長期化する中、香港政府が助成する青少年の交流事業について、今年度は初めて日本との交流事業が対象に含まれなかったと、香港メディアが伝えました。", "summary_ja": "日中関係の長期化する悪化を受け、香港政府が助成する青少年交流事業から今年度初めて日本との交流が除外されたと現地メディアが報道。日本の国際関係に影響。", "source": "NHK – アジア太平洋", "link": "http://www3.nhk.or.jp/news/html/20260509/k10015117241000.html", "published": "2026-05-08T20:00:58+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 2}, {"title": "米トランプ大統領 5月14日から中国訪問 習主席と会談へ", "title_ja": "米トランプ大統領 5月14日から中国訪問 習主席と会談へ", "body_ja": "アメリカのトランプ大統領は、今月14日と15日に中国を訪問し、習近平国家主席と首脳会談を行う予定です。両首脳の対面での会談は去年10月以来で、経済・貿易の関係や、台湾をめぐる問題などのほか、イラン情勢についても意見が交わされるものとみられます。", "summary_ja": "トランプ米大統領は5月14日と15日に中国を訪問し、習近平国家主席と首脳会談を実施予定。経済・貿易、台湾問題、イラン情勢などについて協議し、国際情勢と米中関係に大きな影響を与える。", "source": "NHK – アジア太平洋", "link": "http://www3.nhk.or.jp/news/html/20260509/k10015117031000.html", "published": "2026-05-08T16:57:37+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 4}, {"title": "トランプ大統領 EU自動車関税率25％への引き上げは7月まで猶予", "title_ja": "トランプ大統領 EU自動車関税率25％への引き上げは7月まで猶予", "body_ja": "アメリカのトランプ大統領は、EU＝ヨーロッパ連合から輸入する自動車とトラックに課す関税率を15％から25％に引き上げる方針について、ことし7月まで引き上げを猶予するとの考えを明らかにしました。", "summary_ja": "トランプ米大統領は、EUからの自動車・トラック関税率を25%に引き上げる方針に対し、今年7月まで猶予する考えを示した。国際貿易政策の動向として注目される。", "source": "NHK – アジア太平洋", "link": "http://www3.nhk.or.jp/news/html/20260509/k10015117251000.html", "published": "2026-05-08T15:30:22+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 3}, {"title": "米雇用統計 4月の農業分野以外の就業者 前月より大幅に増加", "title_ja": "米雇用統計 4月の農業分野以外の就業者 前月より大幅に増加", "body_ja": "円相場や株価に影響を及ぼすアメリカの雇用統計が発表され、4月の農業分野以外の就業者は前の月から11万5000人の大幅な増加となり、市場の予想を上回りました。イラン情勢によって物価が上昇するなかでも、アメリカの雇用は堅調さを維持しているとの見方が広がっています。", "summary_ja": "4月の米雇用統計で非農業部門就業者が前月比11.5万人の大幅増となり、市場予想を上回った。イラン情勢による物価上昇の中でも米国の雇用は堅調と見られ、国際マクロ経済に影響。", "source": "NHK – アジア太平洋", "link": "http://www3.nhk.or.jp/news/html/20260508/k10015117201000.html", "published": "2026-05-08T14:52:33+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 3}, {"title": "茂木外相 モロッコ外相と会談 リン鉱石の安定供給へ協力確認", "title_ja": "茂木外相 モロッコ外相と会談 リン鉱石の安定供給へ協力確認", "body_ja": "茂木外務大臣は、モロッコのブリタ外相とオンラインで会談し、世界で最も埋蔵量が多く、半導体などの原料となるモロッコのリン鉱石の扱いをめぐり、日本への安定的な供給を含め、両国の共通の利益を目指して協力していくことで一致しました。", "summary_ja": "茂木外務大臣はモロッコのブリタ外相と会談し、半導体原料となるリン鉱石の日本への安定供給で協力することを確認。重要資源のサプライチェーン確保に向けた日本の取り組み。", "source": "NHK – アジア太平洋", "link": "http://www3.nhk.or.jp/news/html/20260508/k10015117191000.html", "published": "2026-05-08T13:58:49+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 3}, {"title": "米イラン 海峡付近で衝突 協議めぐる米提案にイランの出方は", "title_ja": "米イラン 海峡付近で衝突 協議めぐる米提案にイランの出方は", "body_ja": "アメリカとイランは、日本時間の8日朝、ホルムズ海峡付近で相手側から攻撃を受けたため反撃や迎撃を行ったと主張しました。トランプ大統領は、停戦は続いているという認識を示すとともに、戦闘終結に向けた協議をめぐって早期に合意するよう求め、今後のイラン側の出方が焦点となっています。", "summary_ja": "5月8日朝、米イランがホルムズ海峡付近で衝突。双方の主張が対立する中、トランプ大統領は停戦維持と協議での早期合意を要求。中東情勢緊迫化とエネルギー安全保障への影響が懸念される。", "source": "NHK – アジア太平洋", "link": "http://www3.nhk.or.jp/news/html/20260508/k10015116461000.html", "published": "2026-05-08T10:42:55+00:00", "category": "エネルギー市場", "relevance_score": 5}, {"title": "【詳細】ロシア ウクライナに軍事侵攻（5月8日の動き）", "title_ja": "【詳細】ロシア ウクライナに軍事侵攻（5月8日の動き）", "body_ja": "ロシアによるウクライナに対する軍事侵攻が続いています。ウクライナの各地でロシア軍とウクライナ軍が戦闘を続けていて、大勢の市民が国外へ避難しています。戦闘の状況や関係各国の外交など、ウクライナ情勢をめぐる8日（日本時間）の動きを随時更新でお伝えします。（日本とウクライナ、およびロシアのモスクワとは6時間の時差があります）", "summary_ja": "ロシアによるウクライナ侵攻が続き、各地で戦闘が発生し多数の市民が避難。5月8日の状況は、戦闘の激化と関係各国の外交動向が中心で、国際情勢とエネルギー市場への影響が続く。", "source": "NHK – アジア太平洋", "link": "http://www3.nhk.or.jp/news/html/20260508/k10015101811000.html", "published": "2026-05-08T09:25:03+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 3}, {"title": "ソニー 次世代画像センサーの開発・製造でTSMCと提携合意", "title_ja": "ソニー 次世代画像センサーの開発・製造でTSMCと提携合意", "body_ja": "ソニーの半導体事業を手がけるグループ会社と半導体の受託生産で世界最大手の台湾のTSMCは、次世代の画像センサーの開発や製造に向けて提携することで基本合意したと発表しました。", "summary_ja": "ソニーグループの半導体事業会社と世界最大の受託生産企業TSMCが、次世代画像センサーの開発・製造で提携に基本合意。日本の主要企業のビジネス動向とサプライチェーン強化の動き。", "source": "NHK – ビジネス", "link": "http://www3.nhk.or.jp/news/html/20260508/k10015117051000.html", "published": "2026-05-08T11:11:26+00:00", "category": "企業/ビジネス動向", "relevance_score": 4}, {"title": "トランプ政権の10％関税「違法」と判断 米国際貿易裁判所", "title_ja": "トランプ政権の10％関税「違法」と判断 米国際貿易裁判所", "body_ja": "アメリカの国際貿易裁判所は、トランプ政権がことし2月に幅広い国や地域を対象に発動した10％の新たな関税措置について違法だとする判断を示しました。この関税は連邦最高裁判所によって無効と判断された「相互関税」などの代替措置として導入されたもので、トランプ政権が控訴するかが焦点となります。", "summary_ja": "米国際貿易裁判所は、トランプ政権が2月に発動した10%の新たな関税措置を違法と判断。連邦最高裁が「相互関税」を無効とした代替措置であり、今後のトランプ政権の控訴の有無が焦点となる。", "source": "NHK – アジア太平洋", "link": "http://www3.nhk.or.jp/news/html/20260508/k10015116471000.html", "published": "2026-05-08T10:45:52+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 3}, {"title": "大手企業の決算発表相次ぐ 各社の業績や見通しは【8日まとめ】", "title_ja": "大手企業の決算発表相次ぐ 各社の業績や見通しは【8日まとめ】", "body_ja": "8日、大手企業の決算発表が相次ぎました。各社の昨年度の業績や今年度の見通し、中東情勢やアメリカの関税措置の影響などについて、まとめました。", "summary_ja": "5月8日、日本大手企業の決算発表が相次ぎ、昨年度業績や今年度見通しが明らかにされた。中東情勢や米国の関税措置が企業業績に影響を与えていると分析されている。", "source": "NHK – ビジネス", "link": "http://www3.nhk.or.jp/news/html/20260508/k10015116561000.html", "published": "2026-05-08T10:27:37+00:00", "category": "企業/ビジネス動向", "relevance_score": 3}, {"title": "「ニンテンドースイッチ2」1万円値上げへ 半導体価格の上昇で", "title_ja": "「ニンテンドースイッチ2」1万円値上げへ 半導体価格の上昇で", "body_ja": "「任天堂」は、去年発売した新型ゲーム機「ニンテンドースイッチ2」について、国内専用の機種を1万円値上げすると明らかにしました。メモリーなどゲーム機に搭載される半導体の価格が上昇していることなどが要因だとしています。", "summary_ja": "任天堂は新型ゲーム機「ニンテンドースイッチ2」の国内専用機種を1万円値上げすると発表。メモリなど半導体価格の高騰が要因で、日本の製造業におけるサプライチェーンコストの課題を浮き彫りに。", "source": "NHK – ビジネス", "link": "http://www3.nhk.or.jp/news/html/20260508/k10015116961000.html", "published": "2026-05-08T09:47:07+00:00", "category": "企業/ビジネス動向", "relevance_score": 3}, {"title": "トヨタ 初の売り上げ50兆円超 今年度も減益へ 中東情勢が影響", "title_ja": "トヨタ 初の売り上げ50兆円超 今年度も減益へ 中東情勢が影響", "body_ja": "トヨタ自動車の昨年度（2025年度）1年間のグループ全体の決算は売り上げが初めて50兆円を超えた一方、トランプ政権の関税措置の影響を受けて減益となりました。今年度も営業利益は3兆円と減益を見込んでいて、中東情勢の悪化は6700億円の押し下げ要因になるとしています。", "summary_ja": "トヨタ自動車の2025年度決算は売上高が初の50兆円超えも減益。今年度も営業利益3兆円と減益を見込み、中東情勢悪化が6700億円の押し下げ要因となる見通し。関税措置も影響。", "source": "NHK – ビジネス", "link": "http://www3.nhk.or.jp/news/html/20260508/k10015116551000.html", "published": "2026-05-08T07:03:31+00:00", "category": "企業/ビジネス動向", "relevance_score": 5}, {"title": "ソニーG、通期見通し当期益1兆1600億円　ゲーム・イメージセンサー事業改善", "title_ja": "ソニーG、通期見通し当期益1兆1600億円　ゲーム・イメージセンサー事業改善", "body_ja": "", "summary_ja": "ソニーグループは通期見通しで当期利益1兆1600億円を計上。ゲーム事業とイメージセンサー事業の改善が貢献し、日本の大手企業の業績が回復基調にあることを示す。", "source": "日刊工業新聞", "link": "http://www.nikkan.co.jp/articles/view/00780814", "published": "2026-05-09T00:31:40+00:00", "category": "企業/ビジネス動向", "relevance_score": 3}, {"title": "ニコンの新中計、30年度に売上収益1兆円　露光装置・3Dプリンターに重点", "title_ja": "ニコンの新中計、30年度に売上収益1兆円　露光装置・3Dプリンターに重点", "body_ja": "", "summary_ja": "ニコンは新たな中期経営計画で、2030年度に売上収益1兆円を目指し、露光装置と3Dプリンター事業に重点を置く方針。日本の産業設備分野における大手企業の戦略転換を示す。", "source": "日刊工業新聞", "link": "http://www.nikkan.co.jp/articles/view/00780816", "published": "2026-05-09T00:31:40+00:00", "category": "企業/ビジネス動向", "relevance_score": 4}, {"title": "家電ブランド消す「富士通」と残す「日立」　消費者接点、希薄化リスクも (日の丸電機サバイバル)", "title_ja": "家電ブランド消す「富士通」と残す「日立」　消費者接点、希薄化リスクも (日の丸電機サバイバル)", "body_ja": "「2030年度には確実に売上高で1.5兆円に達する」。富士通の磯部武司CFO（最高財務責任者）は主力事業である「Uvance（ユーバンス）」について、そう意気込む。その額は25年度比で約2.5倍だ。国内電機・IT各社はAI需要を追い風に構造改革を進めてきており、果実を得る段階へと歩を進めている。", "summary_ja": "富士通は2030年度に主力事業「Uvance」で売上高1.5兆円を目指す。日立との家電ブランド戦略の違いを比較しつつ、国内電機・IT各社がAI需要を追い風に構造改革を進める動向を示す。", "source": "日経ビジネス", "link": "https://business.nikkei.com/atcl/gen/19/00112/050700238/", "published": "2026-05-08T08:00:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 3}, {"title": "How Brazil Became Asia’s Emergency Oil Supplier in 2026 - Discovery Alert", "title_ja": "ブラジルはどのようにして2026年にアジアの緊急石油供給源になったのか", "body_ja": "How Brazil Became Asia’s Emergency Oil Supplier in 2026 Discovery Alert", "summary_ja": "2026年にブラジルがアジア地域にとって緊急の石油供給源となった経緯が報じられている。アジアのエネルギー安全保障における原油調達先の多様化を示す重要な動向。", "source": "Google: crude oil Asia", "link": "https://news.google.com/rss/articles/CBMiigFBVV95cUxQVGtQTnBKR3MxVHN1UHo1ZWI1ZDVKQ0l5S0JwR0VSUUZTRXpPYTBYUzZMZU45dTg1c1Y2VGJpcURfWTJDa1VOTVY1QlB1dkVuVHI2aC1CTkV1ZGM3ZGxmT29BMHEyaWpkZEhFUHQ5V0R0d3FJU0w3YlVCRkc1ZEdfZkZBVUN3ZFU1S1E?oc=5", "published": "2026-05-08T03:57:59+00:00", "category": "エネルギー市場", "relevance_score": 5}];
-const AVAILABLE_DATES = ["20260507", "20260508", "20260509"];
-const TODAY_TAG = "20260509";
+const ARTICLES = [{"title": "中国 4月の輸出額は14％余増加 原油高の影響が今後の焦点に", "title_ja": "中国 4月の輸出額は14％余増加 原油高の影響が今後の焦点に", "body_ja": "中国の先月の輸出額は、東南アジア向けなどが大きく伸びたことやアメリカ向けが増加に転じたことから、去年の同じ月と比べて14％余り増えました。今後はイラン情勢を背景とした原油価格の高止まりがどう影響するかが焦点になります。", "summary_ja": "中国の4月輸出額は前年比14%超増加し、東南アジア向けが大きく伸びた。今後、イラン情勢による原油価格高止まりが経済にどう影響するかが焦点。東南アジアの貿易動向とエネルギー市場の国際情勢が注目される。", "source": "NHK – アジア太平洋", "link": "http://www3.nhk.or.jp/news/html/20260509/k10015117451000.html", "published": "2026-05-09T06:09:55+00:00", "category": "エネルギー市場", "relevance_score": 4}, {"title": "東南アジア、ホルムズ危機で露呈したもろさ 原油調達でロシア傾倒も [米・イスラエルのイラン攻撃 イラン情勢] - 朝日新聞", "title_ja": "東南アジア、ホルムズ危機で露呈したもろさ 原油調達でロシア傾倒も [米・イスラエルのイラン攻撃 イラン情勢]", "body_ja": "東南アジア、ホルムズ危機で露呈したもろさ 原油調達でロシア傾倒も [米・イスラエルのイラン攻撃 イラン情勢] 朝日新聞", "summary_ja": "東南アジアはホルムズ危機により原油調達の脆弱性を露呈し、ロシアへの依存度を高めている。米・イスラエルによるイラン攻撃とイラン情勢が背景にあり、東南アジアのエネルギー安全保障に大きな影響を与える。", "source": "Google: 原油 アジア", "link": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE02VnZKcm1UVHRCVnE4cUJHVGxyRS1pYU5QaFlNVnlDR0QtQ21zWDVHdEtkZ3RMSkR5SmRVU0syRkEyLXl3U0stOVpaMEowZU5SUlhleTFwV1RMc0ZIS1JkT3lXaUp3NDQ?oc=5", "published": "2026-05-09T09:00:00+00:00", "category": "エネルギー市場", "relevance_score": 5}, {"title": "【随時更新】ロシア ウクライナに軍事侵攻（5月10日の動き）", "title_ja": "【随時更新】ロシア ウクライナに軍事侵攻（5月10日の動き）", "body_ja": "ロシアによるウクライナに対する軍事侵攻が続いています。ウクライナの各地でロシア軍とウクライナ軍が戦闘を続けていて、大勢の市民が国外へ避難しています。戦闘の状況や関係各国の外交など、ウクライナ情勢をめぐる10日（日本時間）の動きを随時更新でお伝えします。（日本とウクライナ、およびロシアのモスクワとは6時間の時差があります）", "summary_ja": "ロシアによるウクライナ軍事侵攻が続き、各地で戦闘が発生し多数の市民が国外へ避難。ウクライナ情勢は関係各国の外交や国際的な経済動向に影響を与える国際情勢の重大な要素であり、今後の推移が注視される。", "source": "NHK – アジア太平洋", "link": "http://www3.nhk.or.jp/news/html/20260510/k10015107491000.html", "published": "2026-05-09T22:40:28+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 3}, {"title": "トランプ政権 10％関税措置の違法判断を不服として控訴", "title_ja": "トランプ政権 10％関税措置の違法判断を不服として控訴", "body_ja": "アメリカのトランプ政権がことし2月、幅広い国や地域を対象に発動した10％の新たな関税措置について国際貿易裁判所が違法だとする判断を示したことを受けて、トランプ政権はこれを不服として8日、連邦控訴裁判所に控訴しました。", "summary_ja": "米トランプ政権が2月に発動した10%関税措置について、国際貿易裁判所が違法判断を下した。これに対しトランプ政権は不服として連邦控訴裁判所に控訴。この貿易政策は国際貿易全体に影響を及ぼし、マクロ経済動向を左右する可能性がある。", "source": "NHK – アジア太平洋", "link": "http://www3.nhk.or.jp/news/html/20260509/k10015117401000.html", "published": "2026-05-09T03:14:57+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 4}, {"title": "トランプ大統領 5月14日から中国訪問 習主席と会談へ", "title_ja": "トランプ大統領 5月14日から中国訪問 習主席と会談へ", "body_ja": "アメリカのトランプ大統領は、今月14日と15日に中国を訪問し、習近平国家主席と首脳会談を行う予定です。両首脳の対面での会談は去年10月以来で、経済・貿易の関係や、台湾をめぐる問題などのほか、イラン情勢についても意見が交わされるものとみられます。", "summary_ja": "トランプ米大統領は5月14、15日に中国を訪問し、習近平国家主席と首脳会談を行う。経済・貿易関係、台湾問題に加え、イラン情勢についても意見交換がされる見通し。国際情勢および貿易動向に影響を与える重要な会談となる。", "source": "NHK – アジア太平洋", "link": "http://www3.nhk.or.jp/news/html/20260509/k10015117031000.html", "published": "2026-05-09T01:47:33+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 4}, {"title": "ソニーG、通期見通し当期益1兆1600億円　ゲーム・イメージセンサー事業改善", "title_ja": "ソニーG、通期見通し当期益1兆1600億円　ゲーム・イメージセンサー事業改善", "body_ja": "", "summary_ja": "ソニーグループは、通期の当期利益見通しを1兆1600億円と発表。ゲームおよびイメージセンサー事業の改善が見込まれる。日本の大手製造業の業績動向として注目され、関連サプライチェーンへの影響も考えられる。", "source": "日刊工業新聞", "link": "http://www.nikkan.co.jp/articles/view/00780814", "published": "2026-05-09T23:52:30+00:00", "category": "企業/ビジネス動向", "relevance_score": 3}, {"title": "ニコンの新中計、30年度に売上収益1兆円　露光装置・3Dプリンターに重点", "title_ja": "ニコンの新中計、30年度に売上収益1兆円　露光装置・3Dプリンターに重点", "body_ja": "", "summary_ja": "ニコンは2030年度までに売上収益1兆円を目指す新中期経営計画を発表。露光装置と3Dプリンター事業に重点を置く方針。日本の主要製造業における事業戦略であり、将来の産業動向を示す重要な動きと言える。", "source": "日刊工業新聞", "link": "http://www.nikkan.co.jp/articles/view/00780816", "published": "2026-05-09T23:52:30+00:00", "category": "企業/ビジネス動向", "relevance_score": 3}, {"title": "NTTデータグループ社長に中山氏「成長投資を機動的に実行」、ドコモFG社長には廣井氏", "title_ja": "NTTデータグループ社長に中山氏「成長投資を機動的に実行」、ドコモFG社長には廣井氏", "body_ja": "", "summary_ja": "NTTデータグループは中山氏を新社長に据え、「成長投資を機動的に実行する」方針。ドコモFG社長には廣井氏が就任。日本の大手IT企業の経営層交代と戦略方向性を示すもので、関連するビジネス動向に影響がある。", "source": "日刊工業新聞", "link": "http://www.nikkan.co.jp/articles/view/00780817", "published": "2026-05-09T23:52:30+00:00", "category": "企業/ビジネス動向", "relevance_score": 3}, {"title": "三菱自の通期予想は増収増益　ASEANなどで販売回復見込む", "title_ja": "三菱自の通期予想は増収増益　ASEANなどで販売回復見込む", "body_ja": "", "summary_ja": "三菱自動車は通期予想で増収増益を見込み、特にASEAN地域での販売回復を期待している。日本の自動車メーカーによる東南アジア市場の動向を示唆し、地域の経済および製造業に与える影響は大きい。", "source": "日刊工業新聞", "link": "http://www.nikkan.co.jp/articles/view/00780821", "published": "2026-05-09T23:52:30+00:00", "category": "企業/ビジネス動向", "relevance_score": 5}];
+const AVAILABLE_DATES = ["20260507", "20260508", "20260509", "20260510"];
+const TODAY_TAG = "20260510";
 
 // ── 日付ナビゲーション ──────────────────────────────
 function getCurrentTag() {
@@ -897,8 +555,7 @@ function renderCalendar() {
 document.addEventListener('DOMContentLoaded', initNavButtons);
 const CAT_ICONS  = {"ボイラー/産業設備": "🔧", "バイオマス/再生可能エネルギー": "🌿", "エネルギー市場": "⚡", "日タイ貿易/マクロ": "🤝", "企業/ビジネス動向": "🏭", "その他": "📰"};
 const CAT_COLORS = {"ボイラー/産業設備": "#b45309", "バイオマス/再生可能エネルギー": "#2d7a4f", "エネルギー市場": "#0369a1", "日タイ貿易/マクロ": "#7c3aed", "企業/ビジネス動向": "#be123c", "その他": "#555"};
-const CAT_SUMMARIES = {"日タイ貿易/マクロ": "継続トレンドとして、国際情勢の不安定化（米中対立、中東・ウクライナ情勢）、資源・サプライチェーンリスク、そして円安基調が継続しています。\n新規動向では、タイがタイフェックス目標設定、空港利用料大幅値上げ、銀行手数料標準化など、貿易・観光・国内経済の具体的な動きを加速。米雇用統計の詳細や過去の貿易摩擦判決も報じられ、マクロ経済の多角的な情報が増加しています。", "企業/ビジネス動向": "継続トレンドとして、中東情勢が企業業績（トヨタ、三菱自）やグローバルサプライチェーンに与える影響、及び半導体価格高騰が引き続き顕著です。\n\n新規動向としては、5Gが企業収益に貢献し始め（AIS、True）、新中央鉄道のようなインフラ投資が具体化。ソニーのTSMCとの技術提携、ニコン等の新成長戦略、富士通・日立の家電ブランド戦略に見られるように、企業が新技術開発と事業構造改革へ注力する動きが鮮明になっています。", "エネルギー市場": "中東情勢緊迫化による原油高騰圧力とアジアへの打撃は継続トレンド。供給源多様化（ナイジェリア、ロシア、ブラジル）が加速する。新規動向は、インド企業の燃料価格据え置きによる巨額損失とブラジルの緊急供給源化計画の具体化。供給不安が実体経済へ波及し、長期的なサプライチェーン再編の動きが顕著だ。"};
-const GEMINI_KEY = ""; // ← 深掘り分析を使う場合は aistudio.google.com のAPIキーを入力
+const CAT_SUMMARIES = {"エネルギー市場": "**継続トレンド：** 中東情勢由来の原油高と供給不安、それがアジアへ与える打撃、及び東南アジアのロシア原油傾倒による脆弱性は継続的な懸念。\n\n**新規動向：** これに加え、本日の記事では中国の輸出増加にも関わらず、原油高がその持続性に影を落とし始めた点が新たに焦点化。供給不安がサプライチェーンだけでなく、国際貿易構造全体に具体的な打撃を与え始める兆候が見られる。", "日タイ貿易/マクロ": "新規動向として、ロシア・ウクライナ軍事侵攻とトランプ政権の対中関税控訴・訪中が浮上。継続トレンドは、中東情勢緊迫化による原油高と供給網混乱、それらが日本の自動車産業等に与える業績影響、及びロシア産原油の東南アジアへの影響だ。", "企業/ビジネス動向": "継続トレンドとして、企業業績発表が続く中、三菱自がASEAN販売回復を見込む。新規動向は、ソニーGのゲーム・センサー改善、ニコンの露光装置・3Dプリンター重点戦略、NTTデータの経営刷新と成長投資加速など、各社が特定事業や技術領域に注力し、将来への「攻め」の経営戦略を明確化している点が目立つ。"};
 const GAS_URL = "https://script.google.com/macros/s/AKfycbz9Nc874Azvh8zqv5BySUGToK01aIkInocGYeqxgyyiJ-fN0YCqIW4h2E9NRkYBQ8bO/exec";
 
 let history = ["top"];
@@ -953,9 +610,10 @@ function showArticle(idx, push=true) {
   document.getElementById("det-meta").innerHTML = `<span>${a.source}</span><span>${(a.published||"").slice(0,16).replace("T"," ")}</span>`;
   const isTranslated = a.body_ja && a.body_ja !== a.body;
   document.getElementById("det-body-label").textContent = isTranslated ? "記事本文（日本語訳）" : "記事本文";
+  const origText = (a.body && a.body !== "undefined") ? a.body : "";
   document.getElementById("det-body").innerHTML =
-    (a.body_ja || a.body || "") +
-    (isTranslated ? `<div class="detail-orig-body"><div class="detail-orig-label">ORIGINAL</div>${a.body}</div>` : "") +
+    (a.body_ja || origText || "") +
+    (isTranslated && origText ? `<div class="detail-orig-body"><div class="detail-orig-label">ORIGINAL</div>${origText}</div>` : "") +
     `<br><a href="${a.link}" target="_blank" rel="noopener" class="source-link">🔗 元記事を開く</a>`;
   document.getElementById("deep-content").innerHTML = '<button class="deep-btn" onclick="loadDeepDive()">分析を生成</button>';
   showPage("article");
@@ -1018,27 +676,10 @@ async function saveChecked() {
   }
 }
 
-async function loadDeepDive() {
+function openPerplexity() {
   const a = ARTICLES[currentArticleIdx];
-  document.getElementById("deep-content").innerHTML = '<div class="deep-loading">⟳ 分析中...</div>';
-  if (!GEMINI_KEY) {
-    document.getElementById("deep-content").innerHTML =
-      '<div class="deep-loading">※ 深掘り分析にはAPIキーが必要です。HTMLファイル内の GEMINI_KEY を設定してください。</div>';
-    return;
-  }
-  try {
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`, {
-      method:"POST", headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({ contents:[{ parts:[{ text:
-        `以下のニュース記事を深掘り分析してください（250〜300字、文章形式）。\n①市場・業界への示唆\n②タイのボイラー・バイオマス事業または日タイ貿易への影響\n③今後の注目点\n\n【タイトル】${a.title_ja||a.title}\n【本文】${a.body_ja||a.body}\n【カテゴリ】${a.category}`
-      }]}]})
-    });
-    const data = await res.json();
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "分析に失敗しました。";
-    document.getElementById("deep-content").innerHTML = `<div class="deep-text">${text}</div>`;
-  } catch(e) {
-    document.getElementById("deep-content").innerHTML = `<div class="deep-loading">エラー: ${e.message}</div>`;
-  }
+  const query = encodeURIComponent(a.title_ja || a.title);
+  window.open(`https://www.perplexity.ai/search?q=${query}`, '_blank');
 }
 </script>
 
