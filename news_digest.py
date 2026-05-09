@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """
-news_digest.py — 毎日ニュース自動巡回スクリプト v3.1
+news_digest.py — 毎日ニュース自動巡回スクリプト v3.2
 機能: RSS巡回 → Geminiで翻訳・全体サマリー・カテゴリ分析・世界トレンド → インタラクティブHTML出力
 変更履歴:
+  v3.2 - 日付ナビゲーション（前後矢印＋カレンダーモーダル）追加
   v3.1 - ソース別件数制限撤廃・候補上限60件・保存済みバッジ表示
   v3.0 - カテゴリ5分類・デザイン刷新・世界トレンド枠追加・RSSソース追加・Geminiリトライ機能
   v2.0 - Gemini API対応・全体サマリー・カテゴリ別分析・日本語翻訳・スプレッドシート保存
@@ -248,12 +249,32 @@ def generate_cat_summaries(model, articles):
 
 # ========== HTML生成 ==========
 
+def get_available_dates():
+    """docs/フォルダにある過去のダイジェストの日付リストを返す"""
+    docs_dir = Path("docs")
+    dates = []
+    if docs_dir.exists():
+        for f in docs_dir.glob("digest_*.html"):
+            name = f.stem  # digest_20260508
+            date_str = name.replace("digest_", "")
+            if len(date_str) == 8 and date_str.isdigit():
+                dates.append(date_str)
+    return sorted(dates)
+
 def build_html(articles, overall_summary, world_trend, cat_summaries, all_count, candidate_count):
     today    = datetime.now(tz=timezone(timedelta(hours=9)))
     date_str = today.strftime("%Y年%m月%d日（%a）")
 
     # 記事データをJSに埋め込む（深掘り用）
     articles_js = json.dumps(articles, ensure_ascii=False)
+
+    # 利用可能な日付リスト（カレンダー用）
+    available_dates = get_available_dates()
+    # 今日の日付も追加（まだdocsに存在しない場合）
+    today_tag = today.strftime("%Y%m%d")
+    if today_tag not in available_dates:
+        available_dates.append(today_tag)
+    available_dates_js = json.dumps(sorted(available_dates))
 
     # カテゴリ別グループ
     from collections import defaultdict
@@ -339,6 +360,23 @@ def build_html(articles, overall_summary, world_trend, cat_summaries, all_count,
       color:var(--fg2); padding:6px 14px; border-radius:20px; cursor:pointer; font-size:12px; font-weight:500;
     }}
     .back-btn.visible {{ display:block; }}
+
+    /* Navigation */
+    .nav-center {{ display:flex; align-items:center; gap:6px; }}
+    .nav-arrow {{
+      background:none; border:1px solid var(--rule); border-radius:8px;
+      width:32px; height:32px; font-size:20px; cursor:pointer;
+      color:var(--fg2); display:flex; align-items:center; justify-content:center;
+      transition:all .15s; line-height:1;
+    }}
+    .nav-arrow:hover {{ background:var(--bg3); }}
+    .nav-arrow:disabled {{ color:var(--rule); cursor:not-allowed; }}
+    .date-btn {{
+      background:var(--bg3); border:1px solid var(--rule); border-radius:8px;
+      padding:5px 12px; font-size:13px; font-weight:600; cursor:pointer;
+      color:var(--fg); transition:all .15s; white-space:nowrap;
+    }}
+    .date-btn:hover {{ background:#e5e7eb; }}
 
     /* Pages */
     .page {{ display:none; max-width:780px; margin:0 auto; padding:28px 20px 80px; }}
@@ -495,9 +533,37 @@ def build_html(articles, overall_summary, world_trend, cat_summaries, all_count,
 
 <header class="site-header">
   <div class="site-logo">📋 Daily Digest</div>
-  <div class="site-date">{date_str}</div>
+  <div class="nav-center">
+    <button class="nav-arrow" id="prevBtn" onclick="goToDate('prev')" title="前日">‹</button>
+    <button class="date-btn" onclick="toggleCalendar()" title="カレンダー">
+      📅 {date_str}
+    </button>
+    <button class="nav-arrow" id="nextBtn" onclick="goToDate('next')" title="翌日">›</button>
+  </div>
   <button class="back-btn" id="backBtn" onclick="goBack()">← 戻る</button>
 </header>
+
+<!-- カレンダーモーダル -->
+<div id="calendarOverlay" onclick="closeCalendar()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:300;"></div>
+<div id="calendarModal" style="display:none;position:fixed;top:64px;left:50%;transform:translateX(-50%);
+  background:#fff;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.15);
+  padding:20px;z-index:301;width:320px;max-width:90vw;">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+    <button onclick="changeCalMonth(-1)" style="background:none;border:none;font-size:20px;cursor:pointer;color:#4a5168;">‹</button>
+    <div id="calMonthLabel" style="font-weight:700;font-size:15px;color:#1a1d23;"></div>
+    <button onclick="changeCalMonth(1)" style="background:none;border:none;font-size:20px;cursor:pointer;color:#4a5168;">›</button>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;margin-bottom:8px;">
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">日</div>
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">月</div>
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">火</div>
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">水</div>
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">木</div>
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">金</div>
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">土</div>
+  </div>
+  <div id="calGrid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;"></div>
+</div>
 
 <!-- TOP PAGE -->
 <div class="page active" id="page-top">
@@ -556,6 +622,98 @@ def build_html(articles, overall_summary, world_trend, cat_summaries, all_count,
 
 <script>
 const ARTICLES = {articles_js};
+const AVAILABLE_DATES = {available_dates_js};
+const TODAY_TAG = "{today_tag}";
+
+// ── 日付ナビゲーション ──────────────────────────────
+function getCurrentTag() {{
+  // URLのファイル名から日付タグを取得（index.htmlの場合はTODAY_TAG）
+  const path = location.pathname;
+  const re = new RegExp('digest_([0-9]{8})\\.html'); const m = path.match(re);
+  return m ? m[1] : TODAY_TAG;
+}}
+
+function tagToUrl(tag) {{
+  if (tag === TODAY_TAG) return 'index.html';
+  return `digest_${{tag}}.html`;
+}}
+
+function goToDate(dir) {{
+  const cur = getCurrentTag();
+  const idx = AVAILABLE_DATES.indexOf(cur);
+  if (dir === 'prev' && idx > 0) location.href = tagToUrl(AVAILABLE_DATES[idx - 1]);
+  if (dir === 'next' && idx < AVAILABLE_DATES.length - 1) location.href = tagToUrl(AVAILABLE_DATES[idx + 1]);
+}}
+
+function initNavButtons() {{
+  const cur = getCurrentTag();
+  const idx = AVAILABLE_DATES.indexOf(cur);
+  const prev = document.getElementById('prevBtn');
+  const next = document.getElementById('nextBtn');
+  if (prev) prev.disabled = idx <= 0;
+  if (next) next.disabled = idx >= AVAILABLE_DATES.length - 1;
+}}
+
+// ── カレンダー ──────────────────────────────────────
+let calYear, calMonth;
+
+function toggleCalendar() {{
+  const modal = document.getElementById('calendarModal');
+  const overlay = document.getElementById('calendarOverlay');
+  if (modal.style.display === 'none') {{
+    const cur = getCurrentTag();
+    calYear = parseInt(cur.slice(0, 4));
+    calMonth = parseInt(cur.slice(4, 6));
+    renderCalendar();
+    modal.style.display = 'block';
+    overlay.style.display = 'block';
+  }} else {{
+    closeCalendar();
+  }}
+}}
+
+function closeCalendar() {{
+  document.getElementById('calendarModal').style.display = 'none';
+  document.getElementById('calendarOverlay').style.display = 'none';
+}}
+
+function changeCalMonth(dir) {{
+  calMonth += dir;
+  if (calMonth > 12) {{ calMonth = 1; calYear++; }}
+  if (calMonth < 1)  {{ calMonth = 12; calYear--; }}
+  renderCalendar();
+}}
+
+function renderCalendar() {{
+  const label = document.getElementById('calMonthLabel');
+  const grid  = document.getElementById('calGrid');
+  label.textContent = `${{calYear}}年${{calMonth}}月`;
+
+  const firstDay = new Date(calYear, calMonth - 1, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth, 0).getDate();
+  const dateSet = new Set(AVAILABLE_DATES);
+  const cur = getCurrentTag();
+
+  let html = '';
+  // 空白セル
+  for (let i = 0; i < firstDay; i++) html += '<div></div>';
+  // 日付セル
+  for (let d = 1; d <= daysInMonth; d++) {{
+    const tag = `${{calYear}}${{String(calMonth).padStart(2,'0')}}${{String(d).padStart(2,'0')}}`;
+    const hasData = dateSet.has(tag);
+    const isCur = tag === cur;
+    const style = isCur
+      ? 'background:#1a56db;color:#fff;border-radius:50%;font-weight:700;cursor:pointer;padding:5px 0;font-size:13px;'
+      : hasData
+        ? 'color:#1a56db;font-weight:600;cursor:pointer;padding:5px 0;font-size:13px;border-radius:50%;'
+        : 'color:#d1d5db;padding:5px 0;font-size:13px;';
+    const onclick = hasData ? `onclick="location.href='${{tagToUrl(tag)}}';"` : '';
+    html += `<div style="${{style}}" ${{onclick}}>${{d}}</div>`;
+  }}
+  grid.innerHTML = html;
+}}
+
+document.addEventListener('DOMContentLoaded', initNavButtons);
 const CAT_ICONS  = {json.dumps(CAT_ICONS,  ensure_ascii=False)};
 const CAT_COLORS = {json.dumps(CAT_COLORS, ensure_ascii=False)};
 const CAT_SUMMARIES = {json.dumps(cat_summaries, ensure_ascii=False)};
