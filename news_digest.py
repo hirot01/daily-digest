@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """
-news_digest.py — 毎日ニュース自動巡回スクリプト v3.2
+news_digest.py — 毎日ニュース自動巡回スクリプト v3.3
 機能: RSS巡回 → Geminiで翻訳・全体サマリー・カテゴリ分析・世界トレンド → インタラクティブHTML出力
 変更履歴:
+  v3.3 - 過去3日分との差分分析（What's new・継続・変化）をサマリーに追加
   v3.2 - 日付ナビゲーション（前後矢印＋カレンダーモーダル）追加
   v3.1 - ソース別件数制限撤廃・候補上限60件・保存済みバッジ表示
   v3.0 - カテゴリ5分類・デザイン刷新・世界トレンド枠追加・RSSソース追加・Geminiリトライ機能
@@ -204,12 +205,35 @@ JSONのみ返答（マークダウン不要）:
         print(f"[WARN] analyze JSON parse failed: {raw[:200]}")
         return []
 
-def generate_overall_summary(model, articles):
-    """全記事から全体サマリーを生成"""
+def generate_overall_summary(model, articles, past_digests=None):
+    """全記事から全体サマリーを生成（過去データと比較）"""
     if not articles:
         return "本日、関連ニュースは見つかりませんでした。"
     article_list = "\n".join([f"[{a['category']}] {a['title_ja']}" for a in articles])
-    prompt = f"""以下の本日のニュース記事一覧から、全体的な市場動向・トレンドを200字程度で分析してください。
+
+    past_context = ""
+    if past_digests:
+        past_lines = []
+        for p in past_digests:
+            date_fmt = f"{p['date'][:4]}/{p['date'][4:6]}/{p['date'][6:8]}"
+            past_lines.append(f"\n【{date_fmt}のサマリー】\n{p['summary']}")
+            if p['titles']:
+                past_lines.append("主な記事: " + " / ".join(p['titles'][:10]))
+        past_context = "\n".join(past_lines)
+
+    if past_context:
+        prompt = f"""あなたは日タイビジネス専門のアナリストです。
+本日の記事一覧と過去3日分のデータを比較し、以下の3点を含む200字程度の分析をしてください：
+①継続している動き ②今日新たに出てきたトピック ③変化・進展があった点
+箇条書きではなく流れのある文章で。数字や固有名詞は残してください。
+
+【本日の記事】
+{article_list}
+
+【過去3日間のデータ】
+{past_context}"""
+    else:
+        prompt = f"""以下は本日のニュース記事一覧です。全体的な市場動向・トレンドを200字程度で分析してください。
 箇条書きではなく流れのある文章で。重要な数字や固有名詞は残してください。
 
 {article_list}"""
@@ -230,17 +254,41 @@ def generate_world_trend(model, trend_articles):
 {titles_text}"""
     return gemini(model, prompt)
 
-def generate_cat_summaries(model, articles):
-    """カテゴリ別トレンド分析を生成"""
+def generate_cat_summaries(model, articles, past_digests=None):
+    """カテゴリ別トレンド分析を生成（過去データと比較）"""
     from collections import defaultdict
     by_cat = defaultdict(list)
     for a in articles:
         by_cat[a["category"]].append(a)
 
+    # 過去記事をカテゴリ別に整理
+    past_by_cat = defaultdict(list)
+    if past_digests:
+        for p in past_digests:
+            date_fmt = f"{p['date'][4:6]}/{p['date'][6:8]}"
+            for t in p.get('titles', []):
+                past_by_cat['_all'].append(f"[{date_fmt}] {t}")
+
     summaries = {}
     for cat, arts in by_cat.items():
         titles = "\n".join([f"・{a['title_ja']}" for a in arts])
-        prompt = f"""以下の「{cat}」カテゴリの記事群から、現在のトレンドと注目点を120字程度で分析してください。
+        # 過去の同カテゴリ記事（タイトルに部分一致で判断はGeminiに任せる）
+        past_info = ""
+        if past_digests:
+            past_lines = []
+            for p in past_digests:
+                date_fmt = f"{p['date'][4:6]}/{p['date'][6:8]}"
+                past_lines.append(f"[{date_fmt}]: {' / '.join(p['titles'][:8])}")
+            past_info = f"\n\n【過去3日の全記事タイトル（参考）】\n" + "\n".join(past_lines)
+
+        if past_info:
+            prompt = f"""以下の「{cat}」カテゴリの本日記事と過去データを比較し、
+What's new（新規動向）と継続トレンドを明確にしながら120字程度で分析してください。
+
+【本日の記事】
+{titles}{past_info}"""
+        else:
+            prompt = f"""以下の「{cat}」カテゴリの記事群から、現在のトレンドと注目点を120字程度で分析してください。
 実務担当者向けに、文章形式で簡潔に。
 
 {titles}"""
@@ -248,6 +296,42 @@ def generate_cat_summaries(model, articles):
     return summaries
 
 # ========== HTML生成 ==========
+
+def extract_past_digest(date_tag):
+    """過去のHTMLから全体サマリーと記事タイトル一覧を抽出"""
+    path = Path(f"docs/digest_{date_tag}.html")
+    if not path.exists():
+        return None
+    try:
+        html = path.read_text(encoding="utf-8")
+        result = {"date": date_tag, "summary": "", "titles": []}
+
+        # 全体サマリーを抽出（summary-textクラスのdiv）
+        m = re.search(r'class="summary-text"[^>]*>([^<]{20,})', html)
+        if m:
+            result["summary"] = m.group(1).strip()[:300]
+
+        # 記事タイトルを抽出（article-titleクラスのdiv）
+        titles = re.findall(r'class="article-title"[^>]*>([^<]{5,})', html)
+        result["titles"] = titles[:30]  # 最大30件
+
+        return result if result["titles"] or result["summary"] else None
+    except Exception as e:
+        print(f"  [WARN] 過去データ取得失敗 {date_tag}: {e}")
+        return None
+
+def get_past_digests(days=3):
+    """過去N日分のダイジェストデータを取得"""
+    available = get_available_dates()
+    today_tag = datetime.now(tz=timezone(timedelta(hours=9))).strftime("%Y%m%d")
+    past = [d for d in available if d < today_tag]
+    past = sorted(past, reverse=True)[:days]  # 直近N日分
+    results = []
+    for tag in past:
+        data = extract_past_digest(tag)
+        if data:
+            results.append(data)
+    return results
 
 def get_available_dates():
     """docs/フォルダにある過去のダイジェストの日付リストを返す"""
@@ -890,14 +974,18 @@ def main():
     articles = analyze_articles(model, candidates)
     print(f"  → 関連記事: {len(articles)}件")
 
+    print(f"[{datetime.now().strftime('%H:%M:%S')}] 過去データ取得中...")
+    past_digests = get_past_digests(days=3)
+    print(f"  → {len(past_digests)}日分の過去データを取得")
+
     print(f"[{datetime.now().strftime('%H:%M:%S')}] 全体サマリー生成中...")
-    overall_summary = generate_overall_summary(model, articles)
+    overall_summary = generate_overall_summary(model, articles, past_digests)
 
     print(f"[{datetime.now().strftime('%H:%M:%S')}] 世界トレンド分析中...")
     world_trend = generate_world_trend(model, trend_articles)
 
     print(f"[{datetime.now().strftime('%H:%M:%S')}] カテゴリ分析中...")
-    cat_summaries = generate_cat_summaries(model, articles)
+    cat_summaries = generate_cat_summaries(model, articles, past_digests)
 
     html = build_html(articles, overall_summary, world_trend, cat_summaries, len(all_articles), len(candidates))
 
