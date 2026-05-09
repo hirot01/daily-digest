@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """
-news_digest.py — 毎日ニュース自動巡回スクリプト v3.3
+news_digest.py — 毎日ニュース自動巡回スクリプト v3.4
 機能: RSS巡回 → Geminiで翻訳・全体サマリー・カテゴリ分析・世界トレンド → インタラクティブHTML出力
 変更履歴:
+  v3.4 - 深掘りボタンをPerplexity検索に変更・ORIGINAL undefinedバグ修正
   v3.3 - 過去3日分との差分分析（What's new・継続・変化）をサマリーに追加
   v3.2 - 日付ナビゲーション（前後矢印＋カレンダーモーダル）追加
   v3.1 - ソース別件数制限撤廃・候補上限60件・保存済みバッジ表示
@@ -578,9 +579,12 @@ def build_html(articles, overall_summary, world_trend, cat_summaries, all_count,
     }}
     .deep-text {{ font-size:13.5px; line-height:1.95; color:var(--fg2); }}
     .deep-btn {{
-      background:var(--accent); border:none; color:#fff;
-      padding:9px 20px; border-radius:8px; cursor:pointer; font-size:13px; font-weight:600;
+      background:#1a56db; border:none; color:#fff;
+      padding:10px 22px; border-radius:8px; cursor:pointer; font-size:13px; font-weight:600;
+      display:inline-flex; align-items:center; gap:6px;
+      box-shadow:0 2px 8px rgba(26,86,219,.25); transition:all .15s;
     }}
+    .deep-btn:hover {{ background:#1e40af; transform:translateY(-1px); }}
     .deep-loading {{ font-size:13px; color:var(--fg3); }}
 
     /* Save bar */
@@ -694,8 +698,11 @@ def build_html(articles, overall_summary, world_trend, cat_summaries, all_count,
   <div class="section-head" id="det-body-label"></div>
   <div class="detail-body" id="det-body"></div>
   <div class="deep-card">
-    <div class="deep-label">🔬 AI 深掘り分析</div>
-    <div id="deep-content"><button class="deep-btn" onclick="loadDeepDive()">分析を生成</button></div>
+    <div class="deep-label">🔍 もっと調べる</div>
+    <p style="font-size:13px;color:var(--fg2);margin-bottom:12px;line-height:1.7;">
+      Perplexity AIがこの記事のトピックについてウェブ上の最新情報を収集・日本語でまとめます。
+    </p>
+    <button class="deep-btn" id="perplexity-btn" onclick="openPerplexity()">🔍 Perplexityで深掘り</button>
   </div>
 </div>
 
@@ -801,7 +808,6 @@ document.addEventListener('DOMContentLoaded', initNavButtons);
 const CAT_ICONS  = {json.dumps(CAT_ICONS,  ensure_ascii=False)};
 const CAT_COLORS = {json.dumps(CAT_COLORS, ensure_ascii=False)};
 const CAT_SUMMARIES = {json.dumps(cat_summaries, ensure_ascii=False)};
-const GEMINI_KEY = ""; // ← 深掘り分析を使う場合は aistudio.google.com のAPIキーを入力
 const GAS_URL = "https://script.google.com/macros/s/AKfycbz9Nc874Azvh8zqv5BySUGToK01aIkInocGYeqxgyyiJ-fN0YCqIW4h2E9NRkYBQ8bO/exec";
 
 let history = ["top"];
@@ -856,9 +862,10 @@ function showArticle(idx, push=true) {{
   document.getElementById("det-meta").innerHTML = `<span>${{a.source}}</span><span>${{(a.published||"").slice(0,16).replace("T"," ")}}</span>`;
   const isTranslated = a.body_ja && a.body_ja !== a.body;
   document.getElementById("det-body-label").textContent = isTranslated ? "記事本文（日本語訳）" : "記事本文";
+  const origText = (a.body && a.body !== "undefined") ? a.body : "";
   document.getElementById("det-body").innerHTML =
-    (a.body_ja || a.body || "") +
-    (isTranslated ? `<div class="detail-orig-body"><div class="detail-orig-label">ORIGINAL</div>${{a.body}}</div>` : "") +
+    (a.body_ja || origText || "") +
+    (isTranslated && origText ? `<div class="detail-orig-body"><div class="detail-orig-label">ORIGINAL</div>${{origText}}</div>` : "") +
     `<br><a href="${{a.link}}" target="_blank" rel="noopener" class="source-link">🔗 元記事を開く</a>`;
   document.getElementById("deep-content").innerHTML = '<button class="deep-btn" onclick="loadDeepDive()">分析を生成</button>';
   showPage("article");
@@ -921,27 +928,10 @@ async function saveChecked() {{
   }}
 }}
 
-async function loadDeepDive() {{
+function openPerplexity() {{
   const a = ARTICLES[currentArticleIdx];
-  document.getElementById("deep-content").innerHTML = '<div class="deep-loading">⟳ 分析中...</div>';
-  if (!GEMINI_KEY) {{
-    document.getElementById("deep-content").innerHTML =
-      '<div class="deep-loading">※ 深掘り分析にはAPIキーが必要です。HTMLファイル内の GEMINI_KEY を設定してください。</div>';
-    return;
-  }}
-  try {{
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${{GEMINI_KEY}}`, {{
-      method:"POST", headers:{{"Content-Type":"application/json"}},
-      body: JSON.stringify({{ contents:[{{ parts:[{{ text:
-        `以下のニュース記事を深掘り分析してください（250〜300字、文章形式）。\\n①市場・業界への示唆\\n②タイのボイラー・バイオマス事業または日タイ貿易への影響\\n③今後の注目点\\n\\n【タイトル】${{a.title_ja||a.title}}\\n【本文】${{a.body_ja||a.body}}\\n【カテゴリ】${{a.category}}`
-      }}]}}]}})
-    }});
-    const data = await res.json();
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "分析に失敗しました。";
-    document.getElementById("deep-content").innerHTML = `<div class="deep-text">${{text}}</div>`;
-  }} catch(e) {{
-    document.getElementById("deep-content").innerHTML = `<div class="deep-loading">エラー: ${{e.message}}</div>`;
-  }}
+  const query = encodeURIComponent(a.title_ja || a.title);
+  window.open(`https://www.perplexity.ai/search?q=${{query}}`, '_blank');
 }}
 </script>
 
