@@ -35,6 +35,9 @@ jobs:
           cp digest_*.html docs/index.html
           # 日付入りのアーカイブも保存
           cp digest_*.html docs/
+          # available_dates.jsonをdocsとルートにコピー
+          cp available_dates.json docs/available_dates.json
+          cp available_dates.json available_dates.json
 
       - name: GitHub Pagesにコミット・プッシュ
         run: |
