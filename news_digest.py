@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """
-news_digest.py — 毎日ニュース自動巡回スクリプト v3.4
+news_digest.py — 毎日ニュース自動巡回スクリプト v3.5
 機能: RSS巡回 → Geminiで翻訳・全体サマリー・カテゴリ分析・世界トレンド → インタラクティブHTML出力
 変更履歴:
+  v3.5 - 記事クリック不具合修正・カレンダー前後ナビ修正
   v3.4 - 深掘りボタンをPerplexity検索に変更・ORIGINAL undefinedバグ修正
   v3.3 - 過去3日分との差分分析（What's new・継続・変化）をサマリーに追加
   v3.2 - 日付ナビゲーション（前後矢印＋カレンダーモーダル）追加
@@ -392,20 +393,18 @@ def build_html(articles, overall_summary, world_trend, cat_summaries, all_count,
         stars = "★" * a.get("relevance_score", 3) + "☆" * (5 - a.get("relevance_score", 3))
         pub   = a.get("published", "")[:16].replace("T", " ")
         all_articles_html += f"""
-        <div class="article-item" style="border-left:3px solid {color}" data-cat="{cat}" data-idx="{i}">
-          <div class="check-wrap">
-            <input type="checkbox" id="chk-{i}" onchange="updateCount()" onclick="event.stopPropagation()">
+        <div class="article-item" style="border-left:3px solid {color}" data-cat="{cat}" data-idx="{i}" onclick="showArticle({i})">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-{i}" onchange="updateCount()">
             <label class="check-label" for="chk-{i}">保存する</label>
           </div>
-          <div onclick="showArticle({i})">
-            <div class="article-meta">
-              <span class="art-cat" style="color:{color}">{icon} {cat}</span>
-              <span class="art-src">{a['source']}</span>
-              <span class="art-stars">{stars}</span>
-            </div>
-            <div class="article-title">{a.get('title_ja', a['title'])}</div>
-            <div class="article-summary">{a.get('summary_ja', '')}</div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:{color}">{icon} {cat}</span>
+            <span class="art-src">{a['source']}</span>
+            <span class="art-stars">{stars}</span>
           </div>
+          <div class="article-title">{a.get('title_ja', a['title'])}</div>
+          <div class="article-summary">{a.get('summary_ja', '')}</div>
         </div>"""
 
     if not all_articles_html:
@@ -725,7 +724,9 @@ function getCurrentTag() {{
 }}
 
 function tagToUrl(tag) {{
-  if (tag === TODAY_TAG) return 'index.html';
+  // AVAILABLE_DATESの最新日 = index.html
+  const latestTag = AVAILABLE_DATES[AVAILABLE_DATES.length - 1];
+  if (tag === latestTag) return 'index.html';
   return `digest_${{tag}}.html`;
 }}
 
