@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """
-news_digest.py — 毎日ニュース自動巡回スクリプト v3.5
+news_digest.py — 毎日ニュース自動巡回スクリプト v3.6
 機能: RSS巡回 → Geminiで翻訳・全体サマリー・カテゴリ分析・世界トレンド → インタラクティブHTML出力
 変更履歴:
+  v3.6 - ナビゲーション完全修正（available_dates.json動的取得）・記事クリック修正
   v3.5 - 記事クリック不具合修正・カレンダー前後ナビ修正
   v3.4 - 深掘りボタンをPerplexity検索に変更・ORIGINAL undefinedバグ修正
   v3.3 - 過去3日分との差分分析（What's new・継続・変化）をサマリーに追加
@@ -712,19 +713,19 @@ def build_html(articles, overall_summary, world_trend, cat_summaries, all_count,
 
 <script>
 const ARTICLES = {articles_js};
-const AVAILABLE_DATES = {available_dates_js};
-const TODAY_TAG = "{today_tag}";
+const THIS_TAG = "{today_tag}"; // このHTMLの日付タグ
 
-// ── 日付ナビゲーション ──────────────────────────────
+// ── 日付ナビゲーション（available_dates.jsonを動的取得）──
+let AVAILABLE_DATES = [];
+
 function getCurrentTag() {{
-  // URLのファイル名から日付タグを取得（index.htmlの場合はTODAY_TAG）
   const path = location.pathname;
-  const re = new RegExp('digest_([0-9]{8})\\.html'); const m = path.match(re);
-  return m ? m[1] : TODAY_TAG;
+  const re = new RegExp('digest_([0-9]{{8}})\\.html');
+  const m = path.match(re);
+  return m ? m[1] : THIS_TAG;
 }}
 
 function tagToUrl(tag) {{
-  // AVAILABLE_DATESの最新日 = index.html
   const latestTag = AVAILABLE_DATES[AVAILABLE_DATES.length - 1];
   if (tag === latestTag) return 'index.html';
   return `digest_${{tag}}.html`;
@@ -744,6 +745,19 @@ function initNavButtons() {{
   const next = document.getElementById('nextBtn');
   if (prev) prev.disabled = idx <= 0;
   if (next) next.disabled = idx >= AVAILABLE_DATES.length - 1;
+}}
+
+async function loadAvailableDates() {{
+  try {{
+    const base = location.href.substring(0, location.href.lastIndexOf('/') + 1);
+    const url = base.includes('/docs/') ? base + '../available_dates.json'
+              : base + 'available_dates.json';
+    const res = await fetch(url);
+    AVAILABLE_DATES = res.ok ? await res.json() : [THIS_TAG];
+  }} catch(e) {{
+    AVAILABLE_DATES = [THIS_TAG];
+  }}
+  initNavButtons();
 }}
 
 // ── カレンダー ──────────────────────────────────────
@@ -805,7 +819,7 @@ function renderCalendar() {{
   grid.innerHTML = html;
 }}
 
-document.addEventListener('DOMContentLoaded', initNavButtons);
+document.addEventListener('DOMContentLoaded', loadAvailableDates);
 const CAT_ICONS  = {json.dumps(CAT_ICONS,  ensure_ascii=False)};
 const CAT_COLORS = {json.dumps(CAT_COLORS, ensure_ascii=False)};
 const CAT_SUMMARIES = {json.dumps(cat_summaries, ensure_ascii=False)};
@@ -868,7 +882,7 @@ function showArticle(idx, push=true) {{
     (a.body_ja || origText || "") +
     (isTranslated && origText ? `<div class="detail-orig-body"><div class="detail-orig-label">ORIGINAL</div>${{origText}}</div>` : "") +
     `<br><a href="${{a.link}}" target="_blank" rel="noopener" class="source-link">🔗 元記事を開く</a>`;
-  document.getElementById("deep-content").innerHTML = '<button class="deep-btn" onclick="loadDeepDive()">分析を生成</button>';
+  showPage("article");
   showPage("article");
 }}
 
