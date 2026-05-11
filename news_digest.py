@@ -999,5 +999,17 @@ def main():
     out.write_text(html, encoding="utf-8")
     print(f"  → 出力: {out}")
 
+    # available_dates.jsonを生成（カレンダーナビ用）
+    all_dates = get_available_dates()
+    if date_tag not in all_dates:
+        all_dates.append(date_tag)
+    all_dates = sorted(all_dates)
+    dates_json = json.dumps(all_dates)
+    Path("available_dates.json").write_text(dates_json, encoding="utf-8")
+    # docsフォルダにも書き出す（存在する場合）
+    if Path("docs").exists():
+        Path("docs/available_dates.json").write_text(dates_json, encoding="utf-8")
+    print(f"  → 日付一覧: {len(all_dates)}件")
+
 if __name__ == "__main__":
     main()
