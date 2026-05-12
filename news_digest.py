@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """
-news_digest.py — 毎日ニュース自動巡回スクリプト v3.6
+news_digest.py — 毎日ニュース自動巡回スクリプト v3.7
 機能: RSS巡回 → Geminiで翻訳・全体サマリー・カテゴリ分析・世界トレンド → インタラクティブHTML出力
 変更履歴:
+  v3.7 - 記事インデックスずれ修正・日付ナビURL固定化・キャッシュ回避
   v3.6 - ナビゲーション完全修正（available_dates.json動的取得）・記事クリック修正
   v3.5 - 記事クリック不具合修正・カレンダー前後ナビ修正
   v3.4 - 深掘りボタンをPerplexity検索に変更・ORIGINAL undefinedバグ修正
@@ -352,8 +353,9 @@ def build_html(articles, overall_summary, world_trend, cat_summaries, all_count,
     today    = datetime.now(tz=timezone(timedelta(hours=9)))
     date_str = today.strftime("%Y年%m月%d日（%a）")
 
-    # 記事データをJSに埋め込む（深掘り用）
-    articles_js = json.dumps(articles, ensure_ascii=False)
+    # 記事データをJSに埋め込む — sorted順でHTMLとインデックスを統一
+    sorted_articles = sorted(articles, key=lambda x: -x.get("relevance_score", 0))
+    articles_js = json.dumps(sorted_articles, ensure_ascii=False)
 
     # 利用可能な日付リスト（カレンダー用）
     available_dates = get_available_dates()
@@ -387,7 +389,7 @@ def build_html(articles, overall_summary, world_trend, cat_summaries, all_count,
 
     # 全記事リスト
     all_articles_html = ""
-    for i, a in enumerate(sorted(articles, key=lambda x: -x.get("relevance_score", 0))):
+    for i, a in enumerate(sorted_articles):
         cat   = a.get("category", "その他")
         color = CAT_COLORS.get(cat, "#555")
         icon  = CAT_ICONS.get(cat, "📰")
@@ -749,23 +751,17 @@ function initNavButtons() {{
 
 
 async function loadAvailableDates() {{
-  // GitHub Pages固定URL: リポジトリ名を含むベースパスを使用
-  const parts = location.pathname.split('/'); parts.pop(); const basePath = parts.join('/') + '/';
-  const urls = [
-    basePath + 'available_dates.json',
-    location.origin + '/daily-digest/available_dates.json',
-    'available_dates.json',
-  ];
-  for (const url of urls) {{
-    try {{
-      const res = await fetch(url);
-      if (res.ok) {{
-        AVAILABLE_DATES = await res.json();
-        initNavButtons();
-        return;
-      }}
-    }} catch(e) {{ /* try next */ }}
-  }}
+  // 固定URLで取得（GitHub Pages: hirot01.github.io/daily-digest/）
+  const DATES_URL = "https://hirot01.github.io/daily-digest/available_dates.json";
+  try {{
+    const res = await fetch(DATES_URL + "?t=" + Date.now()); // キャッシュ回避
+    if (res.ok) {{
+      AVAILABLE_DATES = await res.json();
+      initNavButtons();
+      if (typeof renderCalendar === "function" && calYear) renderCalendar();
+      return;
+    }}
+  }} catch(e) {{ console.log("dates fetch failed:", e); }}
   AVAILABLE_DATES = [THIS_TAG];
   initNavButtons();
 }}
