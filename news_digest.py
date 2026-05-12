@@ -747,16 +747,26 @@ function initNavButtons() {{
   if (next) next.disabled = idx >= AVAILABLE_DATES.length - 1;
 }}
 
+
 async function loadAvailableDates() {{
-  try {{
-    const base = location.href.substring(0, location.href.lastIndexOf('/') + 1);
-    const url = base.includes('/docs/') ? base + '../available_dates.json'
-              : base + 'available_dates.json';
-    const res = await fetch(url);
-    AVAILABLE_DATES = res.ok ? await res.json() : [THIS_TAG];
-  }} catch(e) {{
-    AVAILABLE_DATES = [THIS_TAG];
+  // GitHub Pages固定URL: リポジトリ名を含むベースパスを使用
+  const parts = location.pathname.split('/'); parts.pop(); const basePath = parts.join('/') + '/';
+  const urls = [
+    basePath + 'available_dates.json',
+    location.origin + '/daily-digest/available_dates.json',
+    'available_dates.json',
+  ];
+  for (const url of urls) {{
+    try {{
+      const res = await fetch(url);
+      if (res.ok) {{
+        AVAILABLE_DATES = await res.json();
+        initNavButtons();
+        return;
+      }}
+    }} catch(e) {{ /* try next */ }}
   }}
+  AVAILABLE_DATES = [THIS_TAG];
   initNavButtons();
 }}
 
