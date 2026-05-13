@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """
-news_digest.py — 毎日ニュース自動巡回スクリプト v3.7
+news_digest.py — 毎日ニュース自動巡回スクリプト v3.8
 機能: RSS巡回 → Geminiで翻訳・全体サマリー・カテゴリ分析・世界トレンド → インタラクティブHTML出力
 変更履歴:
+  v3.8 - カテゴリ分析を1回のAPI呼び出しに統合・429時リトライ即終了
   v3.7 - 記事インデックスずれ修正・日付ナビURL固定化・キャッシュ回避
   v3.6 - ナビゲーション完全修正（available_dates.json動的取得）・記事クリック修正
   v3.5 - 記事クリック不具合修正・カレンダー前後ナビ修正
@@ -143,7 +144,7 @@ def keyword_score(a):
 
 # ========== Gemini 呼び出し ==========
 
-def gemini(model, prompt, max_retries=4):
+def gemini(model, prompt, max_retries=3):
     import time
     for attempt in range(max_retries):
         try:
@@ -154,7 +155,12 @@ def gemini(model, prompt, max_retries=4):
             raw = response.text.strip()
             return re.sub(r"^```json\s*|^```\s*|```$", "", raw, flags=re.MULTILINE).strip()
         except Exception as e:
-            wait = 30 * (attempt + 1)
+            err_str = str(e)
+            # 429（クォータ超過）はリトライしても無意味なので即終了
+            if "429" in err_str or "RESOURCE_EXHAUSTED" in err_str:
+                print(f"  [QUOTA] クォータ超過のため処理を中断します")
+                raise
+            wait = 20 * (attempt + 1)
             print(f"  [RETRY {attempt+1}/{max_retries}] Gemini error: {e} → {wait}秒待機")
             if attempt < max_retries - 1:
                 time.sleep(wait)
@@ -259,45 +265,50 @@ def generate_world_trend(model, trend_articles):
     return gemini(model, prompt)
 
 def generate_cat_summaries(model, articles, past_digests=None):
-    """カテゴリ別トレンド分析を生成（過去データと比較）"""
+    """カテゴリ別トレンド分析を1回のAPI呼び出しでまとめて生成"""
     from collections import defaultdict
     by_cat = defaultdict(list)
     for a in articles:
         by_cat[a["category"]].append(a)
 
-    # 過去記事をカテゴリ別に整理
-    past_by_cat = defaultdict(list)
+    if not by_cat:
+        return {}
+
+    # 過去データをまとめる
+    past_info = ""
     if past_digests:
+        past_lines = []
         for p in past_digests:
             date_fmt = f"{p['date'][4:6]}/{p['date'][6:8]}"
-            for t in p.get('titles', []):
-                past_by_cat['_all'].append(f"[{date_fmt}] {t}")
+            past_lines.append(f"[{date_fmt}]: {' / '.join(p['titles'][:8])}")
+        past_info = "\n\n【過去3日の全記事タイトル（参考）】\n" + "\n".join(past_lines)
 
-    summaries = {}
+    # 全カテゴリの記事をまとめてプロンプトに入れる
+    cat_sections = ""
     for cat, arts in by_cat.items():
-        titles = "\n".join([f"・{a['title_ja']}" for a in arts])
-        # 過去の同カテゴリ記事（タイトルに部分一致で判断はGeminiに任せる）
-        past_info = ""
-        if past_digests:
-            past_lines = []
-            for p in past_digests:
-                date_fmt = f"{p['date'][4:6]}/{p['date'][6:8]}"
-                past_lines.append(f"[{date_fmt}]: {' / '.join(p['titles'][:8])}")
-            past_info = f"\n\n【過去3日の全記事タイトル（参考）】\n" + "\n".join(past_lines)
+        titles = "\n".join([f"  ・{a['title_ja']}" for a in arts])
+        cat_sections += f"\n【{cat}】\n{titles}\n"
 
-        if past_info:
-            prompt = f"""以下の「{cat}」カテゴリの本日記事と過去データを比較し、
-What's new（新規動向）と継続トレンドを明確にしながら120字程度で分析してください。
+    prompt = f"""以下は本日のカテゴリ別記事一覧です。各カテゴリについて、
+What's new（新規動向）と継続トレンドを明確にしながら100字程度で分析してください。
+{past_info}
 
-【本日の記事】
-{titles}{past_info}"""
-        else:
-            prompt = f"""以下の「{cat}」カテゴリの記事群から、現在のトレンドと注目点を120字程度で分析してください。
-実務担当者向けに、文章形式で簡潔に。
+【本日の記事（カテゴリ別）】
+{cat_sections}
+以下のJSON形式のみで返答してください（マークダウン不要）:
+{{
+  "カテゴリ名": "分析テキスト",
+  ...
+}}"""
 
-{titles}"""
-        summaries[cat] = gemini(model, prompt)
-    return summaries
+    raw = gemini(model, prompt)
+    try:
+        import json as _json
+        return _json.loads(raw)
+    except Exception:
+        # パース失敗時は空dictを返す（HTMLは「分析中」表示になる）
+        print(f"  [WARN] cat summaries JSON parse failed: {raw[:100]}")
+        return {{cat: "" for cat in by_cat}}
 
 # ========== HTML生成 ==========
 
