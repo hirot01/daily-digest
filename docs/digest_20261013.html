@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>デイリーニュースダイジェスト — 2026年10月13日（Tue）</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f8f9fb; --bg2: #ffffff; --bg3: #f0f2f5;
+      --fg: #1a1d23; --fg2: #4a5168; --fg3: #9299aa;
+      --accent: #1a56db; --accent2: #0e9f6e;
+      --rule: #e5e7eb; --shadow: 0 1px 4px rgba(0,0,0,.07);
+    }
+    body { font-family:'Noto Sans JP',sans-serif; background:var(--bg); color:var(--fg); line-height:1.7; }
+    a { color:var(--accent); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+
+    /* Header */
+    .site-header {
+      position:sticky; top:0; z-index:100;
+      background:#fff; border-bottom:1px solid var(--rule);
+      padding:14px 24px; display:flex; align-items:center; justify-content:space-between;
+      box-shadow:var(--shadow);
+    }
+    .site-logo { font-size:15px; font-weight:700; color:var(--fg); letter-spacing:-.01em; }
+    .site-logo span { color:var(--accent); }
+    .site-date { font-size:12px; color:var(--fg3); }
+    .back-btn {
+      display:none; background:#f0f2f5; border:none;
+      color:var(--fg2); padding:6px 14px; border-radius:20px; cursor:pointer; font-size:12px; font-weight:500;
+    }
+    .back-btn.visible { display:block; }
+
+    /* Navigation */
+    .nav-center { display:flex; align-items:center; gap:6px; }
+    .nav-arrow {
+      background:none; border:1px solid var(--rule); border-radius:8px;
+      width:32px; height:32px; font-size:20px; cursor:pointer;
+      color:var(--fg2); display:flex; align-items:center; justify-content:center;
+      transition:all .15s; line-height:1;
+    }
+    .nav-arrow:hover { background:var(--bg3); }
+    .nav-arrow:disabled { color:var(--rule); cursor:not-allowed; }
+    .date-btn {
+      background:var(--bg3); border:1px solid var(--rule); border-radius:8px;
+      padding:5px 12px; font-size:13px; font-weight:600; cursor:pointer;
+      color:var(--fg); transition:all .15s; white-space:nowrap;
+    }
+    .date-btn:hover { background:#e5e7eb; }
+
+    /* Pages */
+    .page { display:none; max-width:780px; margin:0 auto; padding:28px 20px 80px; }
+    .page.active { display:block; }
+
+    /* Overall summary */
+    .summary-card {
+      background:linear-gradient(135deg, #1a56db 0%, #0e9f6e 100%);
+      border-radius:16px; padding:24px 28px; margin-bottom:28px;
+      box-shadow:0 4px 20px rgba(26,86,219,.2);
+    }
+    .summary-label {
+      font-size:10px; font-weight:700; letter-spacing:.18em;
+      color:rgba(255,255,255,.7); text-transform:uppercase; margin-bottom:10px;
+    }
+    .summary-text { font-size:14px; line-height:1.9; color:#fff; }
+
+    /* Section head */
+    .section-head {
+      font-size:12px; font-weight:700; color:var(--fg3);
+      letter-spacing:.08em; text-transform:uppercase;
+      margin-bottom:14px; padding-bottom:8px;
+      border-bottom:2px solid var(--rule);
+    }
+
+    /* Category cards */
+    .cat-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:32px; }
+    @media(max-width:500px){ .cat-grid { grid-template-columns:1fr; } }
+    .cat-card {
+      background:#fff; border-radius:14px; padding:18px 20px;
+      cursor:pointer; transition:all .2s; border:1px solid var(--rule);
+      box-shadow:var(--shadow);
+    }
+    .cat-card:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(0,0,0,.1); }
+    .cat-card-head { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+    .cat-icon { font-size:22px; }
+    .cat-name { font-size:13px; font-weight:700; flex:1; color:var(--fg); }
+    .cat-count {
+      font-size:11px; color:#fff; font-weight:600;
+      background:var(--accent); padding:2px 10px; border-radius:20px;
+    }
+    .cat-trend { font-size:12px; color:var(--fg2); line-height:1.75; }
+
+    /* Article items */
+    .article-item {
+      background:#fff; border-radius:12px; border:1px solid var(--rule);
+      padding:16px 20px; margin-bottom:10px; cursor:pointer;
+      transition:all .15s; box-shadow:var(--shadow);
+    }
+    .article-item:hover { transform:translateY(-1px); box-shadow:0 4px 16px rgba(0,0,0,.1); }
+    .article-meta { display:flex; gap:10px; font-size:11px; color:var(--fg3); margin-bottom:6px; flex-wrap:wrap; align-items:center; }
+    .art-cat { font-weight:600; font-size:11px; padding:2px 8px; border-radius:4px; background:var(--bg3); }
+    .art-stars { color:#f59e0b; letter-spacing:-1px; }
+    .article-title { font-size:14px; font-weight:600; color:var(--fg); line-height:1.55; margin-bottom:6px; }
+    .article-summary { font-size:12.5px; color:var(--fg2); line-height:1.7; }
+    .no-news { text-align:center; color:var(--fg3); padding:60px 20px; font-size:14px; }
+
+    /* Category page */
+    .cat-page-icon { font-size:32px; margin-bottom:4px; }
+    .cat-page-name { font-size:22px; font-weight:700; margin-bottom:18px; color:var(--fg); }
+    .cat-summary-box {
+      background:#fff; border:1px solid var(--rule);
+      border-radius:12px; padding:18px 22px; margin-bottom:24px;
+      box-shadow:var(--shadow);
+    }
+    .cat-summary-label {
+      font-size:10px; font-weight:700; letter-spacing:.18em;
+      color:var(--accent); text-transform:uppercase; margin-bottom:10px;
+    }
+    .cat-summary-text { font-size:13.5px; color:var(--fg2); line-height:1.85; }
+
+    /* Article detail */
+    .detail-cat { font-size:11px; font-weight:700; margin-bottom:8px; }
+    .detail-title { font-size:20px; font-weight:700; line-height:1.5; margin-bottom:6px; color:var(--fg); }
+    .detail-orig { font-size:11px; color:var(--fg3); font-style:italic; margin-bottom:12px; }
+    .detail-meta { font-size:12px; color:var(--fg3); margin-bottom:18px; display:flex; gap:14px; flex-wrap:wrap; }
+    .detail-body {
+      background:#fff; border:1px solid var(--rule);
+      border-radius:12px; padding:20px 22px;
+      font-size:14px; line-height:1.9; color:var(--fg2); margin-bottom:16px;
+      box-shadow:var(--shadow);
+    }
+    .detail-orig-body {
+      margin-top:14px; padding-top:12px; border-top:1px solid var(--rule);
+      font-size:12px; color:var(--fg3); line-height:1.7;
+    }
+    .detail-orig-label { font-size:10px; color:var(--fg3); margin-bottom:4px; letter-spacing:.1em; font-weight:600; }
+    .source-link {
+      display:inline-flex; align-items:center; gap:6px;
+      font-size:12px; color:var(--accent); margin-top:12px;
+      border:1px solid #c3d5fa; border-radius:6px; padding:5px 12px;
+      background:#eef2ff;
+    }
+
+    /* World trend card */
+    .trend-card {
+      background:#fff; border:1px solid var(--rule);
+      border-radius:16px; padding:22px 26px; margin-bottom:16px;
+      box-shadow:var(--shadow); border-left:4px solid #f59e0b;
+    }
+    .trend-label {
+      font-size:10px; font-weight:700; letter-spacing:.18em;
+      color:#d97706; text-transform:uppercase; margin-bottom:10px;
+    }
+    .trend-text { font-size:14px; line-height:1.9; color:var(--fg2); }
+
+    /* Deep dive */
+    .deep-card {
+      background:linear-gradient(135deg, #eef2ff, #f0fdf4);
+      border:1px solid #c3d5fa; border-radius:14px; padding:22px 24px;
+    }
+    .deep-label {
+      font-size:10px; font-weight:700; letter-spacing:.18em;
+      color:var(--accent); text-transform:uppercase; margin-bottom:12px;
+    }
+    .deep-text { font-size:13.5px; line-height:1.95; color:var(--fg2); }
+    .deep-btn {
+      background:#1a56db; border:none; color:#fff;
+      padding:10px 22px; border-radius:8px; cursor:pointer; font-size:13px; font-weight:600;
+      display:inline-flex; align-items:center; gap:6px;
+      box-shadow:0 2px 8px rgba(26,86,219,.25); transition:all .15s;
+    }
+    .deep-btn:hover { background:#1e40af; transform:translateY(-1px); }
+    .deep-loading { font-size:13px; color:var(--fg3); }
+
+    /* Save bar */
+    .save-bar {
+      position:fixed; bottom:0; left:0; right:0;
+      background:#fff; border-top:1px solid var(--rule);
+      padding:12px 24px; display:flex; align-items:center; justify-content:space-between;
+      z-index:200; box-shadow:0 -2px 12px rgba(0,0,0,.08);
+    }
+    .save-count { font-size:13px; color:var(--fg2); font-weight:500; }
+    .save-btn {
+      background:var(--accent2); border:none; color:#fff;
+      padding:10px 24px; border-radius:8px; cursor:pointer;
+      font-size:14px; font-weight:700; box-shadow:0 2px 8px rgba(14,159,110,.3);
+    }
+    .save-btn:disabled { background:var(--fg3); cursor:not-allowed; box-shadow:none; }
+    .check-wrap { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+    .check-wrap input[type=checkbox] { width:18px; height:18px; cursor:pointer; accent-color:var(--accent); }
+    .check-label { font-size:12px; color:var(--fg3); cursor:pointer; }
+    .saved-badge {
+      display:inline-flex; align-items:center; gap:4px;
+      font-size:11px; font-weight:600; color:var(--accent2);
+      background:#f0fdf4; border:1px solid #bbf7d0;
+      padding:2px 8px; border-radius:20px; margin-bottom:8px;
+    }
+
+    footer {
+      text-align:center; font-size:11px; color:var(--fg3);
+      padding:20px; border-top:1px solid var(--rule); margin-top:40px;
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-logo">📋 Daily Digest</div>
+  <div class="nav-center">
+    <button class="nav-arrow" id="prevBtn" onclick="goToDate('prev')" title="前日">‹</button>
+    <button class="date-btn" onclick="toggleCalendar()" title="カレンダー">
+      📅 2026年10月13日（Tue）
+    </button>
+    <button class="nav-arrow" id="nextBtn" onclick="goToDate('next')" title="翌日">›</button>
+  </div>
+  <button class="back-btn" id="backBtn" onclick="goBack()">← 戻る</button>
+</header>
+
+<!-- カレンダーモーダル -->
+<div id="calendarOverlay" onclick="closeCalendar()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:300;"></div>
+<div id="calendarModal" style="display:none;position:fixed;top:64px;left:50%;transform:translateX(-50%);
+  background:#fff;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.15);
+  padding:20px;z-index:301;width:320px;max-width:90vw;">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+    <button onclick="changeCalMonth(-1)" style="background:none;border:none;font-size:20px;cursor:pointer;color:#4a5168;">‹</button>
+    <div id="calMonthLabel" style="font-weight:700;font-size:15px;color:#1a1d23;"></div>
+    <button onclick="changeCalMonth(1)" style="background:none;border:none;font-size:20px;cursor:pointer;color:#4a5168;">›</button>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;margin-bottom:8px;">
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">日</div>
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">月</div>
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">火</div>
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">水</div>
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">木</div>
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">金</div>
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">土</div>
+  </div>
+  <div id="calGrid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;"></div>
+</div>
+
+<!-- TOP PAGE -->
+<div class="page active" id="page-top">
+  <div class="trend-card">
+    <div class="trend-label">🌍 今日の世界トレンド</div>
+    <div class="trend-text">今日は**地政学的緊張の多角化と国際秩序の動揺**、そして**経済の不確実性**が主要テーマです。
+
+北朝鮮ミサイル発射やロシアによる破壊工作、中東情勢の緊迫化など国際的な対立が深まり、米国内の政治混乱も顕著です。経済面では、原油高や米半導体株安が重荷となり株式市場は不安定さを増しています。国際金融機関の動向も注目される中、AIとロボット技術の進化に伴う倫理・安全性問題も新たな社会課題として浮上しています。</div>
+  </div>
+  <div class="summary-card">
+    <div class="summary-label">📋 本日の関連ニュースサマリー</div>
+    <div class="summary-text">タイ経済の回復基調と再生可能エネルギーへの注力は継続している。本日新たに、日本のバイオマス市場の詳細な分析レポートや電力コスト上昇によるエネルギーコンサルティング市場の活況が浮上した。また、IMFはAI投資を世界成長の支えと見る一方、戦争と債務を脅威と指摘し、キオクシア連合の5兆円投資ジレンマはAIエコノミーの厳しさを示す。変化・進展として、ソフトバンクがAI・蓄電池で「稼ぐGX」を全国展開するなど、再エネ・GX分野が具体的な収益化モデルへと移行し、タイを含むアジア市場への波及が注目される。</div>
+  </div>
+
+  <div class="section-head">カテゴリ別トレンド</div>
+  <div class="cat-grid">
+    
+        <div class="cat-card" onclick="showCategory('企業/ビジネス動向')" style="border-left:4px solid #be123c">
+          <div class="cat-card-head">
+            <span class="cat-icon">🏭</span>
+            <span class="cat-name">企業/ビジネス動向</span>
+            <span class="cat-count">4件</span>
+          </div>
+          <p class="cat-trend">グローバル競争・M&A活発化は継続。AI・GXを活用した「稼ぐ」事業モデル構築が新規動向。ゼンショーの世界戦略、ソフトバンクのGX展開、キオクシアの投資ジレンマ、カカクコム買収合戦など、個別企業の具体的戦略と課題が焦点化。</p>
+        </div>
+        <div class="cat-card" onclick="showCategory('エネルギー市場')" style="border-left:4px solid #0369a1">
+          <div class="cat-card-head">
+            <span class="cat-icon">⚡</span>
+            <span class="cat-name">エネルギー市場</span>
+            <span class="cat-count">2件</span>
+          </div>
+          <p class="cat-trend">エネルギー転換と地政学リスクによる市場変動は継続。新規動向として、電力コスト上昇でエネルギーコンサルティング市場が活況。IMFがAI投資を成長要因としながら、戦争と債務を世界経済の主要な脅威と指摘し、リスクへの注目が高まる。</p>
+        </div>
+        <div class="cat-card" onclick="showCategory('バイオマス/再生可能エネルギー')" style="border-left:4px solid #2d7a4f">
+          <div class="cat-card-head">
+            <span class="cat-icon">🌿</span>
+            <span class="cat-name">バイオマス/再生可能エネルギー</span>
+            <span class="cat-count">1件</span>
+          </div>
+          <p class="cat-trend">再生可能エネルギーへの投資加速トレンドが継続。新規動向として、日本におけるバイオマス市場の具体的成長機会と長期展望（2026-2034年）への関心が高まり、詳細な市場分析が進む。</p>
+        </div>
+  </div>
+
+  <div class="section-head">全記事一覧（7件）</div>
+  <div id="all-articles">
+    
+        <div class="article-item" style="border-left:3px solid #2d7a4f" data-cat="バイオマス/再生可能エネルギー" data-idx="0" onclick="showArticle(0)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-0" onchange="updateCount()">
+            <label class="check-label" for="chk-0">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#2d7a4f">🌿 バイオマス/再生可能エネルギー</span>
+            <span class="art-src">Google: バイオマス 日本</span>
+            <span class="art-stars">★★★★★</span>
+          </div>
+          <div class="article-title">日本のバイオマス市場：市場規模、シェア、再生可能エネルギー需要、成長機会、業界動向、主要企業、および展望（2026年～2034年）</div>
+          <div class="article-summary">日本のバイオマス市場に関する詳細なレポートがNewscast.jpで公開された。2026年から2034年までの市場規模、シェア、再生可能エネルギー需要、成長機会、業界動向、主要企業、および将来展望を包括的に分析している。日本の再生可能エネルギー分野におけるバイオマスの重要性が示唆されており、今後の市場動向を予測する上で重要な情報となる。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="1" onclick="showArticle(1)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-1" onchange="updateCount()">
+            <label class="check-label" for="chk-1">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
+            <span class="art-src">Bangkok Post – Business</span>
+            <span class="art-stars">★★★★★</span>
+          </div>
+          <div class="article-title">電力コスト上昇でエネルギーコンサルティング市場が活況</div>
+          <div class="article-summary">タイでは電力コスト上昇とクリーンエネルギーへの関心の高まりを受け、エネルギーコンサルティングおよびソリューション市場が競争激化。家庭や企業の間で再生可能エネルギーシステムへの需要が高まっており、タイにおける再生可能エネルギー導入の加速と、それに伴うビジネスチャンスが示唆される。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="2" onclick="showArticle(2)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-2" onchange="updateCount()">
+            <label class="check-label" for="chk-2">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
+            <span class="art-src">Bangkok Post – Business</span>
+            <span class="art-stars">★★★★☆</span>
+          </div>
+          <div class="article-title">IMF、AI投資が世界成長を支えるが、戦争と債務が展望を脅かすと指摘</div>
+          <div class="article-summary">IMFは2026年の世界経済のGDP成長率が3%を超えると予測。強力なAI投資が中東での戦争によるエネルギーショックを相殺すると指摘する一方、下方リスクと債務負担の増大を警告した。エネルギー市場の動向と国際情勢が世界経済に与える影響を分析する上で重要な情報となる。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="3" onclick="showArticle(3)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-3" onchange="updateCount()">
+            <label class="check-label" for="chk-3">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">日経ビジネス</span>
+            <span class="art-stars">★★★★☆</span>
+          </div>
+          <div class="article-title">キオクシア・サンディスク連合、5兆円投資のジレンマ　シェア10年で1割低下 (AIエコノミー揺るがす「ジェンスンの数学」)</div>
+          <div class="article-summary">メモリー大手のキオクシアとサンディスクは、2032年までに国内で5兆円を投資する計画を発表。世界市場シェアが10年間で1割低下する中、生産規模だけでなく技術力による差別化で競争力を維持する方針を示した。日本の製造業における大規模投資と国際競争戦略として注目される。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="4" onclick="showArticle(4)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-4" onchange="updateCount()">
+            <label class="check-label" for="chk-4">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">日経ビジネス</span>
+            <span class="art-stars">★★★★☆</span>
+          </div>
+          <div class="article-title">ソフトバンク、北海道で「稼ぐGX」　AI・蓄電池モデル全国展開 (GXで塗り替わる産業地図)</div>
+          <div class="article-summary">北海道でラピダスによる次世代半導体製造拠点整備が象徴する新たな産業集積が拡大中。関連企業の進出も相次ぎ、半導体を核とした産業クラスター形成への期待が高まっている。ソフトバンクは「稼ぐGX」戦略として、AI・蓄電池モデルの全国展開を目指し、日本の産業地図を塗り替える動きを見せる。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="5" onclick="showArticle(5)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-5" onchange="updateCount()">
+            <label class="check-label" for="chk-5">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">日経ビジネス</span>
+            <span class="art-stars">★★★☆☆</span>
+          </div>
+          <div class="article-title">ゼンショーは「食のファストリ」　世界見据え、創業期から描いた食のSPA構想 (ゼンショー 逆転の法則)</div>
+          <div class="article-summary">ゼンショーホールディングスは、原材料調達から販売までを一貫する「MMD（マス・マーチャンダイジング・システム）」という独自のビジネスモデルを確立し、外食業界で成長。アパレルSPAのようなモデルを採用し、地球規模でのサプライチェーン構築を目指す。日本企業のグローバル戦略とサプライチェーン構築の事例として注目される。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="6" onclick="showArticle(6)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-6" onchange="updateCount()">
+            <label class="check-label" for="chk-6">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">日経ビジネス</span>
+            <span class="art-stars">★★★☆☆</span>
+          </div>
+          <div class="article-title">カカクコム争奪戦が迷走　ベインの「二重価格」、EQTは「1円値上げ」 (会計・財務のサイエンス)</div>
+          <div class="article-summary">カカクコムのTOB（株式公開買付け）が長期化。ベインキャピタルがKDDIの協力を前提とした二重価格を提示し、EQTはそれに対し1円値上げで応酬するなど、買収を巡る攻防が激化している。決着の行方が不透明な状況で、日本企業におけるM&A動向の注目事例となっている。</div>
+        </div>
+  </div>
+</div>
+
+<!-- CATEGORY PAGE -->
+<div class="page" id="page-cat">
+  <div class="cat-page-head">
+    <div class="cat-page-icon" id="cat-icon"></div>
+    <div class="cat-page-name" id="cat-name"></div>
+    <div class="cat-summary-box">
+      <div class="cat-summary-label">📊 カテゴリトレンド分析</div>
+      <div class="cat-summary-text" id="cat-summary-text"></div>
+    </div>
+    <div class="section-head" id="cat-count-head"></div>
+    <div id="cat-articles"></div>
+  </div>
+</div>
+
+<!-- ARTICLE PAGE -->
+<div class="page" id="page-article">
+  <div class="detail-cat" id="det-cat"></div>
+  <div class="detail-title" id="det-title"></div>
+  <div class="detail-orig" id="det-orig"></div>
+  <div class="detail-meta" id="det-meta"></div>
+  <div class="section-head" id="det-body-label"></div>
+  <div class="detail-body" id="det-body"></div>
+  <div class="deep-card">
+    <div class="deep-label">🔍 もっと調べる</div>
+    <p style="font-size:13px;color:var(--fg2);margin-bottom:12px;line-height:1.7;">
+      Perplexity AIがこの記事のトピックについてウェブ上の最新情報を収集・日本語でまとめます。
+    </p>
+    <button class="deep-btn" id="perplexity-btn" onclick="openPerplexity()">🔍 Perplexityで深掘り</button>
+  </div>
+</div>
+
+<footer>
+  生成: 2026-10-13 12:24 JST　｜　ソース: RSS自動巡回 + Gemini AI　｜
+  取得: 20件 / 候補: 14件 / 掲載: 7件
+</footer>
+
+<script>
+const ARTICLES = [{"title": "日本のバイオマス市場：市場規模、シェア、再生可能エネルギー需要、成長機会、業界動向、主要企業、および展望（2026年～2034年） - Newscast.jp", "title_ja": "日本のバイオマス市場：市場規模、シェア、再生可能エネルギー需要、成長機会、業界動向、主要企業、および展望（2026年～2034年）", "body_ja": "日本のバイオマス市場：市場規模、シェア、再生可能エネルギー需要、成長機会、業界動向、主要企業、および展望（2026年～2034年）", "summary_ja": "日本のバイオマス市場に関する詳細なレポートがNewscast.jpで公開された。2026年から2034年までの市場規模、シェア、再生可能エネルギー需要、成長機会、業界動向、主要企業、および将来展望を包括的に分析している。日本の再生可能エネルギー分野におけるバイオマスの重要性が示唆されており、今後の市場動向を予測する上で重要な情報となる。", "source": "Google: バイオマス 日本", "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9QY2NLNGRjbTcxY3E0MUExVTZGRUlCVG5hV3FpYkIyUmxGS1ZWQTFkMTNJQ3RHa0U2dEFxSlRBUXNGdGZyUDJUYXZCaExOUVk?oc=5", "published": "2026-10-12T22:45:00+00:00", "category": "バイオマス/再生可能エネルギー", "relevance_score": 5}, {"title": "Energy consulting heats up amid rising power costs", "title_ja": "電力コスト上昇でエネルギーコンサルティング市場が活況", "body_ja": "タイのエネルギーコンサルティングおよびソリューション市場は、電力コストの上昇とクリーンエネルギーへの関心の高まりにより、家庭や企業の間で再生可能エネルギーシステムへの需要が促進され、競争が激化している。", "summary_ja": "タイでは電力コスト上昇とクリーンエネルギーへの関心の高まりを受け、エネルギーコンサルティングおよびソリューション市場が競争激化。家庭や企業の間で再生可能エネルギーシステムへの需要が高まっており、タイにおける再生可能エネルギー導入の加速と、それに伴うビジネスチャンスが示唆される。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3335989/energy-consulting-heats-up-amid-rising-power-costs", "published": "2026-10-12T22:16:00+00:00", "category": "エネルギー市場", "relevance_score": 5}, {"title": "IMF says AI investment propping up global growth, but war and debt threaten outlook", "title_ja": "IMF、AI投資が世界成長を支えるが、戦争と債務が展望を脅かすと指摘", "body_ja": "国際通貨基金（IMF）は火曜日、AIへの強力な投資が中東での戦争によるエネルギーショックを相殺し、今年の世界経済のGDP成長率が3%を超える見込みであると発表した。しかし、下方リスクが高まっており、多くの国が取り残され、増大する債務負担に脆弱になっているとも指摘した。", "summary_ja": "IMFは2026年の世界経済のGDP成長率が3%を超えると予測。強力なAI投資が中東での戦争によるエネルギーショックを相殺すると指摘する一方、下方リスクと債務負担の増大を警告した。エネルギー市場の動向と国際情勢が世界経済に与える影響を分析する上で重要な情報となる。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3336229/imf-says-ai-investment-propping-up-global-growth-but-war-and-debt-threaten-outlook", "published": "2026-10-13T02:26:00+00:00", "category": "エネルギー市場", "relevance_score": 4}, {"title": "キオクシア・サンディスク連合、5兆円投資のジレンマ　シェア10年で1割低下 (AIエコノミー揺るがす「ジェンスンの数学」)", "title_ja": "キオクシア・サンディスク連合、5兆円投資のジレンマ　シェア10年で1割低下 (AIエコノミー揺るがす「ジェンスンの数学」)", "body_ja": "メモリー大手のキオクシアとサンディスクは、連携し国内で2032年までに5兆円を投じていく。一見急アクセルにも見えるが、アナリストからは「投資ペースは堅調だ」との評価もある。キオクシアらは世界市場シェアが低下する中、生産規模だけでなく技術力で差別化を図る。", "summary_ja": "メモリー大手のキオクシアとサンディスクは、2032年までに国内で5兆円を投資する計画を発表。世界市場シェアが10年間で1割低下する中、生産規模だけでなく技術力による差別化で競争力を維持する方針を示した。日本の製造業における大規模投資と国際競争戦略として注目される。", "source": "日経ビジネス", "link": "https://business.nikkei.com/atcl/gen/19/00924/100900003/", "published": "2026-10-12T20:00:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 4}, {"title": "ソフトバンク、北海道で「稼ぐGX」　AI・蓄電池モデル全国展開 (GXで塗り替わる産業地図)", "title_ja": "ソフトバンク、北海道で「稼ぐGX」　AI・蓄電池モデル全国展開 (GXで塗り替わる産業地図)", "body_ja": "北海道で新たな産業集積の動きが広がっている。その象徴がラピダスによる千歳市での次世代半導体製造拠点の整備だ。関連企業の進出も相次いでおり、半導体を核とした産業クラスター形成への期待が高まっている。", "summary_ja": "北海道でラピダスによる次世代半導体製造拠点整備が象徴する新たな産業集積が拡大中。関連企業の進出も相次ぎ、半導体を核とした産業クラスター形成への期待が高まっている。ソフトバンクは「稼ぐGX」戦略として、AI・蓄電池モデルの全国展開を目指し、日本の産業地図を塗り替える動きを見せる。", "source": "日経ビジネス", "link": "https://business.nikkei.com/atcl/gen/19/00941/092900002/", "published": "2026-10-12T20:00:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 4}, {"title": "ゼンショーは「食のファストリ」　世界見据え、創業期から描いた食のSPA構想 (ゼンショー 逆転の法則)", "title_ja": "ゼンショーは「食のファストリ」　世界見据え、創業期から描いた食のSPA構想 (ゼンショー 逆転の法則)", "body_ja": "外食業界で後発のゼンショーホールディングスが競合を追い抜くことができるのはなぜか。強さの秘訣は、原材料の調達から製造、物流、販売までを一貫して自らの手で企画、運営する「MMD（マス・マーチャンダイジング・システム）」と呼ばれるビジネスモデルにある。それは、アパレル業界で企画から生産、販売までを一体化した製造小売り（SPA）を実現するファーストリテイリングのようだ。ゼンショーは企業理念とする「飢餓と貧困の撲滅」のため、地球規模でのサプライチェーン構築を目指す。", "summary_ja": "ゼンショーホールディングスは、原材料調達から販売までを一貫する「MMD（マス・マーチャンダイジング・システム）」という独自のビジネスモデルを確立し、外食業界で成長。アパレルSPAのようなモデルを採用し、地球規模でのサプライチェーン構築を目指す。日本企業のグローバル戦略とサプライチェーン構築の事例として注目される。", "source": "日経ビジネス", "link": "https://business.nikkei.com/atcl/gen/19/00936/100500003/", "published": "2026-10-12T20:00:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 3}, {"title": "カカクコム争奪戦が迷走　ベインの「二重価格」、EQTは「1円値上げ」 (会計・財務のサイエンス)", "title_ja": "カカクコム争奪戦が迷走　ベインの「二重価格」、EQTは「1円値上げ」 (会計・財務のサイエンス)", "body_ja": "カカクコムのTOBが長期戦に突入した。ベインキャピタルはKDDIの協力を前提に二重価格を提示し、EQTは1円値上げで応酬。奇策と寝技の応酬が続き、決着が見えづらくなってきた。", "summary_ja": "カカクコムのTOB（株式公開買付け）が長期化。ベインキャピタルがKDDIの協力を前提とした二重価格を提示し、EQTはそれに対し1円値上げで応酬するなど、買収を巡る攻防が激化している。決着の行方が不透明な状況で、日本企業におけるM&A動向の注目事例となっている。", "source": "日経ビジネス", "link": "https://business.nikkei.com/atcl/gen/19/00611/100900058/", "published": "2026-10-12T20:00:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 3}];
+const THIS_TAG = "20261013"; // このHTMLの日付タグ
+
+// ── 日付ナビゲーション（available_dates.jsonを動的取得）──
+let AVAILABLE_DATES = [];
+
+function getCurrentTag() {
+  const path = location.pathname;
+  const re = new RegExp('digest_([0-9]{8})\.html');
+  const m = path.match(re);
+  return m ? m[1] : THIS_TAG;
+}
+
+function tagToUrl(tag) {
+  const latestTag = AVAILABLE_DATES[AVAILABLE_DATES.length - 1];
+  if (tag === latestTag) return 'index.html';
+  return `digest_${tag}.html`;
+}
+
+function goToDate(dir) {
+  const cur = getCurrentTag();
+  const idx = AVAILABLE_DATES.indexOf(cur);
+  if (dir === 'prev' && idx > 0) location.href = tagToUrl(AVAILABLE_DATES[idx - 1]);
+  if (dir === 'next' && idx < AVAILABLE_DATES.length - 1) location.href = tagToUrl(AVAILABLE_DATES[idx + 1]);
+}
+
+function initNavButtons() {
+  const cur = getCurrentTag();
+  const idx = AVAILABLE_DATES.indexOf(cur);
+  const prev = document.getElementById('prevBtn');
+  const next = document.getElementById('nextBtn');
+  if (prev) prev.disabled = idx <= 0;
+  if (next) next.disabled = idx >= AVAILABLE_DATES.length - 1;
+}
+
+
+async function loadAvailableDates() {
+  // 固定URLで取得（GitHub Pages: hirot01.github.io/daily-digest/）
+  const DATES_URL = "https://hirot01.github.io/daily-digest/available_dates.json";
+  try {
+    const res = await fetch(DATES_URL + "?t=" + Date.now()); // キャッシュ回避
+    if (res.ok) {
+      AVAILABLE_DATES = await res.json();
+      initNavButtons();
+      if (typeof renderCalendar === "function" && calYear) renderCalendar();
+      return;
+    }
+  } catch(e) { console.log("dates fetch failed:", e); }
+  AVAILABLE_DATES = [THIS_TAG];
+  initNavButtons();
+}
+
+// ── カレンダー ──────────────────────────────────────
+let calYear, calMonth;
+
+function toggleCalendar() {
+  const modal = document.getElementById('calendarModal');
+  const overlay = document.getElementById('calendarOverlay');
+  if (modal.style.display === 'none') {
+    const cur = getCurrentTag();
+    calYear = parseInt(cur.slice(0, 4));
+    calMonth = parseInt(cur.slice(4, 6));
+    renderCalendar();
+    modal.style.display = 'block';
+    overlay.style.display = 'block';
+  } else {
+    closeCalendar();
+  }
+}
+
+function closeCalendar() {
+  document.getElementById('calendarModal').style.display = 'none';
+  document.getElementById('calendarOverlay').style.display = 'none';
+}
+
+function changeCalMonth(dir) {
+  calMonth += dir;
+  if (calMonth > 12) { calMonth = 1; calYear++; }
+  if (calMonth < 1)  { calMonth = 12; calYear--; }
+  renderCalendar();
+}
+
+function renderCalendar() {
+  const label = document.getElementById('calMonthLabel');
+  const grid  = document.getElementById('calGrid');
+  label.textContent = `${calYear}年${calMonth}月`;
+
+  const firstDay = new Date(calYear, calMonth - 1, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth, 0).getDate();
+  const dateSet = new Set(AVAILABLE_DATES);
+  const cur = getCurrentTag();
+
+  let html = '';
+  // 空白セル
+  for (let i = 0; i < firstDay; i++) html += '<div></div>';
+  // 日付セル
+  for (let d = 1; d <= daysInMonth; d++) {
+    const tag = `${calYear}${String(calMonth).padStart(2,'0')}${String(d).padStart(2,'0')}`;
+    const hasData = dateSet.has(tag);
+    const isCur = tag === cur;
+    const style = isCur
+      ? 'background:#1a56db;color:#fff;border-radius:50%;font-weight:700;cursor:pointer;padding:5px 0;font-size:13px;'
+      : hasData
+        ? 'color:#1a56db;font-weight:600;cursor:pointer;padding:5px 0;font-size:13px;border-radius:50%;'
+        : 'color:#d1d5db;padding:5px 0;font-size:13px;';
+    const onclick = hasData ? `onclick="location.href='${tagToUrl(tag)}';"` : '';
+    html += `<div style="${style}" ${onclick}>${d}</div>`;
+  }
+  grid.innerHTML = html;
+}
+
+document.addEventListener('DOMContentLoaded', loadAvailableDates);
+const CAT_ICONS  = {"ボイラー/産業設備": "🔧", "バイオマス/再生可能エネルギー": "🌿", "エネルギー市場": "⚡", "日タイ貿易/マクロ": "🤝", "企業/ビジネス動向": "🏭", "その他": "📰"};
+const CAT_COLORS = {"ボイラー/産業設備": "#b45309", "バイオマス/再生可能エネルギー": "#2d7a4f", "エネルギー市場": "#0369a1", "日タイ貿易/マクロ": "#7c3aed", "企業/ビジネス動向": "#be123c", "その他": "#555"};
+const CAT_SUMMARIES = {"バイオマス/再生可能エネルギー": "再生可能エネルギーへの投資加速トレンドが継続。新規動向として、日本におけるバイオマス市場の具体的成長機会と長期展望（2026-2034年）への関心が高まり、詳細な市場分析が進む。", "企業/ビジネス動向": "グローバル競争・M&A活発化は継続。AI・GXを活用した「稼ぐ」事業モデル構築が新規動向。ゼンショーの世界戦略、ソフトバンクのGX展開、キオクシアの投資ジレンマ、カカクコム買収合戦など、個別企業の具体的戦略と課題が焦点化。", "エネルギー市場": "エネルギー転換と地政学リスクによる市場変動は継続。新規動向として、電力コスト上昇でエネルギーコンサルティング市場が活況。IMFがAI投資を成長要因としながら、戦争と債務を世界経済の主要な脅威と指摘し、リスクへの注目が高まる。"};
+const GAS_URL = "https://script.google.com/macros/s/AKfycbz9Nc874Azvh8zqv5BySUGToK01aIkInocGYeqxgyyiJ-fN0YCqIW4h2E9NRkYBQ8bO/exec";
+
+let history = ["top"];
+let currentArticleIdx = null;
+
+function showPage(id) {
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  document.getElementById("page-" + id).classList.add("active");
+  document.getElementById("backBtn").classList.toggle("visible", id !== "top");
+  window.scrollTo(0, 0);
+}
+
+function goBack() {
+  history.pop();
+  const prev = history[history.length - 1];
+  if (prev === "top") showPage("top");
+  else if (prev && prev.startsWith("cat:")) showCategory(prev.slice(4), false);
+}
+
+function showCategory(cat, push=true) {
+  if (push) history.push("cat:" + cat);
+  document.getElementById("cat-icon").textContent = CAT_ICONS[cat] || "📰";
+  document.getElementById("cat-name").textContent = cat;
+  document.getElementById("cat-summary-text").textContent = CAT_SUMMARIES[cat] || "";
+  const arts = ARTICLES.filter(a => a.category === cat).sort((a,b) => b.relevance_score - a.relevance_score);
+  document.getElementById("cat-count-head").textContent = arts.length + "件の記事";
+  document.getElementById("cat-articles").innerHTML = arts.map(a => {
+    const idx = ARTICLES.indexOf(a);
+    const color = CAT_COLORS[cat] || "#555";
+    const stars = "★".repeat(a.relevance_score||3) + "☆".repeat(5-(a.relevance_score||3));
+    return `<div class="article-item" onclick="showArticle(${idx})" style="border-left:3px solid ${color}">
+      <div class="article-meta">
+        <span class="art-src">${a.source}</span>
+        <span class="art-stars">${stars}</span>
+      </div>
+      <div class="article-title">${a.title_ja || a.title}</div>
+      <div class="article-summary">${a.summary_ja || ""}</div>
+    </div>`;
+  }).join("");
+  showPage("cat");
+}
+
+function showArticle(idx, push=true) {
+  if (push) history.push("article:" + idx);
+  currentArticleIdx = idx;
+  const a = ARTICLES[idx];
+  const cat = a.category || "その他";
+  const color = CAT_COLORS[cat] || "#555";
+  document.getElementById("det-cat").innerHTML = `<span style="color:${color}">${CAT_ICONS[cat]||"📰"} ${cat}</span>`;
+  document.getElementById("det-title").textContent = a.title_ja || a.title;
+  document.getElementById("det-orig").textContent = a.title_ja && a.title_ja !== a.title ? "原題: " + a.title : "";
+  document.getElementById("det-meta").innerHTML = `<span>${a.source}</span><span>${(a.published||"").slice(0,16).replace("T"," ")}</span>`;
+  const isTranslated = a.body_ja && a.body_ja !== a.body;
+  document.getElementById("det-body-label").textContent = isTranslated ? "記事本文（日本語訳）" : "記事本文";
+  const origText = (a.body && a.body !== "undefined") ? a.body : "";
+  document.getElementById("det-body").innerHTML =
+    (a.body_ja || origText || "") +
+    (isTranslated && origText ? `<div class="detail-orig-body"><div class="detail-orig-label">ORIGINAL</div>${origText}</div>` : "") +
+    `<br><a href="${a.link}" target="_blank" rel="noopener" class="source-link">🔗 元記事を開く</a>`;
+  showPage("article");
+  showPage("article");
+}
+
+function updateCount() {
+  const checked = document.querySelectorAll('#all-articles input[type=checkbox]:checked').length;
+  document.getElementById('save-count').textContent = `チェックした記事: ${checked}件`;
+  document.getElementById('save-btn').disabled = checked === 0;
+}
+
+// 保存済みIDをセッション内で管理
+const savedIds = new Set();
+
+function markAsSaved(idx) {
+  savedIds.add(idx);
+  const item = document.querySelector(`[data-idx="${idx}"]`);
+  if (!item) return;
+  // チェックボックスを非表示にして保存済みバッジを表示
+  const wrap = item.querySelector('.check-wrap');
+  if (wrap) wrap.style.display = 'none';
+  if (!item.querySelector('.saved-badge')) {
+    const badge = document.createElement('div');
+    badge.className = 'saved-badge';
+    badge.textContent = '✅ 保存済み';
+    item.insertBefore(badge, item.firstChild);
+  }
+}
+
+async function saveChecked() {
+  const checkboxes = document.querySelectorAll('#all-articles input[type=checkbox]:checked');
+  if (checkboxes.length === 0) return;
+  const articles = [];
+  const idxList = [];
+  checkboxes.forEach(cb => {
+    const idx = parseInt(cb.id.replace('chk-', ''));
+    articles.push(ARTICLES[idx]);
+    idxList.push(idx);
+  });
+  const btn = document.getElementById('save-btn');
+  btn.disabled = true;
+  btn.textContent = '保存中...';
+  try {
+    await fetch(GAS_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ articles })
+    });
+    btn.textContent = '✅ 保存しました';
+    // 保存済みバッジを付与
+    idxList.forEach(idx => markAsSaved(idx));
+    updateCount();
+    setTimeout(() => {
+      btn.textContent = '📥 スプレッドシートに保存';
+    }, 3000);
+  } catch(e) {
+    btn.textContent = 'エラー: ' + e.message;
+    btn.disabled = false;
+  }
+}
+
+function openPerplexity() {
+  const a = ARTICLES[currentArticleIdx];
+  const query = encodeURIComponent(a.title_ja || a.title);
+  window.open(`https://www.perplexity.ai/search?q=${query}`, '_blank');
+}
+</script>
+
+<div class="save-bar">
+  <div class="save-count" id="save-count">チェックした記事: 0件</div>
+  <button class="save-btn" id="save-btn" onclick="saveChecked()" disabled>📥 スプレッドシートに保存</button>
+</div>
+</body>
+</html>
