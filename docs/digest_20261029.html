@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>デイリーニュースダイジェスト — 2026年10月29日（Thu）</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f8f9fb; --bg2: #ffffff; --bg3: #f0f2f5;
+      --fg: #1a1d23; --fg2: #4a5168; --fg3: #9299aa;
+      --accent: #1a56db; --accent2: #0e9f6e;
+      --rule: #e5e7eb; --shadow: 0 1px 4px rgba(0,0,0,.07);
+    }
+    body { font-family:'Noto Sans JP',sans-serif; background:var(--bg); color:var(--fg); line-height:1.7; }
+    a { color:var(--accent); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+
+    /* Header */
+    .site-header {
+      position:sticky; top:0; z-index:100;
+      background:#fff; border-bottom:1px solid var(--rule);
+      padding:14px 24px; display:flex; align-items:center; justify-content:space-between;
+      box-shadow:var(--shadow);
+    }
+    .site-logo { font-size:15px; font-weight:700; color:var(--fg); letter-spacing:-.01em; }
+    .site-logo span { color:var(--accent); }
+    .site-date { font-size:12px; color:var(--fg3); }
+    .back-btn {
+      display:none; background:#f0f2f5; border:none;
+      color:var(--fg2); padding:6px 14px; border-radius:20px; cursor:pointer; font-size:12px; font-weight:500;
+    }
+    .back-btn.visible { display:block; }
+
+    /* Navigation */
+    .nav-center { display:flex; align-items:center; gap:6px; }
+    .nav-arrow {
+      background:none; border:1px solid var(--rule); border-radius:8px;
+      width:32px; height:32px; font-size:20px; cursor:pointer;
+      color:var(--fg2); display:flex; align-items:center; justify-content:center;
+      transition:all .15s; line-height:1;
+    }
+    .nav-arrow:hover { background:var(--bg3); }
+    .nav-arrow:disabled { color:var(--rule); cursor:not-allowed; }
+    .date-btn {
+      background:var(--bg3); border:1px solid var(--rule); border-radius:8px;
+      padding:5px 12px; font-size:13px; font-weight:600; cursor:pointer;
+      color:var(--fg); transition:all .15s; white-space:nowrap;
+    }
+    .date-btn:hover { background:#e5e7eb; }
+
+    /* Pages */
+    .page { display:none; max-width:780px; margin:0 auto; padding:28px 20px 80px; }
+    .page.active { display:block; }
+
+    /* Overall summary */
+    .summary-card {
+      background:linear-gradient(135deg, #1a56db 0%, #0e9f6e 100%);
+      border-radius:16px; padding:24px 28px; margin-bottom:28px;
+      box-shadow:0 4px 20px rgba(26,86,219,.2);
+    }
+    .summary-label {
+      font-size:10px; font-weight:700; letter-spacing:.18em;
+      color:rgba(255,255,255,.7); text-transform:uppercase; margin-bottom:10px;
+    }
+    .summary-text { font-size:14px; line-height:1.9; color:#fff; }
+
+    /* Section head */
+    .section-head {
+      font-size:12px; font-weight:700; color:var(--fg3);
+      letter-spacing:.08em; text-transform:uppercase;
+      margin-bottom:14px; padding-bottom:8px;
+      border-bottom:2px solid var(--rule);
+    }
+
+    /* Category cards */
+    .cat-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:32px; }
+    @media(max-width:500px){ .cat-grid { grid-template-columns:1fr; } }
+    .cat-card {
+      background:#fff; border-radius:14px; padding:18px 20px;
+      cursor:pointer; transition:all .2s; border:1px solid var(--rule);
+      box-shadow:var(--shadow);
+    }
+    .cat-card:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(0,0,0,.1); }
+    .cat-card-head { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+    .cat-icon { font-size:22px; }
+    .cat-name { font-size:13px; font-weight:700; flex:1; color:var(--fg); }
+    .cat-count {
+      font-size:11px; color:#fff; font-weight:600;
+      background:var(--accent); padding:2px 10px; border-radius:20px;
+    }
+    .cat-trend { font-size:12px; color:var(--fg2); line-height:1.75; }
+
+    /* Article items */
+    .article-item {
+      background:#fff; border-radius:12px; border:1px solid var(--rule);
+      padding:16px 20px; margin-bottom:10px; cursor:pointer;
+      transition:all .15s; box-shadow:var(--shadow);
+    }
+    .article-item:hover { transform:translateY(-1px); box-shadow:0 4px 16px rgba(0,0,0,.1); }
+    .article-meta { display:flex; gap:10px; font-size:11px; color:var(--fg3); margin-bottom:6px; flex-wrap:wrap; align-items:center; }
+    .art-cat { font-weight:600; font-size:11px; padding:2px 8px; border-radius:4px; background:var(--bg3); }
+    .art-stars { color:#f59e0b; letter-spacing:-1px; }
+    .article-title { font-size:14px; font-weight:600; color:var(--fg); line-height:1.55; margin-bottom:6px; }
+    .article-summary { font-size:12.5px; color:var(--fg2); line-height:1.7; }
+    .no-news { text-align:center; color:var(--fg3); padding:60px 20px; font-size:14px; }
+
+    /* Category page */
+    .cat-page-icon { font-size:32px; margin-bottom:4px; }
+    .cat-page-name { font-size:22px; font-weight:700; margin-bottom:18px; color:var(--fg); }
+    .cat-summary-box {
+      background:#fff; border:1px solid var(--rule);
+      border-radius:12px; padding:18px 22px; margin-bottom:24px;
+      box-shadow:var(--shadow);
+    }
+    .cat-summary-label {
+      font-size:10px; font-weight:700; letter-spacing:.18em;
+      color:var(--accent); text-transform:uppercase; margin-bottom:10px;
+    }
+    .cat-summary-text { font-size:13.5px; color:var(--fg2); line-height:1.85; }
+
+    /* Article detail */
+    .detail-cat { font-size:11px; font-weight:700; margin-bottom:8px; }
+    .detail-title { font-size:20px; font-weight:700; line-height:1.5; margin-bottom:6px; color:var(--fg); }
+    .detail-orig { font-size:11px; color:var(--fg3); font-style:italic; margin-bottom:12px; }
+    .detail-meta { font-size:12px; color:var(--fg3); margin-bottom:18px; display:flex; gap:14px; flex-wrap:wrap; }
+    .detail-body {
+      background:#fff; border:1px solid var(--rule);
+      border-radius:12px; padding:20px 22px;
+      font-size:14px; line-height:1.9; color:var(--fg2); margin-bottom:16px;
+      box-shadow:var(--shadow);
+    }
+    .detail-orig-body {
+      margin-top:14px; padding-top:12px; border-top:1px solid var(--rule);
+      font-size:12px; color:var(--fg3); line-height:1.7;
+    }
+    .detail-orig-label { font-size:10px; color:var(--fg3); margin-bottom:4px; letter-spacing:.1em; font-weight:600; }
+    .source-link {
+      display:inline-flex; align-items:center; gap:6px;
+      font-size:12px; color:var(--accent); margin-top:12px;
+      border:1px solid #c3d5fa; border-radius:6px; padding:5px 12px;
+      background:#eef2ff;
+    }
+
+    /* World trend card */
+    .trend-card {
+      background:#fff; border:1px solid var(--rule);
+      border-radius:16px; padding:22px 26px; margin-bottom:16px;
+      box-shadow:var(--shadow); border-left:4px solid #f59e0b;
+    }
+    .trend-label {
+      font-size:10px; font-weight:700; letter-spacing:.18em;
+      color:#d97706; text-transform:uppercase; margin-bottom:10px;
+    }
+    .trend-text { font-size:14px; line-height:1.9; color:var(--fg2); }
+
+    /* Deep dive */
+    .deep-card {
+      background:linear-gradient(135deg, #eef2ff, #f0fdf4);
+      border:1px solid #c3d5fa; border-radius:14px; padding:22px 24px;
+    }
+    .deep-label {
+      font-size:10px; font-weight:700; letter-spacing:.18em;
+      color:var(--accent); text-transform:uppercase; margin-bottom:12px;
+    }
+    .deep-text { font-size:13.5px; line-height:1.95; color:var(--fg2); }
+    .deep-btn {
+      background:#1a56db; border:none; color:#fff;
+      padding:10px 22px; border-radius:8px; cursor:pointer; font-size:13px; font-weight:600;
+      display:inline-flex; align-items:center; gap:6px;
+      box-shadow:0 2px 8px rgba(26,86,219,.25); transition:all .15s;
+    }
+    .deep-btn:hover { background:#1e40af; transform:translateY(-1px); }
+    .deep-loading { font-size:13px; color:var(--fg3); }
+
+    /* Save bar */
+    .save-bar {
+      position:fixed; bottom:0; left:0; right:0;
+      background:#fff; border-top:1px solid var(--rule);
+      padding:12px 24px; display:flex; align-items:center; justify-content:space-between;
+      z-index:200; box-shadow:0 -2px 12px rgba(0,0,0,.08);
+    }
+    .save-count { font-size:13px; color:var(--fg2); font-weight:500; }
+    .save-btn {
+      background:var(--accent2); border:none; color:#fff;
+      padding:10px 24px; border-radius:8px; cursor:pointer;
+      font-size:14px; font-weight:700; box-shadow:0 2px 8px rgba(14,159,110,.3);
+    }
+    .save-btn:disabled { background:var(--fg3); cursor:not-allowed; box-shadow:none; }
+    .check-wrap { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+    .check-wrap input[type=checkbox] { width:18px; height:18px; cursor:pointer; accent-color:var(--accent); }
+    .check-label { font-size:12px; color:var(--fg3); cursor:pointer; }
+    .saved-badge {
+      display:inline-flex; align-items:center; gap:4px;
+      font-size:11px; font-weight:600; color:var(--accent2);
+      background:#f0fdf4; border:1px solid #bbf7d0;
+      padding:2px 8px; border-radius:20px; margin-bottom:8px;
+    }
+
+    footer {
+      text-align:center; font-size:11px; color:var(--fg3);
+      padding:20px; border-top:1px solid var(--rule); margin-top:40px;
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-logo">📋 Daily Digest</div>
+  <div class="nav-center">
+    <button class="nav-arrow" id="prevBtn" onclick="goToDate('prev')" title="前日">‹</button>
+    <button class="date-btn" onclick="toggleCalendar()" title="カレンダー">
+      📅 2026年10月29日（Thu）
+    </button>
+    <button class="nav-arrow" id="nextBtn" onclick="goToDate('next')" title="翌日">›</button>
+  </div>
+  <button class="back-btn" id="backBtn" onclick="goBack()">← 戻る</button>
+</header>
+
+<!-- カレンダーモーダル -->
+<div id="calendarOverlay" onclick="closeCalendar()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:300;"></div>
+<div id="calendarModal" style="display:none;position:fixed;top:64px;left:50%;transform:translateX(-50%);
+  background:#fff;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.15);
+  padding:20px;z-index:301;width:320px;max-width:90vw;">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+    <button onclick="changeCalMonth(-1)" style="background:none;border:none;font-size:20px;cursor:pointer;color:#4a5168;">‹</button>
+    <div id="calMonthLabel" style="font-weight:700;font-size:15px;color:#1a1d23;"></div>
+    <button onclick="changeCalMonth(1)" style="background:none;border:none;font-size:20px;cursor:pointer;color:#4a5168;">›</button>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;margin-bottom:8px;">
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">日</div>
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">月</div>
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">火</div>
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">水</div>
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">木</div>
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">金</div>
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">土</div>
+  </div>
+  <div id="calGrid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;"></div>
+</div>
+
+<!-- TOP PAGE -->
+<div class="page active" id="page-top">
+  <div class="trend-card">
+    <div class="trend-label">🌍 今日の世界トレンド</div>
+    <div class="trend-text">今日は、米国中間選挙を巡る**政治的混乱と不正疑惑**が主要テーマです。トランプ氏の発言や各国選挙結果、ウクライナ和平交渉など国際情勢が錯綜しています。一方、**テクノロジーの進化**も顕著で、Appleの新型MacBook Pro発表やAmazonのAIサービス展開が注目を集め、AI関連銘柄が市場を牽引するなど、大手IT企業の動向がビジネスに影響を与えています。</div>
+  </div>
+  <div class="summary-card">
+    <div class="summary-label">📋 本日の関連ニュースサマリー</div>
+    <div class="summary-text">日タイビジネスでは、GX・再生可能エネルギー推進が継続する中、マクロ経済の不確実性も残ります。今日、タイ中銀が政策金利1.00％を4会合連続で据え置き、27年末まで維持予想とされた点は、金融安定化への新たな動きです。また、バンコクのロイヤルオーキッド・シェラトンが250億円で売却承認され、ゼロボードがタイ国営石油と脱炭素支援基盤を構築するなど、M&Aや環境ソリューションへの具体的な動きが出ました。東南アジア再生可能エネルギー市場に2050年までに2兆5000億ドル投資という広範な市場ポテンシャルが示される一方、洋上風力の撤退事例に見られる事業化の課題も顕在化。タイ政府の燃料価格算定方式見直しも、国民負担軽減という進展です。</div>
+  </div>
+
+  <div class="section-head">カテゴリ別トレンド</div>
+  <div class="cat-grid">
+    
+        <div class="cat-card" onclick="showCategory('企業/ビジネス動向')" style="border-left:4px solid #be123c">
+          <div class="cat-card-head">
+            <span class="cat-icon">🏭</span>
+            <span class="cat-name">企業/ビジネス動向</span>
+            <span class="cat-count">5件</span>
+          </div>
+          <p class="cat-trend">バンコクのホテル売却承認が新規動向。タイではネット通販の中小企業支援や、タイ国営石油との脱炭素支援連携が進む。日本の半導体・電子産業やインフラ関連企業のタイでの事業拡大が継続トレンド。</p>
+        </div>
+        <div class="cat-card" onclick="showCategory('日タイ貿易/マクロ')" style="border-left:4px solid #7c3aed">
+          <div class="cat-card-head">
+            <span class="cat-icon">🤝</span>
+            <span class="cat-name">日タイ貿易/マクロ</span>
+            <span class="cat-count">4件</span>
+          </div>
+          <p class="cat-trend">タイ中銀の政策金利据え置き（4会合連続）が新規動向。タイ経済は輸出・投資が牽引役として成長期待が高まる中、国際的な経済連携（日米戦略投資）も継続トレンドとして注目される。</p>
+        </div>
+        <div class="cat-card" onclick="showCategory('バイオマス/再生可能エネルギー')" style="border-left:4px solid #2d7a4f">
+          <div class="cat-card-head">
+            <span class="cat-icon">🌿</span>
+            <span class="cat-name">バイオマス/再生可能エネルギー</span>
+            <span class="cat-count">2件</span>
+          </div>
+          <p class="cat-trend">東南アジア再生エネ市場が2050年までに2.5兆ドル規模へ拡大する見通しが新規動向。タイでのバイオ燃料減税やクリーンテック市場拡大など、同地域での再生エネ推進が継続トレンド。一方、日本の洋上風力はコスト高で撤退も。</p>
+        </div>
+        <div class="cat-card" onclick="showCategory('エネルギー市場')" style="border-left:4px solid #0369a1">
+          <div class="cat-card-head">
+            <span class="cat-icon">⚡</span>
+            <span class="cat-name">エネルギー市場</span>
+            <span class="cat-count">1件</span>
+          </div>
+          <p class="cat-trend">タイ政府が燃料価格算定方式を見直し、国民負担軽減を図るのが新規動向。中東情勢やFRB金利動向が国際原油価格を高値圏で維持させ、タイでの燃料税減税や燃料費対策が継続トレンドとなっている。</p>
+        </div>
+  </div>
+
+  <div class="section-head">全記事一覧（12件）</div>
+  <div id="all-articles">
+    
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="0" onclick="showArticle(0)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-0" onchange="updateCount()">
+            <label class="check-label" for="chk-0">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
+            <span class="art-src">newsclip: タイ経済・企業</span>
+            <span class="art-stars">★★★★★</span>
+          </div>
+          <div class="article-title">タイ中銀、政策金利1.00％で据え置き　4会合連続、27年末まで維持の予想も</div>
+          <div class="article-summary">タイ中央銀行（BOT）は10月28日の金融政策委員会で、政策金利を1.00％に据え置くことを4会合連続で全会一致決定した。タイ経済は輸出と投資が支え。一部には2027年末までこの水準が維持されるとの予想もあり、タイのビジネス環境に大きな影響を与える金融政策として注目される。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="1" onclick="showArticle(1)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-1" onchange="updateCount()">
+            <label class="check-label" for="chk-1">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
+            <span class="art-src">Bangkok Post – Business</span>
+            <span class="art-stars">★★★★★</span>
+          </div>
+          <div class="article-title">タイ中央銀行、金利を据え置き</div>
+          <div class="article-summary">タイ中央銀行（BoT）は水曜日（10月28日）、主要政策金利を4会合連続で据え置くと発表した。この決定は市場の予想通りであり、タイの金融政策の現状維持を示唆する。タイ経済のマクロ動向として、日タイビジネスに影響を及ぼす重要なニュース。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="2" onclick="showArticle(2)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-2" onchange="updateCount()">
+            <label class="check-label" for="chk-2">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
+            <span class="art-src">newsclip: タイ経済・企業</span>
+            <span class="art-stars">★★★★★</span>
+          </div>
+          <div class="article-title">タイ政府、燃料価格算定方式を見直し　年間500億円相当の国民負担軽減へ</div>
+          <div class="article-summary">タイ政府は10月29日、燃料の精製所出荷価格の新たな算定方式を導入すると発表した。これにより、年間100億バーツ（約500億円）相当の国民負担が軽減される見込み。エネルギー価格の透明性向上と国民生活への配慮が目的で、タイのエネルギー市場に直接影響を与える重要な政策変更。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="3" onclick="showArticle(3)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-3" onchange="updateCount()">
+            <label class="check-label" for="chk-3">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">日刊工業新聞</span>
+            <span class="art-stars">★★★★★</span>
+          </div>
+          <div class="article-title">ゼロボード、脱炭素支援基盤を構築　タイ国営石油と</div>
+          <div class="article-summary">日本のゼロボード社は、タイ国営石油と共同で脱炭素支援基盤を構築する。この提携は、タイのエネルギー産業における脱炭素化を推進するものであり、日タイ間の企業連携として、タイの産業設備やエネルギー市場のグリーン化に貢献することが期待される。企業・ビジネス動向の好事例。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #2d7a4f" data-cat="バイオマス/再生可能エネルギー" data-idx="4" onclick="showArticle(4)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-4" onchange="updateCount()">
+            <label class="check-label" for="chk-4">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#2d7a4f">🌿 バイオマス/再生可能エネルギー</span>
+            <span class="art-src">Google: 再生可能エネルギー</span>
+            <span class="art-stars">★★★★☆</span>
+          </div>
+          <div class="article-title">東南アジア再生可能エネルギー見通し：2050年までに2兆5000億ドル投資、3TWへ - ニュースと統計 - IndexBox</div>
+          <div class="article-summary">東南アジア地域では、2050年までに再生可能エネルギー分野へ2兆5000億ドルもの巨額投資が行われ、発電容量は3テラワット（TW）に達する見込み。この見通しは、タイを含む東南アジア諸国のエネルギー転換とビジネス機会を大きく示唆しており、バイオマス・再生可能エネルギーの動向として重要。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="5" onclick="showArticle(5)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-5" onchange="updateCount()">
+            <label class="check-label" for="chk-5">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">newsclip: タイ経済・企業</span>
+            <span class="art-stars">★★★★☆</span>
+          </div>
+          <div class="article-title">タイのネット通販大手3社、手数料引き下げで中小事業者120万社を支援</div>
+          <div class="article-summary">タイ商務省との合意に基づき、「Shopee」「Lazada」「TikTok Shop」の大手ネット通販3社が、中小事業者向けの必須手数料を引き下げる。2026年12月1日から6カ月間実施され、120万社の中小事業者を支援する。タイのデジタル経済と中小企業支援の動向を示す重要なビジネスニュース。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="6" onclick="showArticle(6)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-6" onchange="updateCount()">
+            <label class="check-label" for="chk-6">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">newsclip: タイ経済・企業</span>
+            <span class="art-stars">★★★☆☆</span>
+          </div>
+          <div class="article-title">バンコクのロイヤルオーキッド・シェラトン、売却承認　250億円相当で第三者へ</div>
+          <div class="article-summary">タイの不動産投資信託（REIT）、グランデ・ロイヤルオーキッド・ホスピタリティREITは、バンコクの高級ホテル「ロイヤルオーキッド・シェラトン・リバーサイドホテル」を53億バーツ（約250億円）で第三者へ売却することを承認した。タイ国内の大型不動産取引として、企業・ビジネス動向を示す。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="7" onclick="showArticle(7)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-7" onchange="updateCount()">
+            <label class="check-label" for="chk-7">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">Bangkok Post – Business</span>
+            <span class="art-stars">★★★☆☆</span>
+          </div>
+          <div class="article-title">ロイヤルオーキッド・シェラトンの53億バーツでの売却が承認</div>
+          <div class="article-summary">タイのグランデ・ロイヤルオーキッド・ホスピタリティREITの投資主は、バンコクのロイヤルオーキッド・シェラトンホテルを53億バーツで新投資家へ売却することを承認した。元所有者からの買い戻し提案は拒否され、タイの不動産市場における大規模取引として企業・ビジネス動向を示す。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #2d7a4f" data-cat="バイオマス/再生可能エネルギー" data-idx="8" onclick="showArticle(8)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-8" onchange="updateCount()">
+            <label class="check-label" for="chk-8">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#2d7a4f">🌿 バイオマス/再生可能エネルギー</span>
+            <span class="art-src">日経ビジネス</span>
+            <span class="art-stars">★★★☆☆</span>
+          </div>
+          <div class="article-title">洋上風力止まらぬ撤退、東京ガスが福島沖浮体式を断念か　建造コスト5割超に (洋上風力再起の条件)</div>
+          <div class="article-summary">東京ガスが福島沖の浮体式洋上風力発電計画を断念したと報じられた。建造コストが5割以上増加したにもかかわらず、売電価格は36円で据え置かれたことが採算悪化の主な原因。洋上風力事業者の撤退ドミノが続く中、国の制度見直しが求められており、日本の再生可能エネルギーの動向を示す。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="9" onclick="showArticle(9)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-9" onchange="updateCount()">
+            <label class="check-label" for="chk-9">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
+            <span class="art-src">日刊工業新聞</span>
+            <span class="art-stars">★★☆☆☆</span>
+          </div>
+          <div class="article-title">アルミの国際相場、1週間は3000ドル近辺　米中間選挙前まで小動き</div>
+          <div class="article-summary">アルミの国際相場は1週間を通じて3000ドル近辺で推移し、米中間選挙を控えて小動きが予想される。国際的な商品価格の動向は、タイの製造業や貿易にも間接的に影響を及ぼす可能性がある。マクロ経済の一部として注視が必要な情報である。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="10" onclick="showArticle(10)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-10" onchange="updateCount()">
+            <label class="check-label" for="chk-10">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
+            <span class="art-src">日刊工業新聞</span>
+            <span class="art-stars">★★☆☆☆</span>
+          </div>
+          <div class="article-title">財政審「進捗踏まえ計画を」　日米戦略投資で議論</div>
+          <div class="article-summary">日本の財政審議会で、日米戦略投資に関する議論が行われ、進捗状況を踏まえて計画を策定する方針が示された。この議論は国際的な投資動向の一部であり、タイとの直接的な関連は低いものの、広範な国際情勢の一環として今後の日タイ関係に間接的な影響を与える可能性も考慮される。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="11" onclick="showArticle(11)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-11" onchange="updateCount()">
+            <label class="check-label" for="chk-11">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">日刊工業新聞</span>
+            <span class="art-stars">★★☆☆☆</span>
+          </div>
+          <div class="article-title">ルネサス、産機向けマイコン投入　リアルタイム処理向上</div>
+          <div class="article-summary">ルネサスエレクトロニクスが産業機器向けマイコンを投入し、リアルタイム処理性能を向上させる。この新製品は、FA機器やロボットなどの産業設備分野での活用が期待される。日本の製造業における技術革新として、タイの産業界への波及効果も期待される企業・ビジネス動向。</div>
+        </div>
+  </div>
+</div>
+
+<!-- CATEGORY PAGE -->
+<div class="page" id="page-cat">
+  <div class="cat-page-head">
+    <div class="cat-page-icon" id="cat-icon"></div>
+    <div class="cat-page-name" id="cat-name"></div>
+    <div class="cat-summary-box">
+      <div class="cat-summary-label">📊 カテゴリトレンド分析</div>
+      <div class="cat-summary-text" id="cat-summary-text"></div>
+    </div>
+    <div class="section-head" id="cat-count-head"></div>
+    <div id="cat-articles"></div>
+  </div>
+</div>
+
+<!-- ARTICLE PAGE -->
+<div class="page" id="page-article">
+  <div class="detail-cat" id="det-cat"></div>
+  <div class="detail-title" id="det-title"></div>
+  <div class="detail-orig" id="det-orig"></div>
+  <div class="detail-meta" id="det-meta"></div>
+  <div class="section-head" id="det-body-label"></div>
+  <div class="detail-body" id="det-body"></div>
+  <div class="deep-card">
+    <div class="deep-label">🔍 もっと調べる</div>
+    <p style="font-size:13px;color:var(--fg2);margin-bottom:12px;line-height:1.7;">
+      Perplexity AIがこの記事のトピックについてウェブ上の最新情報を収集・日本語でまとめます。
+    </p>
+    <button class="deep-btn" id="perplexity-btn" onclick="openPerplexity()">🔍 Perplexityで深掘り</button>
+  </div>
+</div>
+
+<footer>
+  生成: 2026-10-29 11:14 JST　｜　ソース: RSS自動巡回 + Gemini AI　｜
+  取得: 153件 / 候補: 42件 / 掲載: 12件
+</footer>
+
+<script>
+const ARTICLES = [{"title": "タイ中銀、政策金利1.00％で据え置き　4会合連続、27年末まで維持の予想も", "title_ja": "タイ中銀、政策金利1.00％で据え置き　4会合連続、27年末まで維持の予想も", "body_ja": "【タイ】タイ中央銀行（BOT）は10月28日の金融政策委員会（MPC）会合で、政策金利（翌日物レポ金利）を1.00％に据え置くことを全会一致で決定した。据え置きは4会合連続。 　タイ経済は輸出や投資が支えとなっている一方 [...]", "summary_ja": "タイ中央銀行（BOT）は10月28日の金融政策委員会で、政策金利を1.00％に据え置くことを4会合連続で全会一致決定した。タイ経済は輸出と投資が支え。一部には2027年末までこの水準が維持されるとの予想もあり、タイのビジネス環境に大きな影響を与える金融政策として注目される。", "source": "newsclip: タイ経済・企業", "link": "https://newsclip.be/thai-news/thai-economy/43613", "published": "2026-10-28T08:30:36+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 5}, {"title": "Bank of Thailand keeps interest rate unchanged", "title_ja": "タイ中央銀行、金利を据え置き", "body_ja": "タイ中央銀行（BoT）は水曜日、主要政策金利を4会合連続で据え置いた。これは広く予想されていた動きである。", "summary_ja": "タイ中央銀行（BoT）は水曜日（10月28日）、主要政策金利を4会合連続で据え置くと発表した。この決定は市場の予想通りであり、タイの金融政策の現状維持を示唆する。タイ経済のマクロ動向として、日タイビジネスに影響を及ぼす重要なニュース。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3345184/bank-of-thailand-keeps-interest-rate-unchanged", "published": "2026-10-28T07:34:00+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 5}, {"title": "タイ政府、燃料価格算定方式を見直し　年間500億円相当の国民負担軽減へ", "title_ja": "タイ政府、燃料価格算定方式を見直し　年間500億円相当の国民負担軽減へ", "body_ja": "【タイ】政府は10月29日、燃料の精製所出荷価格（エクス・リファイナリー価格）の新たな算定方式を導入する。エーカナット・プロームパン・エネルギー相によると、実際には発生していない費用を価格算定から除外することで、年間100億バーツ（約500億円）相当の国民負担を軽減する。", "summary_ja": "タイ政府は10月29日、燃料の精製所出荷価格の新たな算定方式を導入すると発表した。これにより、年間100億バーツ（約500億円）相当の国民負担が軽減される見込み。エネルギー価格の透明性向上と国民生活への配慮が目的で、タイのエネルギー市場に直接影響を与える重要な政策変更。", "source": "newsclip: タイ経済・企業", "link": "https://newsclip.be/thai-news/thai-economy/43620", "published": "2026-10-28T10:00:15+00:00", "category": "エネルギー市場", "relevance_score": 5}, {"title": "ゼロボード、脱炭素支援基盤を構築　タイ国営石油と", "title_ja": "ゼロボード、脱炭素支援基盤を構築　タイ国営石油と", "body_ja": "", "summary_ja": "日本のゼロボード社は、タイ国営石油と共同で脱炭素支援基盤を構築する。この提携は、タイのエネルギー産業における脱炭素化を推進するものであり、日タイ間の企業連携として、タイの産業設備やエネルギー市場のグリーン化に貢献することが期待される。企業・ビジネス動向の好事例。", "source": "日刊工業新聞", "link": "https://www.nikkan.co.jp/articles/view/795613", "published": "2026-10-28T20:00:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 5}, {"title": "東南アジア再生可能エネルギー見通し：2050年までに2兆5000億ドル投資、3TWへ - ニュースと統計 - IndexBox", "title_ja": "東南アジア再生可能エネルギー見通し：2050年までに2兆5000億ドル投資、3TWへ - ニュースと統計 - IndexBox", "body_ja": "東南アジア再生可能エネルギー見通し：2050年までに2兆5000億ドル投資、3TWへ - ニュースと統計&nbsp;&nbsp;IndexBox", "summary_ja": "東南アジア地域では、2050年までに再生可能エネルギー分野へ2兆5000億ドルもの巨額投資が行われ、発電容量は3テラワット（TW）に達する見込み。この見通しは、タイを含む東南アジア諸国のエネルギー転換とビジネス機会を大きく示唆しており、バイオマス・再生可能エネルギーの動向として重要。", "source": "Google: 再生可能エネルギー", "link": "https://news.google.com/rss/articles/CBMivAFBVV95cUxNSHhUTXM4ZW1tU0pFNW9qOHlmX0NubDQ1TjNiUTdQU3JpRTdXRHItMkszb3M2VmFfa0Fyd19CSnB6bVM0SjRrZkFUNFlfSDlSVkdoZERjYmFxQmFsZV9UZFJKS2twemtTRF9QZWhSQXUwS0NXM3RQOElBbHdxZkFaTmZuZzc0REZQcGJ0SzBzNUhrS3F4VEZMeGRlWUg1eGdxaU50NWtkQllkR2ppREJtaGNQSjhUbVE5a0l0NA?oc=5", "published": "2026-10-28T14:20:59+00:00", "category": "バイオマス/再生可能エネルギー", "relevance_score": 4}, {"title": "タイのネット通販大手3社、手数料引き下げで中小事業者120万社を支援", "title_ja": "タイのネット通販大手3社、手数料引き下げで中小事業者120万社を支援", "body_ja": "【タイ】「Shopee」「Lazada」「TikTok Shop」の大手ネット通販3社は、中小事業者向けの必須手数料（GP）を引き下げる。商務省との合意に基づく措置で、12月1日から来年5月31日までの6カ月間、2026 [&#8230;]", "summary_ja": "タイ商務省との合意に基づき、「Shopee」「Lazada」「TikTok Shop」の大手ネット通販3社が、中小事業者向けの必須手数料を引き下げる。2026年12月1日から6カ月間実施され、120万社の中小事業者を支援する。タイのデジタル経済と中小企業支援の動向を示す重要なビジネスニュース。", "source": "newsclip: タイ経済・企業", "link": "https://newsclip.be/thai-news/thai-economy/43625", "published": "2026-10-28T17:02:26+00:00", "category": "企業/ビジネス動向", "relevance_score": 4}, {"title": "バンコクのロイヤルオーキッド・シェラトン、売却承認　250億円相当で第三者へ", "title_ja": "バンコクのロイヤルオーキッド・シェラトン、売却承認　250億円相当で第三者へ", "body_ja": "【タイ】不動産投資信託（REIT）のグランデ・ロイヤルオーキッド・ホスピタリティREIT（GROREIT）の投資主は、バンコクの高級ホテル「ロイヤルオーキッド・シェラトン・リバーサイドホテル・バンコク」を、53億バーツ（約250億円）相当で第三者に売却することを承認した。", "summary_ja": "タイの不動産投資信託（REIT）、グランデ・ロイヤルオーキッド・ホスピタリティREITは、バンコクの高級ホテル「ロイヤルオーキッド・シェラトン・リバーサイドホテル」を53億バーツ（約250億円）で第三者へ売却することを承認した。タイ国内の大型不動産取引として、企業・ビジネス動向を示す。", "source": "newsclip: タイ経済・企業", "link": "https://newsclip.be/thai-news/thai-economy/43634", "published": "2026-10-28T17:01:55+00:00", "category": "企業/ビジネス動向", "relevance_score": 3}, {"title": "B5.3bn sale of Royal Orchid Sheraton approved", "title_ja": "ロイヤルオーキッド・シェラトンの53億バーツでの売却が承認", "body_ja": "グランデ・ロイヤルオーキッド・ホスピタリティ不動産投資信託（GROREIT）の投資主は、バンコクのロイヤルオーキッド・シェラトンホテルを53億バーツで新たな投資家へ売却することを承認した。これにより、同高級物件の元所有者であるタイ証券取引所上場のロイヤルオーキッドホテル（タイ）社からの低額の買い戻し提案は却下された。", "summary_ja": "タイのグランデ・ロイヤルオーキッド・ホスピタリティREITの投資主は、バンコクのロイヤルオーキッド・シェラトンホテルを53億バーツで新投資家へ売却することを承認した。元所有者からの買い戻し提案は拒否され、タイの不動産市場における大規模取引として企業・ビジネス動向を示す。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3345248/b53bn-sale-of-royal-orchid-sheraton-approved", "published": "2026-10-28T13:36:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 3}, {"title": "洋上風力止まらぬ撤退、東京ガスが福島沖浮体式を断念か　建造コスト5割超に (洋上風力再起の条件)", "title_ja": "洋上風力止まらぬ撤退、東京ガスが福島沖浮体式を断念か　建造コスト5割超に (洋上風力再起の条件)", "body_ja": "採算悪化で事業者が手を引く洋上風力の「撤退ドミノ」が浮体式にも飛び火した――。東京ガスが福島沖の計画を断念したと報じられた。コストは5割以上増えても、売電価格は36円のまま。資本効率を重んじる経営も重なった。国は制度を作り直せるか。", "summary_ja": "東京ガスが福島沖の浮体式洋上風力発電計画を断念したと報じられた。建造コストが5割以上増加したにもかかわらず、売電価格は36円で据え置かれたことが採算悪化の主な原因。洋上風力事業者の撤退ドミノが続く中、国の制度見直しが求められており、日本の再生可能エネルギーの動向を示す。", "source": "日経ビジネス", "link": "https://business.nikkei.com/atcl/gen/19/00758/102700012/", "published": "2026-10-28T08:00:00+00:00", "category": "バイオマス/再生可能エネルギー", "relevance_score": 3}, {"title": "アルミの国際相場、1週間は3000ドル近辺　米中間選挙前まで小動き", "title_ja": "アルミの国際相場、1週間は3000ドル近辺　米中間選挙前まで小動き", "body_ja": "", "summary_ja": "アルミの国際相場は1週間を通じて3000ドル近辺で推移し、米中間選挙を控えて小動きが予想される。国際的な商品価格の動向は、タイの製造業や貿易にも間接的に影響を及ぼす可能性がある。マクロ経済の一部として注視が必要な情報である。", "source": "日刊工業新聞", "link": "https://www.nikkan.co.jp/articles/view/795630", "published": "2026-10-28T20:00:00+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 2}, {"title": "財政審「進捗踏まえ計画を」　日米戦略投資で議論", "title_ja": "財政審「進捗踏まえ計画を」　日米戦略投資で議論", "body_ja": "", "summary_ja": "日本の財政審議会で、日米戦略投資に関する議論が行われ、進捗状況を踏まえて計画を策定する方針が示された。この議論は国際的な投資動向の一部であり、タイとの直接的な関連は低いものの、広範な国際情勢の一環として今後の日タイ関係に間接的な影響を与える可能性も考慮される。", "source": "日刊工業新聞", "link": "https://www.nikkan.co.jp/articles/view/795721", "published": "2026-10-28T20:00:00+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 2}, {"title": "ルネサス、産機向けマイコン投入　リアルタイム処理向上", "title_ja": "ルネサス、産機向けマイコン投入　リアルタイム処理向上", "body_ja": "", "summary_ja": "ルネサスエレクトロニクスが産業機器向けマイコンを投入し、リアルタイム処理性能を向上させる。この新製品は、FA機器やロボットなどの産業設備分野での活用が期待される。日本の製造業における技術革新として、タイの産業界への波及効果も期待される企業・ビジネス動向。", "source": "日刊工業新聞", "link": "https://www.nikkan.co.jp/articles/view/795740", "published": "2026-10-28T20:00:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 2}];
+const THIS_TAG = "20261029"; // このHTMLの日付タグ
+
+// ── 日付ナビゲーション（available_dates.jsonを動的取得）──
+let AVAILABLE_DATES = [];
+
+function getCurrentTag() {
+  const path = location.pathname;
+  const re = new RegExp('digest_([0-9]{8})\.html');
+  const m = path.match(re);
+  return m ? m[1] : THIS_TAG;
+}
+
+function tagToUrl(tag) {
+  const latestTag = AVAILABLE_DATES[AVAILABLE_DATES.length - 1];
+  if (tag === latestTag) return 'index.html';
+  return `digest_${tag}.html`;
+}
+
+function goToDate(dir) {
+  const cur = getCurrentTag();
+  const idx = AVAILABLE_DATES.indexOf(cur);
+  if (dir === 'prev' && idx > 0) location.href = tagToUrl(AVAILABLE_DATES[idx - 1]);
+  if (dir === 'next' && idx < AVAILABLE_DATES.length - 1) location.href = tagToUrl(AVAILABLE_DATES[idx + 1]);
+}
+
+function initNavButtons() {
+  const cur = getCurrentTag();
+  const idx = AVAILABLE_DATES.indexOf(cur);
+  const prev = document.getElementById('prevBtn');
+  const next = document.getElementById('nextBtn');
+  if (prev) prev.disabled = idx <= 0;
+  if (next) next.disabled = idx >= AVAILABLE_DATES.length - 1;
+}
+
+
+async function loadAvailableDates() {
+  // 固定URLで取得（GitHub Pages: hirot01.github.io/daily-digest/）
+  const DATES_URL = "https://hirot01.github.io/daily-digest/available_dates.json";
+  try {
+    const res = await fetch(DATES_URL + "?t=" + Date.now()); // キャッシュ回避
+    if (res.ok) {
+      AVAILABLE_DATES = await res.json();
+      initNavButtons();
+      if (typeof renderCalendar === "function" && calYear) renderCalendar();
+      return;
+    }
+  } catch(e) { console.log("dates fetch failed:", e); }
+  AVAILABLE_DATES = [THIS_TAG];
+  initNavButtons();
+}
+
+// ── カレンダー ──────────────────────────────────────
+let calYear, calMonth;
+
+function toggleCalendar() {
+  const modal = document.getElementById('calendarModal');
+  const overlay = document.getElementById('calendarOverlay');
+  if (modal.style.display === 'none') {
+    const cur = getCurrentTag();
+    calYear = parseInt(cur.slice(0, 4));
+    calMonth = parseInt(cur.slice(4, 6));
+    renderCalendar();
+    modal.style.display = 'block';
+    overlay.style.display = 'block';
+  } else {
+    closeCalendar();
+  }
+}
+
+function closeCalendar() {
+  document.getElementById('calendarModal').style.display = 'none';
+  document.getElementById('calendarOverlay').style.display = 'none';
+}
+
+function changeCalMonth(dir) {
+  calMonth += dir;
+  if (calMonth > 12) { calMonth = 1; calYear++; }
+  if (calMonth < 1)  { calMonth = 12; calYear--; }
+  renderCalendar();
+}
+
+function renderCalendar() {
+  const label = document.getElementById('calMonthLabel');
+  const grid  = document.getElementById('calGrid');
+  label.textContent = `${calYear}年${calMonth}月`;
+
+  const firstDay = new Date(calYear, calMonth - 1, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth, 0).getDate();
+  const dateSet = new Set(AVAILABLE_DATES);
+  const cur = getCurrentTag();
+
+  let html = '';
+  // 空白セル
+  for (let i = 0; i < firstDay; i++) html += '<div></div>';
+  // 日付セル
+  for (let d = 1; d <= daysInMonth; d++) {
+    const tag = `${calYear}${String(calMonth).padStart(2,'0')}${String(d).padStart(2,'0')}`;
+    const hasData = dateSet.has(tag);
+    const isCur = tag === cur;
+    const style = isCur
+      ? 'background:#1a56db;color:#fff;border-radius:50%;font-weight:700;cursor:pointer;padding:5px 0;font-size:13px;'
+      : hasData
+        ? 'color:#1a56db;font-weight:600;cursor:pointer;padding:5px 0;font-size:13px;border-radius:50%;'
+        : 'color:#d1d5db;padding:5px 0;font-size:13px;';
+    const onclick = hasData ? `onclick="location.href='${tagToUrl(tag)}';"` : '';
+    html += `<div style="${style}" ${onclick}>${d}</div>`;
+  }
+  grid.innerHTML = html;
+}
+
+document.addEventListener('DOMContentLoaded', loadAvailableDates);
+const CAT_ICONS  = {"ボイラー/産業設備": "🔧", "バイオマス/再生可能エネルギー": "🌿", "エネルギー市場": "⚡", "日タイ貿易/マクロ": "🤝", "企業/ビジネス動向": "🏭", "その他": "📰"};
+const CAT_COLORS = {"ボイラー/産業設備": "#b45309", "バイオマス/再生可能エネルギー": "#2d7a4f", "エネルギー市場": "#0369a1", "日タイ貿易/マクロ": "#7c3aed", "企業/ビジネス動向": "#be123c", "その他": "#555"};
+const CAT_SUMMARIES = {"日タイ貿易/マクロ": "タイ中銀の政策金利据え置き（4会合連続）が新規動向。タイ経済は輸出・投資が牽引役として成長期待が高まる中、国際的な経済連携（日米戦略投資）も継続トレンドとして注目される。", "企業/ビジネス動向": "バンコクのホテル売却承認が新規動向。タイではネット通販の中小企業支援や、タイ国営石油との脱炭素支援連携が進む。日本の半導体・電子産業やインフラ関連企業のタイでの事業拡大が継続トレンド。", "バイオマス/再生可能エネルギー": "東南アジア再生エネ市場が2050年までに2.5兆ドル規模へ拡大する見通しが新規動向。タイでのバイオ燃料減税やクリーンテック市場拡大など、同地域での再生エネ推進が継続トレンド。一方、日本の洋上風力はコスト高で撤退も。", "エネルギー市場": "タイ政府が燃料価格算定方式を見直し、国民負担軽減を図るのが新規動向。中東情勢やFRB金利動向が国際原油価格を高値圏で維持させ、タイでの燃料税減税や燃料費対策が継続トレンドとなっている。"};
+const GAS_URL = "https://script.google.com/macros/s/AKfycbz9Nc874Azvh8zqv5BySUGToK01aIkInocGYeqxgyyiJ-fN0YCqIW4h2E9NRkYBQ8bO/exec";
+
+let history = ["top"];
+let currentArticleIdx = null;
+
+function showPage(id) {
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  document.getElementById("page-" + id).classList.add("active");
+  document.getElementById("backBtn").classList.toggle("visible", id !== "top");
+  window.scrollTo(0, 0);
+}
+
+function goBack() {
+  history.pop();
+  const prev = history[history.length - 1];
+  if (prev === "top") showPage("top");
+  else if (prev && prev.startsWith("cat:")) showCategory(prev.slice(4), false);
+}
+
+function showCategory(cat, push=true) {
+  if (push) history.push("cat:" + cat);
+  document.getElementById("cat-icon").textContent = CAT_ICONS[cat] || "📰";
+  document.getElementById("cat-name").textContent = cat;
+  document.getElementById("cat-summary-text").textContent = CAT_SUMMARIES[cat] || "";
+  const arts = ARTICLES.filter(a => a.category === cat).sort((a,b) => b.relevance_score - a.relevance_score);
+  document.getElementById("cat-count-head").textContent = arts.length + "件の記事";
+  document.getElementById("cat-articles").innerHTML = arts.map(a => {
+    const idx = ARTICLES.indexOf(a);
+    const color = CAT_COLORS[cat] || "#555";
+    const stars = "★".repeat(a.relevance_score||3) + "☆".repeat(5-(a.relevance_score||3));
+    return `<div class="article-item" onclick="showArticle(${idx})" style="border-left:3px solid ${color}">
+      <div class="article-meta">
+        <span class="art-src">${a.source}</span>
+        <span class="art-stars">${stars}</span>
+      </div>
+      <div class="article-title">${a.title_ja || a.title}</div>
+      <div class="article-summary">${a.summary_ja || ""}</div>
+    </div>`;
+  }).join("");
+  showPage("cat");
+}
+
+function showArticle(idx, push=true) {
+  if (push) history.push("article:" + idx);
+  currentArticleIdx = idx;
+  const a = ARTICLES[idx];
+  const cat = a.category || "その他";
+  const color = CAT_COLORS[cat] || "#555";
+  document.getElementById("det-cat").innerHTML = `<span style="color:${color}">${CAT_ICONS[cat]||"📰"} ${cat}</span>`;
+  document.getElementById("det-title").textContent = a.title_ja || a.title;
+  document.getElementById("det-orig").textContent = a.title_ja && a.title_ja !== a.title ? "原題: " + a.title : "";
+  document.getElementById("det-meta").innerHTML = `<span>${a.source}</span><span>${(a.published||"").slice(0,16).replace("T"," ")}</span>`;
+  const isTranslated = a.body_ja && a.body_ja !== a.body;
+  document.getElementById("det-body-label").textContent = isTranslated ? "記事本文（日本語訳）" : "記事本文";
+  const origText = (a.body && a.body !== "undefined") ? a.body : "";
+  document.getElementById("det-body").innerHTML =
+    (a.body_ja || origText || "") +
+    (isTranslated && origText ? `<div class="detail-orig-body"><div class="detail-orig-label">ORIGINAL</div>${origText}</div>` : "") +
+    `<br><a href="${a.link}" target="_blank" rel="noopener" class="source-link">🔗 元記事を開く</a>`;
+  showPage("article");
+  showPage("article");
+}
+
+function updateCount() {
+  const checked = document.querySelectorAll('#all-articles input[type=checkbox]:checked').length;
+  document.getElementById('save-count').textContent = `チェックした記事: ${checked}件`;
+  document.getElementById('save-btn').disabled = checked === 0;
+}
+
+// 保存済みIDをセッション内で管理
+const savedIds = new Set();
+
+function markAsSaved(idx) {
+  savedIds.add(idx);
+  const item = document.querySelector(`[data-idx="${idx}"]`);
+  if (!item) return;
+  // チェックボックスを非表示にして保存済みバッジを表示
+  const wrap = item.querySelector('.check-wrap');
+  if (wrap) wrap.style.display = 'none';
+  if (!item.querySelector('.saved-badge')) {
+    const badge = document.createElement('div');
+    badge.className = 'saved-badge';
+    badge.textContent = '✅ 保存済み';
+    item.insertBefore(badge, item.firstChild);
+  }
+}
+
+async function saveChecked() {
+  const checkboxes = document.querySelectorAll('#all-articles input[type=checkbox]:checked');
+  if (checkboxes.length === 0) return;
+  const articles = [];
+  const idxList = [];
+  checkboxes.forEach(cb => {
+    const idx = parseInt(cb.id.replace('chk-', ''));
+    articles.push(ARTICLES[idx]);
+    idxList.push(idx);
+  });
+  const btn = document.getElementById('save-btn');
+  btn.disabled = true;
+  btn.textContent = '保存中...';
+  try {
+    await fetch(GAS_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ articles })
+    });
+    btn.textContent = '✅ 保存しました';
+    // 保存済みバッジを付与
+    idxList.forEach(idx => markAsSaved(idx));
+    updateCount();
+    setTimeout(() => {
+      btn.textContent = '📥 スプレッドシートに保存';
+    }, 3000);
+  } catch(e) {
+    btn.textContent = 'エラー: ' + e.message;
+    btn.disabled = false;
+  }
+}
+
+function openPerplexity() {
+  const a = ARTICLES[currentArticleIdx];
+  const query = encodeURIComponent(a.title_ja || a.title);
+  window.open(`https://www.perplexity.ai/search?q=${query}`, '_blank');
+}
+</script>
+
+<div class="save-bar">
+  <div class="save-count" id="save-count">チェックした記事: 0件</div>
+  <button class="save-btn" id="save-btn" onclick="saveChecked()" disabled>📥 スプレッドシートに保存</button>
+</div>
+</body>
+</html>
