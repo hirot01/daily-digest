@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>デイリーニュースダイジェスト — 2026年11月01日（Sun）</title>
+  <title>デイリーニュースダイジェスト — 2026年11月02日（Mon）</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -211,7 +211,7 @@
   <div class="nav-center">
     <button class="nav-arrow" id="prevBtn" onclick="goToDate('prev')" title="前日">‹</button>
     <button class="date-btn" onclick="toggleCalendar()" title="カレンダー">
-      📅 2026年11月01日（Sun）
+      📅 2026年11月02日（Mon）
     </button>
     <button class="nav-arrow" id="nextBtn" onclick="goToDate('next')" title="翌日">›</button>
   </div>
@@ -244,29 +244,53 @@
 <div class="page active" id="page-top">
   <div class="trend-card">
     <div class="trend-label">🌍 今日の世界トレンド</div>
-    <div class="trend-text">今日は**国際情勢の緊迫化と欧州の社会不安**、そして**米中間選挙を巡る政治・経済の動向**が主要テーマです。
+    <div class="trend-text">今日は**米国中間選挙を巡る政治情勢**と、**サイバーセキュリティの脅威**が主要テーマです。
 
-ウクライナの住民退避やイラン・台湾周辺情勢、仏独での大規模デモが国際的な緊張と社会不安を色濃く示します。米国では中間選挙が最終局面を迎え、その結果が株価やAI投資に影響するとの見方が。AIの著作権問題や企業のシステム脆弱性などテクノロジー関連の課題も浮上しています。</div>
+米国ではトランプ氏の影響力や共和党の動向が注目される中、北朝鮮ハッカーによる巨額暗号資産流出や、企業・国家レベルでの不正アクセスが発覚。同時に、生成AIがゲーム業界を変革するなど、テクノロジーの進化とリスクが顕著です。国内では防災対策の徹底要請も報じられています。</div>
   </div>
   <div class="summary-card">
     <div class="summary-label">📋 本日の関連ニュースサマリー</div>
-    <div class="summary-text">日タイビジネスでは、GX・再生可能エネルギー推進が継続的な注力領域ですが、今日の記事からはタイのマクロ経済における新たな国家戦略の動きが顕著です。まず、タイ農相がロシアとの農業協力強化を呼びかけた点は、食料安全保障と農産物貿易拡大に向けた新たな地政学的アプローチであり、10/31のアジアのエネルギー安全保障強化と並び、国家レベルでの安全保障意識の高まりを示唆します。また、タイ政府が観光収益で年間19兆円達成を目標としたことは、10/30のASEAN消費動向への注目や10/29のホテル売却から、より具体的な経済成長戦略へと進展した点として注目されます。</div>
+    <div class="summary-text">日タイビジネスでは、GX・再生可能エネルギー推進や資源循環が継続する中、タイのマクロ経済戦略は観光や農業協力からAI分野へと焦点が広がり、今日「AI医療ハブ」「小型AI」への注力、そして「2037年高所得経済国」目標と具体化・進展を見せました。資源循環も三菱電機が廃エアコンからレアアース回収し新規調達35％削減と具体的な成果を示し、マツダの太陽光導入やENEOS等の再生可能燃料取引が示すように、多様な企業活動に深化しています。今日新たに出てきたのは、日本の食品輸出拡大でタイとの提携模索という具体的な日タイ協力分野の提案と、タイの「コメ輸出、逆風」という具体的な課題の顕在化です。日銀は金利据え置きで物価目標2%と整合的と判断、金融政策の安定化フェーズを示唆します。</div>
   </div>
 
   <div class="section-head">カテゴリ別トレンド</div>
   <div class="cat-grid">
     
+        <div class="cat-card" onclick="showCategory('企業/ビジネス動向')" style="border-left:4px solid #be123c">
+          <div class="cat-card-head">
+            <span class="cat-icon">🏭</span>
+            <span class="cat-name">企業/ビジネス動向</span>
+            <span class="cat-count">4件</span>
+          </div>
+          <p class="cat-trend">新規：タイがAI医療ハブを目指し小型AIに注力。三菱電機は廃エアコンからレアアース回収に着手。継続：IT・製造業の収益堅調に加え、AI技術活用や資源循環・脱炭素への取り組みが国内外で加速するトレンドが顕著。</p>
+        </div>
         <div class="cat-card" onclick="showCategory('日タイ貿易/マクロ')" style="border-left:4px solid #7c3aed">
           <div class="cat-card-head">
             <span class="cat-icon">🤝</span>
             <span class="cat-name">日タイ貿易/マクロ</span>
+            <span class="cat-count">4件</span>
+          </div>
+          <p class="cat-trend">新規：タイが2037年までの高所得経済国入りを目標に掲げ、日本は食品輸出拡大でタイとの提携を模索。継続：コメ輸出逆風下でも農業・貿易関係は重要視され、日銀は物価目標2%と整合的として金融緩和を継続する流れ。</p>
+        </div>
+        <div class="cat-card" onclick="showCategory('エネルギー市場')" style="border-left:4px solid #0369a1">
+          <div class="cat-card-head">
+            <span class="cat-icon">⚡</span>
+            <span class="cat-name">エネルギー市場</span>
             <span class="cat-count">2件</span>
           </div>
-          <p class="cat-trend">新規動向として、タイがロシアとの農業協力強化を通じて食料安全保障と貿易多角化を図る動きが注目される。また、観光収益19兆円目標設定で観光業を成長戦略の柱と明確化。継続トレンドとして、タイ政府が経済成長と国民生活安定のため多様な政策を積極的に展開している。</p>
+          <p class="cat-trend">新規：日本政府がガソリン補助に1.1兆円の追加支出を決定し、物価高対策を強化。継続：エネルギー企業の好業績が続く一方で、原油価格高騰による家計負担軽減のため、燃料補助金政策が継続されるトレンド。</p>
+        </div>
+        <div class="cat-card" onclick="showCategory('バイオマス/再生可能エネルギー')" style="border-left:4px solid #2d7a4f">
+          <div class="cat-card-head">
+            <span class="cat-icon">🌿</span>
+            <span class="cat-name">バイオマス/再生可能エネルギー</span>
+            <span class="cat-count">2件</span>
+          </div>
+          <p class="cat-trend">新規：再生可能燃料の環境価値取引に大手9社が参画し、市場形成を推進。マツダも拠点に太陽光導入を加速。継続：企業による再生可能エネルギー導入や脱炭素への取り組みが活発化し、資源循環と持続可能な社会へのシフトが続く。</p>
         </div>
   </div>
 
-  <div class="section-head">全記事一覧（2件）</div>
+  <div class="section-head">全記事一覧（12件）</div>
   <div id="all-articles">
     
         <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="0" onclick="showArticle(0)">
@@ -276,11 +300,11 @@
           </div>
           <div class="article-meta">
             <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
-            <span class="art-src">newsclip: タイ経済・企業</span>
+            <span class="art-src">Google: Japan Thailand</span>
             <span class="art-stars">★★★★★</span>
           </div>
-          <div class="article-title">タイ政府、観光収益で年間19兆円達成を目標に</div>
-          <div class="article-summary">タイ政府は、観光産業を持続的な経済成長の牽引役と位置付け、年間観光収益4兆バーツ（約19兆円）超を目標に設定した。旅行・観光開発指数（TTDI）の世界ランキング上位を目指し、政策を推進する。</div>
+          <div class="article-title">日本、食品輸出拡大でタイとの提携を模索</div>
+          <div class="article-summary">日本は、食品輸出のさらなる拡大を目指し、タイとのパートナーシップ構築を模索している。両国間の貿易関係強化、特に食品産業における協力の進展が期待される。</div>
         </div>
         <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="1" onclick="showArticle(1)">
           <div class="check-wrap" onclick="event.stopPropagation()">
@@ -289,11 +313,141 @@
           </div>
           <div class="article-meta">
             <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
-            <span class="art-src">newsclip: タイ経済・企業</span>
+            <span class="art-src">日刊工業新聞</span>
+            <span class="art-stars">★★★★★</span>
+          </div>
+          <div class="article-title">日銀、金利据え置き　物価目標2%と「おおおむね整合」　決定会合</div>
+          <div class="article-summary">日本銀行は金融政策決定会合で、金利を据え置くことを決定し、物価目標2%と「おおむね整合的」との見解を示した。これは日本の金融政策の方向性を示唆し、為替レートや日タイ間の投資環境に影響を与える可能性がある。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="2" onclick="showArticle(2)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-2" onchange="updateCount()">
+            <label class="check-label" for="chk-2">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
+            <span class="art-src">Bangkok Post – Business</span>
             <span class="art-stars">★★★★☆</span>
           </div>
-          <div class="article-title">タイ農相、ロシアとの農業協力強化呼びかけ　食料安全保障や農産物貿易拡大で一致</div>
-          <div class="article-summary">タイのスリヤ農業協同組合相は10月30日、バンコクで開かれた第2回ロシア・タイ投資フォーラムにて、ロシアとの農業協力強化を呼びかけた。食料安全保障や農産物貿易拡大で両国間の合意が形成された。</div>
+          <div class="article-title">政府、2037年までに高所得経済国入りを目指す</div>
+          <div class="article-summary">タイ政府は、2037年までに高所得経済国への移行を目指し、新たな5カ年科学・イノベーション戦略で年間GDP成長率5%を目標に掲げた。経済構造の高度化と競争力強化を図る。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="3" onclick="showArticle(3)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-3" onchange="updateCount()">
+            <label class="check-label" for="chk-3">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">日経ビジネス</span>
+            <span class="art-stars">★★★★☆</span>
+          </div>
+          <div class="article-title">三菱電機、廃エアコンからレアアース回収　再資源化で新規調達35％削減</div>
+          <div class="article-summary">三菱電機は廃エアコンからレアアースを回収し、新規調達量を35%削減する。レアアース調達が厳しさを増す中、使用済み家電やIT機器からの再資源化は、日本の資源安全保障を支える戦略的取り組みとして注目される。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="4" onclick="showArticle(4)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-4" onchange="updateCount()">
+            <label class="check-label" for="chk-4">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">日刊工業新聞</span>
+            <span class="art-stars">★★★★☆</span>
+          </div>
+          <div class="article-title">三菱電、売上高6.5兆円　通期上方修正　FAシステム・空調伸長</div>
+          <div class="article-summary">三菱電機は通期業績予想を上方修正し、売上高6.5兆円に達する見込み。FAシステムおよび空調事業の伸長が寄与しており、これはタイを含む海外市場における製造業の設備投資やインフラ需要の動向にも関連する。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="5" onclick="showArticle(5)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-5" onchange="updateCount()">
+            <label class="check-label" for="chk-5">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
+            <span class="art-src">日刊工業新聞</span>
+            <span class="art-stars">★★★★☆</span>
+          </div>
+          <div class="article-title">政府、ガソリン補助に1.1兆円　予備費から追加支出</div>
+          <div class="article-summary">日本政府は、ガソリン価格高騰に対応するため、1.1兆円の補助金を予備費から追加支出することを決定。国民生活と経済活動への影響を軽減する措置であり、国際的な原油価格の動向とエネルギー安全保障問題に連動する。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #2d7a4f" data-cat="バイオマス/再生可能エネルギー" data-idx="6" onclick="showArticle(6)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-6" onchange="updateCount()">
+            <label class="check-label" for="chk-6">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#2d7a4f">🌿 バイオマス/再生可能エネルギー</span>
+            <span class="art-src">日経ビジネス</span>
+            <span class="art-stars">★★★★☆</span>
+          </div>
+          <div class="article-title">ENEOSやNTTドコモなど9社が参画　再生可能燃料の環境価値を取引</div>
+          <div class="article-summary">ENEOSやNTTドコモなど9社が、再生可能燃料の環境価値取引制度創設へ実証事業を開始。建設機械や物流分野での脱炭素化を推進し、日本の主要企業による再生可能エネルギー活用促進の動きとして注目される。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="7" onclick="showArticle(7)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-7" onchange="updateCount()">
+            <label class="check-label" for="chk-7">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">Bangkok Post – Business</span>
+            <span class="art-stars">★★★☆☆</span>
+          </div>
+          <div class="article-title">タイ、AI医療ハブとしての地位を狙う</div>
+          <div class="article-summary">タイは、東南アジア向けAIモデルの開発を通じて、地域的なAI医療ハブとしての地位確立を目指す。数十年の臨床研究を精密医療、新薬開発、がん治療に応用し、医療分野でのAI活用を推進する。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="8" onclick="showArticle(8)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-8" onchange="updateCount()">
+            <label class="check-label" for="chk-8">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
+            <span class="art-src">Bangkok Post – Business</span>
+            <span class="art-stars">★★★☆☆</span>
+          </div>
+          <div class="article-title">コメ輸出、逆風に直面</div>
+          <div class="article-summary">タイの今年のコメ輸出は、アジア市場への出荷増にもかかわらず、目標の700万トンを下回る見通し。これは、国際市場の変動や国内生産状況がタイ経済に与える影響を示唆する。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="9" onclick="showArticle(9)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-9" onchange="updateCount()">
+            <label class="check-label" for="chk-9">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">Bangkok Post – Business</span>
+            <span class="art-stars">★★★☆☆</span>
+          </div>
+          <div class="article-title">小型AIに大きく賭けるタイ</div>
+          <div class="article-summary">タイは、小型AI（Small AI）を多様な分野で活用し、大きなインパクトを生み出すことに注力している。これは、タイのデジタルトランスフォーメーションと産業競争力強化に向けた重要な戦略の一環。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="10" onclick="showArticle(10)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-10" onchange="updateCount()">
+            <label class="check-label" for="chk-10">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
+            <span class="art-src">日刊工業新聞</span>
+            <span class="art-stars">★★★☆☆</span>
+          </div>
+          <div class="article-title">JERA通期上方修正　当期益4800億円　最高益大幅更新へ</div>
+          <div class="article-summary">JERAが通期業績予想を上方修正し、当期純利益4800億円と過去最高益を大幅に更新する見込み。国際的なLNG価格変動や電力市場の動向が、日本の大手エネルギー企業に好影響を与えたものと分析される。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #2d7a4f" data-cat="バイオマス/再生可能エネルギー" data-idx="11" onclick="showArticle(11)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-11" onchange="updateCount()">
+            <label class="check-label" for="chk-11">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#2d7a4f">🌿 バイオマス/再生可能エネルギー</span>
+            <span class="art-src">日刊工業新聞</span>
+            <span class="art-stars">★★★☆☆</span>
+          </div>
+          <div class="article-title">マツダ、広島2拠点に太陽光導入</div>
+          <div class="article-summary">マツダは広島の2工場に太陽光発電システムを導入する。日本の製造業における再生可能エネルギー導入の加速を示す動きであり、企業全体の脱炭素化と持続可能なサプライチェーン構築への取り組みとして注目される。</div>
         </div>
   </div>
 </div>
@@ -330,13 +484,13 @@
 </div>
 
 <footer>
-  生成: 2026-11-01 10:57 JST　｜　ソース: RSS自動巡回 + Gemini AI　｜
-  取得: 4件 / 候補: 3件 / 掲載: 2件
+  生成: 2026-11-02 11:11 JST　｜　ソース: RSS自動巡回 + Gemini AI　｜
+  取得: 127件 / 候補: 36件 / 掲載: 12件
 </footer>
 
 <script>
-const ARTICLES = [{"title": "タイ政府、観光収益で年間19兆円達成を目標に", "title_ja": "タイ政府、観光収益で年間19兆円達成を目標に", "body_ja": "【タイ】政府は観光産業を持続的な経済成長の牽引役と位置付け、年間で観光収益4兆バーツ（19兆円相当）超の達成と、「旅行・観光開発指数（TTDI：Travel &#38; Tourism Development Index [&#8230;]", "summary_ja": "タイ政府は、観光産業を持続的な経済成長の牽引役と位置付け、年間観光収益4兆バーツ（約19兆円）超を目標に設定した。旅行・観光開発指数（TTDI）の世界ランキング上位を目指し、政策を推進する。", "source": "newsclip: タイ経済・企業", "link": "https://newsclip.be/thai-news/thai-economy/43730", "published": "2026-10-31T05:30:30+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 5}, {"title": "タイ農相、ロシアとの農業協力強化呼びかけ　食料安全保障や農産物貿易拡大で一致", "title_ja": "タイ農相、ロシアとの農業協力強化呼びかけ　食料安全保障や農産物貿易拡大で一致", "body_ja": "【タイ・ロシア】スリヤ・ジュンルンルアンキット農業協同組合相は10月30日、バンコク都内のホテルで開かれた第2回ロシア・タイ投資フォーラムで、「食料安全保障：農産物貿易と規制（Food Security: Agricul [&#8230;]", "summary_ja": "タイのスリヤ農業協同組合相は10月30日、バンコクで開かれた第2回ロシア・タイ投資フォーラムにて、ロシアとの農業協力強化を呼びかけた。食料安全保障や農産物貿易拡大で両国間の合意が形成された。", "source": "newsclip: タイ経済・企業", "link": "https://newsclip.be/thai-news/thai-economy/43727", "published": "2026-10-31T05:00:24+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 4}];
-const THIS_TAG = "20261101"; // このHTMLの日付タグ
+const ARTICLES = [{"title": "Japan seeks Thai partnerships in food export expansion drive - Nation Thailand", "title_ja": "日本、食品輸出拡大でタイとの提携を模索", "body_ja": "日本は食品輸出拡大に向け、タイとの提携を模索している。", "summary_ja": "日本は、食品輸出のさらなる拡大を目指し、タイとのパートナーシップ構築を模索している。両国間の貿易関係強化、特に食品産業における協力の進展が期待される。", "source": "Google: Japan Thailand", "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE9HNkVldFV0YVpUQUNlRkFfOFdrYU1wUUw5RFB0SjJqRlY1a18xLTBlNjlqSGp1eHRoa2lQUS1sZ2pjbmxvNmxHNWdMQnBmUUFVcjdmOTRXdFRXd0JFS2xHa29JeEU?oc=5", "published": "2026-11-01T04:10:00+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 5}, {"title": "日銀、金利据え置き　物価目標2%と「おおおむね整合」　決定会合", "title_ja": "日銀、金利据え置き　物価目標2%と「おおおむね整合」　決定会合", "body_ja": "", "summary_ja": "日本銀行は金融政策決定会合で、金利を据え置くことを決定し、物価目標2%と「おおむね整合的」との見解を示した。これは日本の金融政策の方向性を示唆し、為替レートや日タイ間の投資環境に影響を与える可能性がある。", "source": "日刊工業新聞", "link": "https://www.nikkan.co.jp/articles/view/795987", "published": "2026-11-01T20:00:00+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 5}, {"title": "Govt eyes high-income  economy status 'by 2037'", "title_ja": "政府、2037年までに高所得経済国入りを目指す", "body_ja": "タイは2037年までに高所得経済国となることを目指しており、新たな5カ年科学・イノベーション戦略で年間GDP成長率5%を目標としている。", "summary_ja": "タイ政府は、2037年までに高所得経済国への移行を目指し、新たな5カ年科学・イノベーション戦略で年間GDP成長率5%を目標に掲げた。経済構造の高度化と競争力強化を図る。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3346865/govt-eyes-highincome-economy-status-by-2037", "published": "2026-11-01T21:02:00+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 4}, {"title": "三菱電機、廃エアコンからレアアース回収　再資源化で新規調達35％削減 (「ごみ」が日本を救う)", "title_ja": "三菱電機、廃エアコンからレアアース回収　再資源化で新規調達35％削減", "body_ja": "使用済み家電やIT機器が都市に眠る新たな資源として耳目を集める。レアアースなどの調達が厳しさを増す中、企業は再資源化を加速する。三菱電機は廃エアコンからレアアースを回収し、伊藤忠商事は中古スマホやIT機器の再利用・再資源化を推進。「都市鉱山」は日本の資源安全保障を支える戦略資産へと変わり始めた。", "summary_ja": "三菱電機は廃エアコンからレアアースを回収し、新規調達量を35%削減する。レアアース調達が厳しさを増す中、使用済み家電やIT機器からの再資源化は、日本の資源安全保障を支える戦略的取り組みとして注目される。", "source": "日経ビジネス", "link": "https://business.nikkei.com/atcl/gen/19/00947/102900002/", "published": "2026-11-01T20:00:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 4}, {"title": "三菱電、売上高6.5兆円　通期上方修正　FAシステム・空調伸長", "title_ja": "三菱電、売上高6.5兆円　通期上方修正　FAシステム・空調伸長", "body_ja": "", "summary_ja": "三菱電機は通期業績予想を上方修正し、売上高6.5兆円に達する見込み。FAシステムおよび空調事業の伸長が寄与しており、これはタイを含む海外市場における製造業の設備投資やインフラ需要の動向にも関連する。", "source": "日刊工業新聞", "link": "https://www.nikkan.co.jp/articles/view/795966", "published": "2026-11-01T20:00:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 4}, {"title": "政府、ガソリン補助に1.1兆円　予備費から追加支出", "title_ja": "政府、ガソリン補助に1.1兆円　予備費から追加支出", "body_ja": "", "summary_ja": "日本政府は、ガソリン価格高騰に対応するため、1.1兆円の補助金を予備費から追加支出することを決定。国民生活と経済活動への影響を軽減する措置であり、国際的な原油価格の動向とエネルギー安全保障問題に連動する。", "source": "日刊工業新聞", "link": "https://www.nikkan.co.jp/articles/view/795977", "published": "2026-11-01T20:00:00+00:00", "category": "エネルギー市場", "relevance_score": 4}, {"title": "ENEOSやNTTドコモなど9社が参画　再生可能燃料の環境価値を取引 (日経ESG)", "title_ja": "ENEOSやNTTドコモなど9社が参画　再生可能燃料の環境価値を取引", "body_ja": "次世代燃料の環境価値を取引する制度の創設に向け、実証事業が始まった。建設機械や物流など燃料を多く消費する企業の脱炭素化の切り札となるか。", "summary_ja": "ENEOSやNTTドコモなど9社が、再生可能燃料の環境価値取引制度創設へ実証事業を開始。建設機械や物流分野での脱炭素化を推進し、日本の主要企業による再生可能エネルギー活用促進の動きとして注目される。", "source": "日経ビジネス", "link": "https://business.nikkei.com/atcl/gen/19/00159/102700404/", "published": "2026-11-01T20:00:00+00:00", "category": "バイオマス/再生可能エネルギー", "relevance_score": 4}, {"title": "Thailand eyes status as AI medical hub", "title_ja": "タイ、AI医療ハブとしての地位を狙う", "body_ja": "タイは、東南アジアの人々に合わせたAIモデルを開発し、数十年にわたる臨床研究を精密医療、新薬開発、がん治療の進歩につなげることで、地域的なAI医療ハブとなることを目指している。", "summary_ja": "タイは、東南アジア向けAIモデルの開発を通じて、地域的なAI医療ハブとしての地位確立を目指す。数十年の臨床研究を精密医療、新薬開発、がん治療に応用し、医療分野でのAI活用を推進する。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3346775/thailand-eyes-status-as-ai-medical-hub", "published": "2026-11-01T22:25:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 3}, {"title": "Rice exports face mounting headwinds", "title_ja": "コメ輸出、逆風に直面", "body_ja": "タイのコメ輸出は、アジア市場への出荷が急増しているにもかかわらず、今年の目標である700万トンを下回ると予想されている。", "summary_ja": "タイの今年のコメ輸出は、アジア市場への出荷増にもかかわらず、目標の700万トンを下回る見通し。これは、国際市場の変動や国内生産状況がタイ経済に与える影響を示唆する。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3346760/rice-exports-face-mounting-headwinds", "published": "2026-11-01T22:24:00+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 3}, {"title": "Betting big on small AI", "title_ja": "小型AIに大きく賭けるタイ", "body_ja": "タイは、小型AIを多くの分野で大きな影響を生み出すために活用することに熱心である。", "summary_ja": "タイは、小型AI（Small AI）を多様な分野で活用し、大きなインパクトを生み出すことに注力している。これは、タイのデジタルトランスフォーメーションと産業競争力強化に向けた重要な戦略の一環。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3346889/betting-big-on-small-ai", "published": "2026-11-01T22:20:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 3}, {"title": "JERA通期上方修正　当期益4800億円　最高益大幅更新へ", "title_ja": "JERA通期上方修正　当期益4800億円　最高益大幅更新へ", "body_ja": "", "summary_ja": "JERAが通期業績予想を上方修正し、当期純利益4800億円と過去最高益を大幅に更新する見込み。国際的なLNG価格変動や電力市場の動向が、日本の大手エネルギー企業に好影響を与えたものと分析される。", "source": "日刊工業新聞", "link": "https://www.nikkan.co.jp/articles/view/795931", "published": "2026-11-01T20:00:00+00:00", "category": "エネルギー市場", "relevance_score": 3}, {"title": "マツダ、広島2拠点に太陽光導入", "title_ja": "マツダ、広島2拠点に太陽光導入", "body_ja": "", "summary_ja": "マツダは広島の2工場に太陽光発電システムを導入する。日本の製造業における再生可能エネルギー導入の加速を示す動きであり、企業全体の脱炭素化と持続可能なサプライチェーン構築への取り組みとして注目される。", "source": "日刊工業新聞", "link": "https://www.nikkan.co.jp/articles/view/795970", "published": "2026-11-01T20:00:00+00:00", "category": "バイオマス/再生可能エネルギー", "relevance_score": 3}];
+const THIS_TAG = "20261102"; // このHTMLの日付タグ
 
 // ── 日付ナビゲーション（available_dates.jsonを動的取得）──
 let AVAILABLE_DATES = [];
@@ -449,7 +603,7 @@ function renderCalendar() {
 document.addEventListener('DOMContentLoaded', loadAvailableDates);
 const CAT_ICONS  = {"ボイラー/産業設備": "🔧", "バイオマス/再生可能エネルギー": "🌿", "エネルギー市場": "⚡", "日タイ貿易/マクロ": "🤝", "企業/ビジネス動向": "🏭", "その他": "📰"};
 const CAT_COLORS = {"ボイラー/産業設備": "#b45309", "バイオマス/再生可能エネルギー": "#2d7a4f", "エネルギー市場": "#0369a1", "日タイ貿易/マクロ": "#7c3aed", "企業/ビジネス動向": "#be123c", "その他": "#555"};
-const CAT_SUMMARIES = {"日タイ貿易/マクロ": "新規動向として、タイがロシアとの農業協力強化を通じて食料安全保障と貿易多角化を図る動きが注目される。また、観光収益19兆円目標設定で観光業を成長戦略の柱と明確化。継続トレンドとして、タイ政府が経済成長と国民生活安定のため多様な政策を積極的に展開している。"};
+const CAT_SUMMARIES = {"企業/ビジネス動向": "新規：タイがAI医療ハブを目指し小型AIに注力。三菱電機は廃エアコンからレアアース回収に着手。継続：IT・製造業の収益堅調に加え、AI技術活用や資源循環・脱炭素への取り組みが国内外で加速するトレンドが顕著。", "日タイ貿易/マクロ": "新規：タイが2037年までの高所得経済国入りを目標に掲げ、日本は食品輸出拡大でタイとの提携を模索。継続：コメ輸出逆風下でも農業・貿易関係は重要視され、日銀は物価目標2%と整合的として金融緩和を継続する流れ。", "エネルギー市場": "新規：日本政府がガソリン補助に1.1兆円の追加支出を決定し、物価高対策を強化。継続：エネルギー企業の好業績が続く一方で、原油価格高騰による家計負担軽減のため、燃料補助金政策が継続されるトレンド。", "バイオマス/再生可能エネルギー": "新規：再生可能燃料の環境価値取引に大手9社が参画し、市場形成を推進。マツダも拠点に太陽光導入を加速。継続：企業による再生可能エネルギー導入や脱炭素への取り組みが活発化し、資源循環と持続可能な社会へのシフトが続く。"};
 const GAS_URL = "https://script.google.com/macros/s/AKfycbz9Nc874Azvh8zqv5BySUGToK01aIkInocGYeqxgyyiJ-fN0YCqIW4h2E9NRkYBQ8bO/exec";
 
 let history = ["top"];
