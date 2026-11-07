@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>デイリーニュースダイジェスト — 2026年11月07日（Sat）</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f8f9fb; --bg2: #ffffff; --bg3: #f0f2f5;
+      --fg: #1a1d23; --fg2: #4a5168; --fg3: #9299aa;
+      --accent: #1a56db; --accent2: #0e9f6e;
+      --rule: #e5e7eb; --shadow: 0 1px 4px rgba(0,0,0,.07);
+    }
+    body { font-family:'Noto Sans JP',sans-serif; background:var(--bg); color:var(--fg); line-height:1.7; }
+    a { color:var(--accent); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+
+    /* Header */
+    .site-header {
+      position:sticky; top:0; z-index:100;
+      background:#fff; border-bottom:1px solid var(--rule);
+      padding:14px 24px; display:flex; align-items:center; justify-content:space-between;
+      box-shadow:var(--shadow);
+    }
+    .site-logo { font-size:15px; font-weight:700; color:var(--fg); letter-spacing:-.01em; }
+    .site-logo span { color:var(--accent); }
+    .site-date { font-size:12px; color:var(--fg3); }
+    .back-btn {
+      display:none; background:#f0f2f5; border:none;
+      color:var(--fg2); padding:6px 14px; border-radius:20px; cursor:pointer; font-size:12px; font-weight:500;
+    }
+    .back-btn.visible { display:block; }
+
+    /* Navigation */
+    .nav-center { display:flex; align-items:center; gap:6px; }
+    .nav-arrow {
+      background:none; border:1px solid var(--rule); border-radius:8px;
+      width:32px; height:32px; font-size:20px; cursor:pointer;
+      color:var(--fg2); display:flex; align-items:center; justify-content:center;
+      transition:all .15s; line-height:1;
+    }
+    .nav-arrow:hover { background:var(--bg3); }
+    .nav-arrow:disabled { color:var(--rule); cursor:not-allowed; }
+    .date-btn {
+      background:var(--bg3); border:1px solid var(--rule); border-radius:8px;
+      padding:5px 12px; font-size:13px; font-weight:600; cursor:pointer;
+      color:var(--fg); transition:all .15s; white-space:nowrap;
+    }
+    .date-btn:hover { background:#e5e7eb; }
+
+    /* Pages */
+    .page { display:none; max-width:780px; margin:0 auto; padding:28px 20px 80px; }
+    .page.active { display:block; }
+
+    /* Overall summary */
+    .summary-card {
+      background:linear-gradient(135deg, #1a56db 0%, #0e9f6e 100%);
+      border-radius:16px; padding:24px 28px; margin-bottom:28px;
+      box-shadow:0 4px 20px rgba(26,86,219,.2);
+    }
+    .summary-label {
+      font-size:10px; font-weight:700; letter-spacing:.18em;
+      color:rgba(255,255,255,.7); text-transform:uppercase; margin-bottom:10px;
+    }
+    .summary-text { font-size:14px; line-height:1.9; color:#fff; }
+
+    /* Section head */
+    .section-head {
+      font-size:12px; font-weight:700; color:var(--fg3);
+      letter-spacing:.08em; text-transform:uppercase;
+      margin-bottom:14px; padding-bottom:8px;
+      border-bottom:2px solid var(--rule);
+    }
+
+    /* Category cards */
+    .cat-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:32px; }
+    @media(max-width:500px){ .cat-grid { grid-template-columns:1fr; } }
+    .cat-card {
+      background:#fff; border-radius:14px; padding:18px 20px;
+      cursor:pointer; transition:all .2s; border:1px solid var(--rule);
+      box-shadow:var(--shadow);
+    }
+    .cat-card:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(0,0,0,.1); }
+    .cat-card-head { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+    .cat-icon { font-size:22px; }
+    .cat-name { font-size:13px; font-weight:700; flex:1; color:var(--fg); }
+    .cat-count {
+      font-size:11px; color:#fff; font-weight:600;
+      background:var(--accent); padding:2px 10px; border-radius:20px;
+    }
+    .cat-trend { font-size:12px; color:var(--fg2); line-height:1.75; }
+
+    /* Article items */
+    .article-item {
+      background:#fff; border-radius:12px; border:1px solid var(--rule);
+      padding:16px 20px; margin-bottom:10px; cursor:pointer;
+      transition:all .15s; box-shadow:var(--shadow);
+    }
+    .article-item:hover { transform:translateY(-1px); box-shadow:0 4px 16px rgba(0,0,0,.1); }
+    .article-meta { display:flex; gap:10px; font-size:11px; color:var(--fg3); margin-bottom:6px; flex-wrap:wrap; align-items:center; }
+    .art-cat { font-weight:600; font-size:11px; padding:2px 8px; border-radius:4px; background:var(--bg3); }
+    .art-stars { color:#f59e0b; letter-spacing:-1px; }
+    .article-title { font-size:14px; font-weight:600; color:var(--fg); line-height:1.55; margin-bottom:6px; }
+    .article-summary { font-size:12.5px; color:var(--fg2); line-height:1.7; }
+    .no-news { text-align:center; color:var(--fg3); padding:60px 20px; font-size:14px; }
+
+    /* Category page */
+    .cat-page-icon { font-size:32px; margin-bottom:4px; }
+    .cat-page-name { font-size:22px; font-weight:700; margin-bottom:18px; color:var(--fg); }
+    .cat-summary-box {
+      background:#fff; border:1px solid var(--rule);
+      border-radius:12px; padding:18px 22px; margin-bottom:24px;
+      box-shadow:var(--shadow);
+    }
+    .cat-summary-label {
+      font-size:10px; font-weight:700; letter-spacing:.18em;
+      color:var(--accent); text-transform:uppercase; margin-bottom:10px;
+    }
+    .cat-summary-text { font-size:13.5px; color:var(--fg2); line-height:1.85; }
+
+    /* Article detail */
+    .detail-cat { font-size:11px; font-weight:700; margin-bottom:8px; }
+    .detail-title { font-size:20px; font-weight:700; line-height:1.5; margin-bottom:6px; color:var(--fg); }
+    .detail-orig { font-size:11px; color:var(--fg3); font-style:italic; margin-bottom:12px; }
+    .detail-meta { font-size:12px; color:var(--fg3); margin-bottom:18px; display:flex; gap:14px; flex-wrap:wrap; }
+    .detail-body {
+      background:#fff; border:1px solid var(--rule);
+      border-radius:12px; padding:20px 22px;
+      font-size:14px; line-height:1.9; color:var(--fg2); margin-bottom:16px;
+      box-shadow:var(--shadow);
+    }
+    .detail-orig-body {
+      margin-top:14px; padding-top:12px; border-top:1px solid var(--rule);
+      font-size:12px; color:var(--fg3); line-height:1.7;
+    }
+    .detail-orig-label { font-size:10px; color:var(--fg3); margin-bottom:4px; letter-spacing:.1em; font-weight:600; }
+    .source-link {
+      display:inline-flex; align-items:center; gap:6px;
+      font-size:12px; color:var(--accent); margin-top:12px;
+      border:1px solid #c3d5fa; border-radius:6px; padding:5px 12px;
+      background:#eef2ff;
+    }
+
+    /* World trend card */
+    .trend-card {
+      background:#fff; border:1px solid var(--rule);
+      border-radius:16px; padding:22px 26px; margin-bottom:16px;
+      box-shadow:var(--shadow); border-left:4px solid #f59e0b;
+    }
+    .trend-label {
+      font-size:10px; font-weight:700; letter-spacing:.18em;
+      color:#d97706; text-transform:uppercase; margin-bottom:10px;
+    }
+    .trend-text { font-size:14px; line-height:1.9; color:var(--fg2); }
+
+    /* Deep dive */
+    .deep-card {
+      background:linear-gradient(135deg, #eef2ff, #f0fdf4);
+      border:1px solid #c3d5fa; border-radius:14px; padding:22px 24px;
+    }
+    .deep-label {
+      font-size:10px; font-weight:700; letter-spacing:.18em;
+      color:var(--accent); text-transform:uppercase; margin-bottom:12px;
+    }
+    .deep-text { font-size:13.5px; line-height:1.95; color:var(--fg2); }
+    .deep-btn {
+      background:#1a56db; border:none; color:#fff;
+      padding:10px 22px; border-radius:8px; cursor:pointer; font-size:13px; font-weight:600;
+      display:inline-flex; align-items:center; gap:6px;
+      box-shadow:0 2px 8px rgba(26,86,219,.25); transition:all .15s;
+    }
+    .deep-btn:hover { background:#1e40af; transform:translateY(-1px); }
+    .deep-loading { font-size:13px; color:var(--fg3); }
+
+    /* Save bar */
+    .save-bar {
+      position:fixed; bottom:0; left:0; right:0;
+      background:#fff; border-top:1px solid var(--rule);
+      padding:12px 24px; display:flex; align-items:center; justify-content:space-between;
+      z-index:200; box-shadow:0 -2px 12px rgba(0,0,0,.08);
+    }
+    .save-count { font-size:13px; color:var(--fg2); font-weight:500; }
+    .save-btn {
+      background:var(--accent2); border:none; color:#fff;
+      padding:10px 24px; border-radius:8px; cursor:pointer;
+      font-size:14px; font-weight:700; box-shadow:0 2px 8px rgba(14,159,110,.3);
+    }
+    .save-btn:disabled { background:var(--fg3); cursor:not-allowed; box-shadow:none; }
+    .check-wrap { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+    .check-wrap input[type=checkbox] { width:18px; height:18px; cursor:pointer; accent-color:var(--accent); }
+    .check-label { font-size:12px; color:var(--fg3); cursor:pointer; }
+    .saved-badge {
+      display:inline-flex; align-items:center; gap:4px;
+      font-size:11px; font-weight:600; color:var(--accent2);
+      background:#f0fdf4; border:1px solid #bbf7d0;
+      padding:2px 8px; border-radius:20px; margin-bottom:8px;
+    }
+
+    footer {
+      text-align:center; font-size:11px; color:var(--fg3);
+      padding:20px; border-top:1px solid var(--rule); margin-top:40px;
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-logo">📋 Daily Digest</div>
+  <div class="nav-center">
+    <button class="nav-arrow" id="prevBtn" onclick="goToDate('prev')" title="前日">‹</button>
+    <button class="date-btn" onclick="toggleCalendar()" title="カレンダー">
+      📅 2026年11月07日（Sat）
+    </button>
+    <button class="nav-arrow" id="nextBtn" onclick="goToDate('next')" title="翌日">›</button>
+  </div>
+  <button class="back-btn" id="backBtn" onclick="goBack()">← 戻る</button>
+</header>
+
+<!-- カレンダーモーダル -->
+<div id="calendarOverlay" onclick="closeCalendar()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:300;"></div>
+<div id="calendarModal" style="display:none;position:fixed;top:64px;left:50%;transform:translateX(-50%);
+  background:#fff;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.15);
+  padding:20px;z-index:301;width:320px;max-width:90vw;">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+    <button onclick="changeCalMonth(-1)" style="background:none;border:none;font-size:20px;cursor:pointer;color:#4a5168;">‹</button>
+    <div id="calMonthLabel" style="font-weight:700;font-size:15px;color:#1a1d23;"></div>
+    <button onclick="changeCalMonth(1)" style="background:none;border:none;font-size:20px;cursor:pointer;color:#4a5168;">›</button>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;margin-bottom:8px;">
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">日</div>
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">月</div>
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">火</div>
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">水</div>
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">木</div>
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">金</div>
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">土</div>
+  </div>
+  <div id="calGrid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;"></div>
+</div>
+
+<!-- TOP PAGE -->
+<div class="page active" id="page-top">
+  <div class="trend-card">
+    <div class="trend-label">🌍 今日の世界トレンド</div>
+    <div class="trend-text">今日は**国際政治情勢の不確実性**と**各国経済・金融政策の動向**が主要テーマです。
+
+米国では中間選挙後のトランプ氏周辺の政局混乱が続き、パラグアイ大統領辞任など国際的な不安定要素も。日本では高市首相（※）の消費減税法案や対中関係が注目され、日銀のインフレ警戒や米国の雇用統計など、内外の経済動向が景気の先行きを示唆しています。NTTドコモの情報流出もテクノロジー分野の懸念材料です。
+
+（※見出しの「高市首相」は、現実の役職と異なる可能性がありますが、提供された見出しに基づいています。）</div>
+  </div>
+  <div class="summary-card">
+    <div class="summary-label">📋 本日の関連ニュースサマリー</div>
+    <div class="summary-text">日タイビジネスでは、GX・再生可能エネルギー推進や米中間選挙後の国際情勢への言及が継続しています。エネルギー価格がインフレを45ヶ月ぶり高水準に押し上げ、米イラン情勢への期待も示すなど、市場の地政学リスクへの感応度が高い状況です。
+
+変化・進展としては、EV分野で大臣が「年内の新たなEV輸入規制はない」と表明し政策が明確化。また、三菱重工が27年度以降に1兆円規模の成長投資を表明する一方、日本製紙は八代工場の生産再開を断念し新規事業検討へ動くなど、日本企業の事業構造転換が顕著です。今日新たに、グラブがタイ文化の収益化へ着手する動きや、JFEHD、三菱自（中東情勢影響で下方修正）、ミネベアミツミなど主要企業の決算修正が複数報じられています。</div>
+  </div>
+
+  <div class="section-head">カテゴリ別トレンド</div>
+  <div class="cat-grid">
+    
+        <div class="cat-card" onclick="showCategory('企業/ビジネス動向')" style="border-left:4px solid #be123c">
+          <div class="cat-card-head">
+            <span class="cat-icon">🏭</span>
+            <span class="cat-name">企業/ビジネス動向</span>
+            <span class="cat-count">9件</span>
+          </div>
+          <p class="cat-trend">デジタルプラットフォーム規制の具体化要求が新規動向。タイのEV市場保護政策や外部環境による企業業績の変動は継続トレンドで、日本製紙の事業再編や一部企業の決算修正に表れている。</p>
+        </div>
+        <div class="cat-card" onclick="showCategory('エネルギー市場')" style="border-left:4px solid #0369a1">
+          <div class="cat-card-head">
+            <span class="cat-icon">⚡</span>
+            <span class="cat-name">エネルギー市場</span>
+            <span class="cat-count">4件</span>
+          </div>
+          <p class="cat-trend">米中間選挙後の市場動揺がインフレと原油価格に具体的に波及し、アジアで米イラン緊張緩和への期待が見られるのが新規動向。地政学リスクが原油価格を左右し、高エネルギー価格がインフレを加速させるトレンドは継続中。</p>
+        </div>
+        <div class="cat-card" onclick="showCategory('日タイ貿易/マクロ')" style="border-left:4px solid #7c3aed">
+          <div class="cat-card-head">
+            <span class="cat-icon">🤝</span>
+            <span class="cat-name">日タイ貿易/マクロ</span>
+            <span class="cat-count">3件</span>
+          </div>
+          <p class="cat-trend">米中間選挙結果が日経平均に「ショック」を与え、今後の株価動向への疑心暗鬼が新規動向。国際政治イベントがマクロ経済や市場に大きく影響を及ぼすトレンドが継続し、AI投資は引き続き活発である。</p>
+        </div>
+        <div class="cat-card" onclick="showCategory('ボイラー/産業設備')" style="border-left:4px solid #b45309">
+          <div class="cat-card-head">
+            <span class="cat-icon">🔧</span>
+            <span class="cat-name">ボイラー/産業設備</span>
+            <span class="cat-count">2件</span>
+          </div>
+          <p class="cat-trend">三菱重工がGTCC高温部品などに1兆円規模の成長投資を発表し、ガスタービンの採算改善が寄与し業績を上方修正したのが新規動向。産業設備投資は継続的なテーマだが、今回は個別企業の大規模戦略が注目される。</p>
+        </div>
+        <div class="cat-card" onclick="showCategory('バイオマス/再生可能エネルギー')" style="border-left:4px solid #2d7a4f">
+          <div class="cat-card-head">
+            <span class="cat-icon">🌿</span>
+            <span class="cat-name">バイオマス/再生可能エネルギー</span>
+            <span class="cat-count">2件</span>
+          </div>
+          <p class="cat-trend">資源循環が企業の競争力を左右するという強いメッセージが新規。再生可能エネルギーとサステナビリティへの継続的な関心が高まる中、ASEAN地域でのスマートグリッド開発推進といった具体的な動きが見られる。</p>
+        </div>
+  </div>
+
+  <div class="section-head">全記事一覧（20件）</div>
+  <div id="all-articles">
+    
+        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="0" onclick="showArticle(0)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-0" onchange="updateCount()">
+            <label class="check-label" for="chk-0">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
+            <span class="art-src">Bangkok Post – Business</span>
+            <span class="art-stars">★★★★★</span>
+          </div>
+          <div class="article-title">エネルギー価格がインフレを45ヶ月ぶりの高水準に押し上げ</div>
+          <div class="article-summary">タイの10月消費者物価指数（CPI）が前年比3.9%上昇し、45ヶ月ぶりの高水準となった。これは燃料価格の高騰が主因で、インフレの56%を占める。タイの経済状況とエネルギー価格の直接的な関連を示す。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="1" onclick="showArticle(1)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-1" onchange="updateCount()">
+            <label class="check-label" for="chk-1">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
+            <span class="art-src">Google: crude oil Asia</span>
+            <span class="art-stars">★★★★★</span>
+          </div>
+          <div class="article-title">アジア燃料油市場、米イラン間の緊張緩和に期待を示す - 原油価格情報</div>
+          <div class="article-summary">アジアの燃料油市場は、米国とイラン間の緊張緩和への期待を示している。これは原油価格の動向に影響を与える可能性があり、国際エネルギー情勢の重要な側面である。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="2" onclick="showArticle(2)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-2" onchange="updateCount()">
+            <label class="check-label" for="chk-2">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">Bangkok Post – Business</span>
+            <span class="art-stars">★★★★★</span>
+          </div>
+          <div class="article-title">大臣、年内の新たなEV輸入規制はないと表明</div>
+          <div class="article-summary">タイ産業省は、2027年1月1日に輸入EVに対する物品税率が引き上げられるまで、EV輸入を抑制する追加措置を今年は導入しないと表明した。これは貿易障壁となる可能性への懸念を理由としており、タイのEV市場に影響を与える。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #b45309" data-cat="ボイラー/産業設備" data-idx="3" onclick="showArticle(3)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-3" onchange="updateCount()">
+            <label class="check-label" for="chk-3">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#b45309">🔧 ボイラー/産業設備</span>
+            <span class="art-src">日刊工業新聞</span>
+            <span class="art-stars">★★★★★</span>
+          </div>
+          <div class="article-title">三菱重工、27年度以降に1兆円規模の成長投資　GTCC高温部品の能力増強など</div>
+          <div class="article-summary">三菱重工は、2027年度以降に1兆円規模の成長投資を計画しており、ガスタービン複合サイクル（GTCC）発電設備向け高温部品の能力増強などが含まれる。これは同社の産業設備分野における事業拡大戦略を示す。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="4" onclick="showArticle(4)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-4" onchange="updateCount()">
+            <label class="check-label" for="chk-4">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
+            <span class="art-src">日経ビジネス</span>
+            <span class="art-stars">★★★★★</span>
+          </div>
+          <div class="article-title">⽶中間選挙の民主党大勝で動揺するマーケット／⽇銀リフレ派の講演に注⽬ (上野泰也の先読みマーケット)</div>
+          <div class="article-summary">米中間選挙で共和党が大敗し、イラン攻撃の可能性が為替に影響を与える可能性がある。日本では日銀審議委員の講演が市場の関心を集め、追加利上げを巡るメッセージが注目される。国際情勢と金融政策が市場に与える影響は大きい。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #b45309" data-cat="ボイラー/産業設備" data-idx="5" onclick="showArticle(5)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-5" onchange="updateCount()">
+            <label class="check-label" for="chk-5">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#b45309">🔧 ボイラー/産業設備</span>
+            <span class="art-src">日刊工業新聞</span>
+            <span class="art-stars">★★★★★</span>
+          </div>
+          <div class="article-title">三菱重工、通期事業益600億円上方修正　ガスタービンの採算改善寄与</div>
+          <div class="article-summary">三菱重工は、ガスタービンの採算改善が寄与し、通期事業利益を600億円上方修正した。これは同社の産業設備事業が好調であることを示しており、日本の重工メーカーの業績動向として注目される。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #2d7a4f" data-cat="バイオマス/再生可能エネルギー" data-idx="6" onclick="showArticle(6)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-6" onchange="updateCount()">
+            <label class="check-label" for="chk-6">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#2d7a4f">🌿 バイオマス/再生可能エネルギー</span>
+            <span class="art-src">Google: 再生可能エネルギー</span>
+            <span class="art-stars">★★★★★</span>
+          </div>
+          <div class="article-title">ASEANの知識を結集し、スマートグリッド開発を促進する。</div>
+          <div class="article-summary">ASEAN各国は知識を結集し、スマートグリッドの開発を促進している。これは地域全体のエネルギー効率向上と再生可能エネルギー導入拡大に不可欠であり、東南アジアの持続可能なエネルギー移行に向けた重要な取り組みである。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="7" onclick="showArticle(7)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-7" onchange="updateCount()">
+            <label class="check-label" for="chk-7">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
+            <span class="art-src">Google: crude oil Asia</span>
+            <span class="art-stars">★★★★★</span>
+          </div>
+          <div class="article-title">明らかになった：原油価格急騰の隠れたコスト</div>
+          <div class="article-summary">原油価格の急騰がもたらす隠れたコストが明らかになった。国際的な原油市場の変動は、各国の経済や消費者物価に大きな影響を与え、エネルギー安全保障上の課題を浮き彫りにする。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="8" onclick="showArticle(8)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-8" onchange="updateCount()">
+            <label class="check-label" for="chk-8">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
+            <span class="art-src">日経ビジネス</span>
+            <span class="art-stars">★★★★☆</span>
+          </div>
+          <div class="article-title">米中間選挙ショック、波乱の相場・市場を読む (トランプ2.0の世界)</div>
+          <div class="article-summary">米中間選挙で野党が圧勝し、AIやデータセンターへの投資抑制懸念から市場が動揺。ナスダック総合指数は5.5%急落し半年ぶり安値、東京市場も日経平均が一時4300円超下落し6万円を半年ぶりに割り込んだ。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="9" onclick="showArticle(9)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-9" onchange="updateCount()">
+            <label class="check-label" for="chk-9">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
+            <span class="art-src">Bangkok Post – Business</span>
+            <span class="art-stars">★★★★☆</span>
+          </div>
+          <div class="article-title">エクニティ大臣、AI投資の継続に楽観的</div>
+          <div class="article-summary">タイのエクニティ財務大臣は、米中間選挙の結果が世界経済に変動をもたらす可能性があるものの、人工知能（AI）産業への投資はタイに引き続き流入すると楽観的な見方を示した。これはタイの今後の経済成長戦略にも関わる。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #2d7a4f" data-cat="バイオマス/再生可能エネルギー" data-idx="10" onclick="showArticle(10)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-10" onchange="updateCount()">
+            <label class="check-label" for="chk-10">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#2d7a4f">🌿 バイオマス/再生可能エネルギー</span>
+            <span class="art-src">日経ビジネス</span>
+            <span class="art-stars">★★★★☆</span>
+          </div>
+          <div class="article-title">「資源循環できぬ企業は競争力を失う」　ヴェオリア・ジャパン野田会長の警鐘 (「ごみ」が日本を救う)</div>
+          <div class="article-summary">ヴェオリア・ジャパンの野田由美子会長は、大量生産・消費の「リニアエコノミー」が終焉し、資源循環できない企業は競争力を失うと警鐘を鳴らす。日本企業は「都市鉱山」活用を前提とした製品設計見直しが必要であり、これは持続可能なビジネスモデルへの転換を促す。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="11" onclick="showArticle(11)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-11" onchange="updateCount()">
+            <label class="check-label" for="chk-11">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">日刊工業新聞</span>
+            <span class="art-stars">★★★★☆</span>
+          </div>
+          <div class="article-title">三菱自、通期営業益200億円下方修正　中東情勢長期化響く</div>
+          <div class="article-summary">三菱自動車は、中東情勢の長期化が響き、通期営業利益を200億円下方修正した。これは国際情勢が日本の自動車産業を含む製造業の業績に与える影響を示すものである。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="12" onclick="showArticle(12)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-12" onchange="updateCount()">
+            <label class="check-label" for="chk-12">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
+            <span class="art-src">日経ビジネス</span>
+            <span class="art-stars">★★★★☆</span>
+          </div>
+          <div class="article-title">日経平均6万円割れ、「共・民・民＝株高」に疑心暗鬼　キオクシアなど下押し (AIデータセンター・エフェクト)</div>
+          <div class="article-summary">6日の東京株式市場で日経平均株価が6万円を割り込み、AIやデータセンター関連のハイテク株が下落した。米中間選挙後、データセンター建設規制への懸念が高まり、AIブームを見極める動きが市場に広がっている。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="13" onclick="showArticle(13)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-13" onchange="updateCount()">
+            <label class="check-label" for="chk-13">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">Bangkok Post – Business</span>
+            <span class="art-stars">★★★☆☆</span>
+          </div>
+          <div class="article-title">デジタルプラットフォーム手数料規則の明確化を求める声</div>
+          <div class="article-summary">タイのデジタルプラットフォーム貿易協会（TDPA）は、貿易競争委員会（TCCT）に対し、デジタルプラットフォームの手数料体系に関する規則案の明確化を求めている。これはタイのデジタル産業におけるビジネス環境に影響を与える可能性がある。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="14" onclick="showArticle(14)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-14" onchange="updateCount()">
+            <label class="check-label" for="chk-14">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">Bangkok Post – Business</span>
+            <span class="art-stars">★★★☆☆</span>
+          </div>
+          <div class="article-title">グラブ、タイ文化の魅力を収益化へ</div>
+          <div class="article-summary">Grab Thailandは、タイの文化や伝統的な知恵を活用し、観光客からの収益増加を目指している。これはタイの経済成長を支援する取り組みであり、サービス産業における新しいビジネスモデルを示すものである。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="15" onclick="showArticle(15)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-15" onchange="updateCount()">
+            <label class="check-label" for="chk-15">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">日刊工業新聞</span>
+            <span class="art-stars">★★★☆☆</span>
+          </div>
+          <div class="article-title">日本製紙、八代工場の印刷用紙・パルプ生産再開断念　新規事業立ち上げ検討</div>
+          <div class="article-summary">日本製紙は、八代工場での印刷用紙およびパルプの生産再開を断念し、新規事業の立ち上げを検討している。これは同社の事業構造転換を示すものであり、日本の製造業における再編の一例と見なせる。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="16" onclick="showArticle(16)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-16" onchange="updateCount()">
+            <label class="check-label" for="chk-16">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">Bangkok Post – Business</span>
+            <span class="art-stars">★★★☆☆</span>
+          </div>
+          <div class="article-title">モールグループ、年末商戦で来客数20%増を目標</div>
+          <div class="article-summary">タイのThe Mall Groupは、年末キャンペーンに6億バーツを投じ、国内旅行による観光客数の20%増加を目指す。これはタイの小売業と観光業における年末商戦の活況を示す指標となる。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="17" onclick="showArticle(17)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-17" onchange="updateCount()">
+            <label class="check-label" for="chk-17">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">日刊工業新聞</span>
+            <span class="art-stars">★★★☆☆</span>
+          </div>
+          <div class="article-title">経済産業省、中部電力に業務改善命令</div>
+          <div class="article-summary">経済産業省は、中部電力に対して業務改善命令を発出した。これは日本の主要電力会社の運営に関する規制当局の監督を示しており、国内電力市場の安定性や企業統治に影響を与える可能性がある。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="18" onclick="showArticle(18)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-18" onchange="updateCount()">
+            <label class="check-label" for="chk-18">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">日刊工業新聞</span>
+            <span class="art-stars">★★★☆☆</span>
+          </div>
+          <div class="article-title">JFEHD、千葉豪雨・台風で事業益500億円悪化　通期見通し</div>
+          <div class="article-summary">JFEホールディングスは、千葉での豪雨と台風の影響により、通期事業利益の見通しを500億円下方修正した。これは自然災害が日本の製造業の業績に与える影響を示す事例である。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="19" onclick="showArticle(19)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-19" onchange="updateCount()">
+            <label class="check-label" for="chk-19">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">日刊工業新聞</span>
+            <span class="art-stars">★★★☆☆</span>
+          </div>
+          <div class="article-title">ミネベアミツミ、通期営業益80億円上方修正　DC向け、業績けん引</div>
+          <div class="article-summary">ミネベアミツミは、データセンター（DC）向け製品が業績を牽引し、通期営業利益を80億円上方修正した。これは日本の精密部品製造業がデータセンター市場の成長から恩恵を受けていることを示している。</div>
+        </div>
+  </div>
+</div>
+
+<!-- CATEGORY PAGE -->
+<div class="page" id="page-cat">
+  <div class="cat-page-head">
+    <div class="cat-page-icon" id="cat-icon"></div>
+    <div class="cat-page-name" id="cat-name"></div>
+    <div class="cat-summary-box">
+      <div class="cat-summary-label">📊 カテゴリトレンド分析</div>
+      <div class="cat-summary-text" id="cat-summary-text"></div>
+    </div>
+    <div class="section-head" id="cat-count-head"></div>
+    <div id="cat-articles"></div>
+  </div>
+</div>
+
+<!-- ARTICLE PAGE -->
+<div class="page" id="page-article">
+  <div class="detail-cat" id="det-cat"></div>
+  <div class="detail-title" id="det-title"></div>
+  <div class="detail-orig" id="det-orig"></div>
+  <div class="detail-meta" id="det-meta"></div>
+  <div class="section-head" id="det-body-label"></div>
+  <div class="detail-body" id="det-body"></div>
+  <div class="deep-card">
+    <div class="deep-label">🔍 もっと調べる</div>
+    <p style="font-size:13px;color:var(--fg2);margin-bottom:12px;line-height:1.7;">
+      Perplexity AIがこの記事のトピックについてウェブ上の最新情報を収集・日本語でまとめます。
+    </p>
+    <button class="deep-btn" id="perplexity-btn" onclick="openPerplexity()">🔍 Perplexityで深掘り</button>
+  </div>
+</div>
+
+<footer>
+  生成: 2026-11-07 11:45 JST　｜　ソース: RSS自動巡回 + Gemini AI　｜
+  取得: 43件 / 候補: 26件 / 掲載: 20件
+</footer>
+
+<script>
+const ARTICLES = [{"title": "Energy prices push inflation to 45-month high", "title_ja": "エネルギー価格がインフレを45ヶ月ぶりの高水準に押し上げ", "body_ja": "タイのヘッドライン消費者物価指数（CPI）は10月に前年比3.9%上昇し、燃料価格の高騰が主因で、これがインフレの56%を占めた。", "summary_ja": "タイの10月消費者物価指数（CPI）が前年比3.9%上昇し、45ヶ月ぶりの高水準となった。これは燃料価格の高騰が主因で、インフレの56%を占める。タイの経済状況とエネルギー価格の直接的な関連を示す。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3350154/energy-prices-push-inflation-to-45month-high", "published": "2026-11-06T18:00:00+00:00", "category": "エネルギー市場", "relevance_score": 5}, {"title": "Asia's Fuel Oil Market Signals Hopes of U.S.-Iran De-Escalation - Crude Oil Prices Today | OilPrice.com", "title_ja": "アジア燃料油市場、米イラン間の緊張緩和に期待を示す - 原油価格情報", "body_ja": "アジアの燃料油市場は、米国とイラン間の緊張緩和への期待を示している。", "summary_ja": "アジアの燃料油市場は、米国とイラン間の緊張緩和への期待を示している。これは原油価格の動向に影響を与える可能性があり、国際エネルギー情勢の重要な側面である。", "source": "Google: crude oil Asia", "link": "https://news.google.com/rss/articles/CBMitwFBVV95cUxPaWJqVU9vM1VudHU3Q19oUHhYeE5zMFFNZDlWdVlhZGRxYnoya0xBYzdYX0xlWkJDYVlsYnhZVEdLM0M3VmU5cThHU2pMM1JSZ1A2dkVlejdHQ2wtTWUzc3ZmUDd0bUJYYk83TFJMZkdLc2dXcDZJVEdQS0xmVUdpMXpnQzM0TWhOMjV3Z3JwWlBQRUpPSkNmYUEyVU9KLV9BTWdWSVhzdmkybjdVc0t4bDNaelNvbUXSAbwBQVVfeXFMT2YzOWVpNlU2WTFlMldOdVRlUHBreTdQbVR0LVhRTWxPNmlxM2hWX3RHMENsQ0hYa3JUOHpsWDdsUUo4VlZlS0txUjNEeGQ0eWNaSUotWkZqYUNISVVYRVc5NGFJUUFuYzdhbUZVYjJYQmNKVmZva0YwdndCXzlSbDVLUF9mZmxENEZreXRIYzYyWFZDem1XSnN2U1A5VmVxRG9ZbmNJLVZjY3FFc0FHdEg3WmVvX1YtOXViVjQ?oc=5", "published": "2026-11-06T12:30:00+00:00", "category": "エネルギー市場", "relevance_score": 5}, {"title": "Minister vows no new EV import curbs this year", "title_ja": "大臣、年内の新たなEV輸入規制はないと表明", "body_ja": "産業省によると、政府は2027年1月1日に輸入EVに対する物品税率が引き上げられるまで、EV輸入を抑制する追加措置を導入しない。これはそのような措置が貿易障壁となる可能性に対する懸念を理由としている。", "summary_ja": "タイ産業省は、2027年1月1日に輸入EVに対する物品税率が引き上げられるまで、EV輸入を抑制する追加措置を今年は導入しないと表明した。これは貿易障壁となる可能性への懸念を理由としており、タイのEV市場に影響を与える。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3350129/minister-vows-no-new-ev-import-curbs-this-year", "published": "2026-11-06T18:00:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 5}, {"title": "三菱重工、27年度以降に1兆円規模の成長投資　GTCC高温部品の能力増強など", "title_ja": "三菱重工、27年度以降に1兆円規模の成長投資　GTCC高温部品の能力増強など", "body_ja": "三菱重工、27年度以降に1兆円規模の成長投資　GTCC高温部品の能力増強など", "summary_ja": "三菱重工は、2027年度以降に1兆円規模の成長投資を計画しており、ガスタービン複合サイクル（GTCC）発電設備向け高温部品の能力増強などが含まれる。これは同社の産業設備分野における事業拡大戦略を示す。", "source": "日刊工業新聞", "link": "https://www.nikkan.co.jp/articles/view/796527", "published": "2026-11-06T20:00:00+00:00", "category": "ボイラー/産業設備", "relevance_score": 5}, {"title": "⽶中間選挙の民主党大勝で動揺するマーケット／⽇銀リフレ派の講演に注⽬ (上野泰也の先読みマーケット)", "title_ja": "⽶中間選挙の民主党大勝で動揺するマーケット／⽇銀リフレ派の講演に注⽬ (上野泰也の先読みマーケット)", "body_ja": "米中間選挙で共和党が大敗したが、その原因としてトランプ大統領らが挙げるイラン攻撃が新たな局面に入れば、為替にも影響が出そうだ。日本では、金融経済懇談会で就任以来初めて講演するリフレ派の浅田統一郎審議委員が追加利上げを巡ってどのようなメッセージを発するか、市場の関心を集めている。", "summary_ja": "米中間選挙で共和党が大敗し、イラン攻撃の可能性が為替に影響を与える可能性がある。日本では日銀審議委員の講演が市場の関心を集め、追加利上げを巡るメッセージが注目される。国際情勢と金融政策が市場に与える影響は大きい。", "source": "日経ビジネス", "link": "https://business.nikkei.com/atcl/seminar/19/00122/00305/", "published": "2026-11-06T08:00:00+00:00", "category": "エネルギー市場", "relevance_score": 5}, {"title": "三菱重工、通期事業益600億円上方修正　ガスタービンの採算改善寄与", "title_ja": "三菱重工、通期事業益600億円上方修正　ガスタービンの採算改善寄与", "body_ja": "三菱重工、通期事業益600億円上方修正　ガスタービンの採算改善寄与", "summary_ja": "三菱重工は、ガスタービンの採算改善が寄与し、通期事業利益を600億円上方修正した。これは同社の産業設備事業が好調であることを示しており、日本の重工メーカーの業績動向として注目される。", "source": "日刊工業新聞", "link": "https://www.nikkan.co.jp/articles/view/796521", "published": "2026-11-06T20:00:00+00:00", "category": "ボイラー/産業設備", "relevance_score": 5}, {"title": "ASEANの知識を結集し、スマートグリッド開発を促進する。 - Vietnam.vn", "title_ja": "ASEANの知識を結集し、スマートグリッド開発を促進する。", "body_ja": "ASEANの知識を結集し、スマートグリッド開発を促進する。", "summary_ja": "ASEAN各国は知識を結集し、スマートグリッドの開発を促進している。これは地域全体のエネルギー効率向上と再生可能エネルギー導入拡大に不可欠であり、東南アジアの持続可能なエネルギー移行に向けた重要な取り組みである。", "source": "Google: 再生可能エネルギー", "link": "https://news.google.com/rss/articles/CBMikwFBVV95cUxNR2JyeENtUElnbDNEUThzUFZieHRqb3RQWExRcFhDcHo0c0VoWDNpaUo1SUlxRTlCV2NkZDU3SEE5RGE4a05venYySHlscG4tLU1aMnlZRkpFZ3M4S3hoRVFsd054OThVMm01YlhUOHFsNVB0aWdWMHkxWE1lZDRUVk1NcjZ6ZXJvSm0yMWNFQ3A0R3M?oc=5", "published": "2026-11-06T09:20:41+00:00", "category": "バイオマス/再生可能エネルギー", "relevance_score": 5}, {"title": "Revealed: The hidden cost of the oil price spikes - Gulf News", "title_ja": "明らかになった：原油価格急騰の隠れたコスト", "body_ja": "明らかになった：原油価格急騰の隠れたコスト", "summary_ja": "原油価格の急騰がもたらす隠れたコストが明らかになった。国際的な原油市場の変動は、各国の経済や消費者物価に大きな影響を与え、エネルギー安全保障上の課題を浮き彫りにする。", "source": "Google: crude oil Asia", "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxNWENzS2U4RFY5S0xldlU2RHRzdlEtbXJieXkxbEpENHBBbVlmZ0dKVEVNRzJEeXo0eGdjd2c3OEV5bEtJdlM5M2JjOHFHbVNwOEJDaFU3ZEZqV0xRRjZ4R2k0U2p6dkk1RWlRMzBTNFRPRkJXZGd6YUJhbHI2TlA4dG9wUnBSUnViTzE0UzZxSVNDOTVvek1XOE5kd0RYUQ?oc=5", "published": "2026-11-06T03:58:38+00:00", "category": "エネルギー市場", "relevance_score": 5}, {"title": "米中間選挙ショック、波乱の相場・市場を読む (トランプ2.0の世界)", "title_ja": "米中間選挙ショック、波乱の相場・市場を読む (トランプ2.0の世界)", "body_ja": "米中間選挙での野党・民主党の圧勝がマーケットを揺さぶっている。人工知能（AI）やデータセンターへの投資が抑制されるとの懸念が広がり、ハイテク企業の成長見通しが不透明になっているためだ。米国では11月5日、ナスダック総合株価指数が5.5%安と急落し半年ぶりの安値となったほか、6日の東京株式市場で日経平均株価は一時前日比4300円超下落し、6万円を半年ぶりに下回った。AIやデータセンターがけん引してきたマーケットやハイテク企業の経営にどのような変調をもたらすのか。多角的に検証する。", "summary_ja": "米中間選挙で野党が圧勝し、AIやデータセンターへの投資抑制懸念から市場が動揺。ナスダック総合指数は5.5%急落し半年ぶり安値、東京市場も日経平均が一時4300円超下落し6万円を半年ぶりに割り込んだ。", "source": "日経ビジネス", "link": "https://business.nikkei.com/atcl/gen/19/00685/110600084/", "published": "2026-11-06T06:00:00+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 4}, {"title": "Ekniti optimistic on continued AI investment", "title_ja": "エクニティ大臣、AI投資の継続に楽観的", "body_ja": "米中間選挙の結果は世界経済に変動を引き起こす可能性があるが、人工知能（AI）産業への投資はタイに引き続き流入すると予想されている、とエクニティ・ニティタンプラパス財務大臣は述べた。", "summary_ja": "タイのエクニティ財務大臣は、米中間選挙の結果が世界経済に変動をもたらす可能性があるものの、人工知能（AI）産業への投資はタイに引き続き流入すると楽観的な見方を示した。これはタイの今後の経済成長戦略にも関わる。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3350310/ekniti-optimistic-on-continued-ai-investment", "published": "2026-11-06T18:01:00+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 4}, {"title": "「資源循環できぬ企業は競争力を失う」　ヴェオリア・ジャパン野田会長の警鐘 (「ごみ」が日本を救う)", "title_ja": "「資源循環できぬ企業は競争力を失う」　ヴェオリア・ジャパン野田会長の警鐘 (「ごみ」が日本を救う)", "body_ja": "大量生産・大量消費の「リニアエコノミー」は終焉（しゅうえん）を迎えている。経団連副会長も務める、ヴェオリア・ジャパンの野田由美子会長は、産業界に循環経済への転換を訴える。日本企業に必要なのは「都市鉱山」の活用を前提とした製品設計の見直しだ。海外からの調達リスクが高まる中で、資源小国の日本の勝ち筋を聞いた。", "summary_ja": "ヴェオリア・ジャパンの野田由美子会長は、大量生産・消費の「リニアエコノミー」が終焉し、資源循環できない企業は競争力を失うと警鐘を鳴らす。日本企業は「都市鉱山」活用を前提とした製品設計見直しが必要であり、これは持続可能なビジネスモデルへの転換を促す。", "source": "日経ビジネス", "link": "https://business.nikkei.com/atcl/gen/19/00947/110400005/", "published": "2026-11-06T08:00:00+00:00", "category": "バイオマス/再生可能エネルギー", "relevance_score": 4}, {"title": "三菱自、通期営業益200億円下方修正　中東情勢長期化響く", "title_ja": "三菱自、通期営業益200億円下方修正　中東情勢長期化響く", "body_ja": "三菱自、通期営業益200億円下方修正　中東情勢長期化響く", "summary_ja": "三菱自動車は、中東情勢の長期化が響き、通期営業利益を200億円下方修正した。これは国際情勢が日本の自動車産業を含む製造業の業績に与える影響を示すものである。", "source": "日刊工業新聞", "link": "https://www.nikkan.co.jp/articles/view/796528", "published": "2026-11-06T20:00:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 4}, {"title": "日経平均6万円割れ、「共・民・民＝株高」に疑心暗鬼　キオクシアなど下押し (AIデータセンター・エフェクト)", "title_ja": "日経平均6万円割れ、「共・民・民＝株高」に疑心暗鬼　キオクシアなど下押し (AIデータセンター・エフェクト)", "body_ja": "6日、東京株式市場で日経平均株価が大きく下落し、節目の6万円台を割り込んだ。米中間選挙を受けてデータセンタの建設規制が高まる懸念が高まり、ハイテク株が下げた。人工知能（AI）やデータセンターブームを見極める動きがしばらく続きそうだ。", "summary_ja": "6日の東京株式市場で日経平均株価が6万円を割り込み、AIやデータセンター関連のハイテク株が下落した。米中間選挙後、データセンター建設規制への懸念が高まり、AIブームを見極める動きが市場に広がっている。", "source": "日経ビジネス", "link": "https://business.nikkei.com/atcl/gen/19/00887/110600013/", "published": "2026-11-06T08:00:00+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 4}, {"title": "Call for more clarity on digital platform fee rules", "title_ja": "デジタルプラットフォーム手数料規則の明確化を求める声", "body_ja": "タイのデジタルプラットフォーム貿易協会（TDPA）は、タイ貿易競争委員会（TCCT）に対し、提案されている手数料体系に関する規則の明確化を求めている。", "summary_ja": "タイのデジタルプラットフォーム貿易協会（TDPA）は、貿易競争委員会（TCCT）に対し、デジタルプラットフォームの手数料体系に関する規則案の明確化を求めている。これはタイのデジタル産業におけるビジネス環境に影響を与える可能性がある。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3350174/call-for-more-clarity-on-digital-platform-fee-rules", "published": "2026-11-06T18:00:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 3}, {"title": "Grab seeks to monetise Thai cultural appeal", "title_ja": "グラブ、タイ文化の魅力を収益化へ", "body_ja": "グラブ・タイランドは、タイの文化と伝統的な知恵を活用し、観光客からの収益を増やしながら、タイの経済成長を支援することを目指している。", "summary_ja": "Grab Thailandは、タイの文化や伝統的な知恵を活用し、観光客からの収益増加を目指している。これはタイの経済成長を支援する取り組みであり、サービス産業における新しいビジネスモデルを示すものである。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3350179/grab-seeks-to-monetise-thai-cultural-appeal", "published": "2026-11-06T23:27:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 3}, {"title": "日本製紙、八代工場の印刷用紙・パルプ生産再開断念　新規事業立ち上げ検討", "title_ja": "日本製紙、八代工場の印刷用紙・パルプ生産再開断念　新規事業立ち上げ検討", "body_ja": "日本製紙、八代工場の印刷用紙・パルプ生産再開断念　新規事業立ち上げ検討", "summary_ja": "日本製紙は、八代工場での印刷用紙およびパルプの生産再開を断念し、新規事業の立ち上げを検討している。これは同社の事業構造転換を示すものであり、日本の製造業における再編の一例と見なせる。", "source": "日刊工業新聞", "link": "https://www.nikkan.co.jp/articles/view/796524", "published": "2026-11-06T20:00:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 3}, {"title": "Mall Group targets 20% rise in festive-season traffic", "title_ja": "モールグループ、年末商戦で来客数20%増を目標", "body_ja": "The Mall Group Co Ltdは、国内旅行に牽引される観光客数の20%増加を目標に、年末キャンペーンと新年カウントダウンイベントに6億バーツを割り当てた。", "summary_ja": "タイのThe Mall Groupは、年末キャンペーンに6億バーツを投じ、国内旅行による観光客数の20%増加を目指す。これはタイの小売業と観光業における年末商戦の活況を示す指標となる。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3350149/mall-group-targets-20-rise-in-festiveseason-traffic", "published": "2026-11-06T23:05:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 3}, {"title": "経済産業省、中部電力に業務改善命令", "title_ja": "経済産業省、中部電力に業務改善命令", "body_ja": "経済産業省、中部電力に業務改善命令", "summary_ja": "経済産業省は、中部電力に対して業務改善命令を発出した。これは日本の主要電力会社の運営に関する規制当局の監督を示しており、国内電力市場の安定性や企業統治に影響を与える可能性がある。", "source": "日刊工業新聞", "link": "https://www.nikkan.co.jp/articles/view/796511", "published": "2026-11-06T20:00:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 3}, {"title": "JFEHD、千葉豪雨・台風で事業益500億円悪化　通期見通し", "title_ja": "JFEHD、千葉豪雨・台風で事業益500億円悪化　通期見通し", "body_ja": "JFEHD、千葉豪雨・台風で事業益500億円悪化　通期見通し", "summary_ja": "JFEホールディングスは、千葉での豪雨と台風の影響により、通期事業利益の見通しを500億円下方修正した。これは自然災害が日本の製造業の業績に与える影響を示す事例である。", "source": "日刊工業新聞", "link": "https://www.nikkan.co.jp/articles/view/796520", "published": "2026-11-06T20:00:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 3}, {"title": "ミネベアミツミ、通期営業益80億円上方修正　DC向け、業績けん引", "title_ja": "ミネベアミツミ、通期営業益80億円上方修正　DC向け、業績けん引", "body_ja": "ミネベアミツミ、通期営業益80億円上方修正　DC向け、業績けん引", "summary_ja": "ミネベアミツミは、データセンター（DC）向け製品が業績を牽引し、通期営業利益を80億円上方修正した。これは日本の精密部品製造業がデータセンター市場の成長から恩恵を受けていることを示している。", "source": "日刊工業新聞", "link": "https://www.nikkan.co.jp/articles/view/796529", "published": "2026-11-06T20:00:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 3}];
+const THIS_TAG = "20261107"; // このHTMLの日付タグ
+
+// ── 日付ナビゲーション（available_dates.jsonを動的取得）──
+let AVAILABLE_DATES = [];
+
+function getCurrentTag() {
+  const path = location.pathname;
+  const re = new RegExp('digest_([0-9]{8})\.html');
+  const m = path.match(re);
+  return m ? m[1] : THIS_TAG;
+}
+
+function tagToUrl(tag) {
+  const latestTag = AVAILABLE_DATES[AVAILABLE_DATES.length - 1];
+  if (tag === latestTag) return 'index.html';
+  return `digest_${tag}.html`;
+}
+
+function goToDate(dir) {
+  const cur = getCurrentTag();
+  const idx = AVAILABLE_DATES.indexOf(cur);
+  if (dir === 'prev' && idx > 0) location.href = tagToUrl(AVAILABLE_DATES[idx - 1]);
+  if (dir === 'next' && idx < AVAILABLE_DATES.length - 1) location.href = tagToUrl(AVAILABLE_DATES[idx + 1]);
+}
+
+function initNavButtons() {
+  const cur = getCurrentTag();
+  const idx = AVAILABLE_DATES.indexOf(cur);
+  const prev = document.getElementById('prevBtn');
+  const next = document.getElementById('nextBtn');
+  if (prev) prev.disabled = idx <= 0;
+  if (next) next.disabled = idx >= AVAILABLE_DATES.length - 1;
+}
+
+
+async function loadAvailableDates() {
+  // 固定URLで取得（GitHub Pages: hirot01.github.io/daily-digest/）
+  const DATES_URL = "https://hirot01.github.io/daily-digest/available_dates.json";
+  try {
+    const res = await fetch(DATES_URL + "?t=" + Date.now()); // キャッシュ回避
+    if (res.ok) {
+      AVAILABLE_DATES = await res.json();
+      initNavButtons();
+      if (typeof renderCalendar === "function" && calYear) renderCalendar();
+      return;
+    }
+  } catch(e) { console.log("dates fetch failed:", e); }
+  AVAILABLE_DATES = [THIS_TAG];
+  initNavButtons();
+}
+
+// ── カレンダー ──────────────────────────────────────
+let calYear, calMonth;
+
+function toggleCalendar() {
+  const modal = document.getElementById('calendarModal');
+  const overlay = document.getElementById('calendarOverlay');
+  if (modal.style.display === 'none') {
+    const cur = getCurrentTag();
+    calYear = parseInt(cur.slice(0, 4));
+    calMonth = parseInt(cur.slice(4, 6));
+    renderCalendar();
+    modal.style.display = 'block';
+    overlay.style.display = 'block';
+  } else {
+    closeCalendar();
+  }
+}
+
+function closeCalendar() {
+  document.getElementById('calendarModal').style.display = 'none';
+  document.getElementById('calendarOverlay').style.display = 'none';
+}
+
+function changeCalMonth(dir) {
+  calMonth += dir;
+  if (calMonth > 12) { calMonth = 1; calYear++; }
+  if (calMonth < 1)  { calMonth = 12; calYear--; }
+  renderCalendar();
+}
+
+function renderCalendar() {
+  const label = document.getElementById('calMonthLabel');
+  const grid  = document.getElementById('calGrid');
+  label.textContent = `${calYear}年${calMonth}月`;
+
+  const firstDay = new Date(calYear, calMonth - 1, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth, 0).getDate();
+  const dateSet = new Set(AVAILABLE_DATES);
+  const cur = getCurrentTag();
+
+  let html = '';
+  // 空白セル
+  for (let i = 0; i < firstDay; i++) html += '<div></div>';
+  // 日付セル
+  for (let d = 1; d <= daysInMonth; d++) {
+    const tag = `${calYear}${String(calMonth).padStart(2,'0')}${String(d).padStart(2,'0')}`;
+    const hasData = dateSet.has(tag);
+    const isCur = tag === cur;
+    const style = isCur
+      ? 'background:#1a56db;color:#fff;border-radius:50%;font-weight:700;cursor:pointer;padding:5px 0;font-size:13px;'
+      : hasData
+        ? 'color:#1a56db;font-weight:600;cursor:pointer;padding:5px 0;font-size:13px;border-radius:50%;'
+        : 'color:#d1d5db;padding:5px 0;font-size:13px;';
+    const onclick = hasData ? `onclick="location.href='${tagToUrl(tag)}';"` : '';
+    html += `<div style="${style}" ${onclick}>${d}</div>`;
+  }
+  grid.innerHTML = html;
+}
+
+document.addEventListener('DOMContentLoaded', loadAvailableDates);
+const CAT_ICONS  = {"ボイラー/産業設備": "🔧", "バイオマス/再生可能エネルギー": "🌿", "エネルギー市場": "⚡", "日タイ貿易/マクロ": "🤝", "企業/ビジネス動向": "🏭", "その他": "📰"};
+const CAT_COLORS = {"ボイラー/産業設備": "#b45309", "バイオマス/再生可能エネルギー": "#2d7a4f", "エネルギー市場": "#0369a1", "日タイ貿易/マクロ": "#7c3aed", "企業/ビジネス動向": "#be123c", "その他": "#555"};
+const CAT_SUMMARIES = {"エネルギー市場": "米中間選挙後の市場動揺がインフレと原油価格に具体的に波及し、アジアで米イラン緊張緩和への期待が見られるのが新規動向。地政学リスクが原油価格を左右し、高エネルギー価格がインフレを加速させるトレンドは継続中。", "企業/ビジネス動向": "デジタルプラットフォーム規制の具体化要求が新規動向。タイのEV市場保護政策や外部環境による企業業績の変動は継続トレンドで、日本製紙の事業再編や一部企業の決算修正に表れている。", "日タイ貿易/マクロ": "米中間選挙結果が日経平均に「ショック」を与え、今後の株価動向への疑心暗鬼が新規動向。国際政治イベントがマクロ経済や市場に大きく影響を及ぼすトレンドが継続し、AI投資は引き続き活発である。", "ボイラー/産業設備": "三菱重工がGTCC高温部品などに1兆円規模の成長投資を発表し、ガスタービンの採算改善が寄与し業績を上方修正したのが新規動向。産業設備投資は継続的なテーマだが、今回は個別企業の大規模戦略が注目される。", "バイオマス/再生可能エネルギー": "資源循環が企業の競争力を左右するという強いメッセージが新規。再生可能エネルギーとサステナビリティへの継続的な関心が高まる中、ASEAN地域でのスマートグリッド開発推進といった具体的な動きが見られる。"};
+const GAS_URL = "https://script.google.com/macros/s/AKfycbz9Nc874Azvh8zqv5BySUGToK01aIkInocGYeqxgyyiJ-fN0YCqIW4h2E9NRkYBQ8bO/exec";
+
+let history = ["top"];
+let currentArticleIdx = null;
+
+function showPage(id) {
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  document.getElementById("page-" + id).classList.add("active");
+  document.getElementById("backBtn").classList.toggle("visible", id !== "top");
+  window.scrollTo(0, 0);
+}
+
+function goBack() {
+  history.pop();
+  const prev = history[history.length - 1];
+  if (prev === "top") showPage("top");
+  else if (prev && prev.startsWith("cat:")) showCategory(prev.slice(4), false);
+}
+
+function showCategory(cat, push=true) {
+  if (push) history.push("cat:" + cat);
+  document.getElementById("cat-icon").textContent = CAT_ICONS[cat] || "📰";
+  document.getElementById("cat-name").textContent = cat;
+  document.getElementById("cat-summary-text").textContent = CAT_SUMMARIES[cat] || "";
+  const arts = ARTICLES.filter(a => a.category === cat).sort((a,b) => b.relevance_score - a.relevance_score);
+  document.getElementById("cat-count-head").textContent = arts.length + "件の記事";
+  document.getElementById("cat-articles").innerHTML = arts.map(a => {
+    const idx = ARTICLES.indexOf(a);
+    const color = CAT_COLORS[cat] || "#555";
+    const stars = "★".repeat(a.relevance_score||3) + "☆".repeat(5-(a.relevance_score||3));
+    return `<div class="article-item" onclick="showArticle(${idx})" style="border-left:3px solid ${color}">
+      <div class="article-meta">
+        <span class="art-src">${a.source}</span>
+        <span class="art-stars">${stars}</span>
+      </div>
+      <div class="article-title">${a.title_ja || a.title}</div>
+      <div class="article-summary">${a.summary_ja || ""}</div>
+    </div>`;
+  }).join("");
+  showPage("cat");
+}
+
+function showArticle(idx, push=true) {
+  if (push) history.push("article:" + idx);
+  currentArticleIdx = idx;
+  const a = ARTICLES[idx];
+  const cat = a.category || "その他";
+  const color = CAT_COLORS[cat] || "#555";
+  document.getElementById("det-cat").innerHTML = `<span style="color:${color}">${CAT_ICONS[cat]||"📰"} ${cat}</span>`;
+  document.getElementById("det-title").textContent = a.title_ja || a.title;
+  document.getElementById("det-orig").textContent = a.title_ja && a.title_ja !== a.title ? "原題: " + a.title : "";
+  document.getElementById("det-meta").innerHTML = `<span>${a.source}</span><span>${(a.published||"").slice(0,16).replace("T"," ")}</span>`;
+  const isTranslated = a.body_ja && a.body_ja !== a.body;
+  document.getElementById("det-body-label").textContent = isTranslated ? "記事本文（日本語訳）" : "記事本文";
+  const origText = (a.body && a.body !== "undefined") ? a.body : "";
+  document.getElementById("det-body").innerHTML =
+    (a.body_ja || origText || "") +
+    (isTranslated && origText ? `<div class="detail-orig-body"><div class="detail-orig-label">ORIGINAL</div>${origText}</div>` : "") +
+    `<br><a href="${a.link}" target="_blank" rel="noopener" class="source-link">🔗 元記事を開く</a>`;
+  showPage("article");
+  showPage("article");
+}
+
+function updateCount() {
+  const checked = document.querySelectorAll('#all-articles input[type=checkbox]:checked').length;
+  document.getElementById('save-count').textContent = `チェックした記事: ${checked}件`;
+  document.getElementById('save-btn').disabled = checked === 0;
+}
+
+// 保存済みIDをセッション内で管理
+const savedIds = new Set();
+
+function markAsSaved(idx) {
+  savedIds.add(idx);
+  const item = document.querySelector(`[data-idx="${idx}"]`);
+  if (!item) return;
+  // チェックボックスを非表示にして保存済みバッジを表示
+  const wrap = item.querySelector('.check-wrap');
+  if (wrap) wrap.style.display = 'none';
+  if (!item.querySelector('.saved-badge')) {
+    const badge = document.createElement('div');
+    badge.className = 'saved-badge';
+    badge.textContent = '✅ 保存済み';
+    item.insertBefore(badge, item.firstChild);
+  }
+}
+
+async function saveChecked() {
+  const checkboxes = document.querySelectorAll('#all-articles input[type=checkbox]:checked');
+  if (checkboxes.length === 0) return;
+  const articles = [];
+  const idxList = [];
+  checkboxes.forEach(cb => {
+    const idx = parseInt(cb.id.replace('chk-', ''));
+    articles.push(ARTICLES[idx]);
+    idxList.push(idx);
+  });
+  const btn = document.getElementById('save-btn');
+  btn.disabled = true;
+  btn.textContent = '保存中...';
+  try {
+    await fetch(GAS_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ articles })
+    });
+    btn.textContent = '✅ 保存しました';
+    // 保存済みバッジを付与
+    idxList.forEach(idx => markAsSaved(idx));
+    updateCount();
+    setTimeout(() => {
+      btn.textContent = '📥 スプレッドシートに保存';
+    }, 3000);
+  } catch(e) {
+    btn.textContent = 'エラー: ' + e.message;
+    btn.disabled = false;
+  }
+}
+
+function openPerplexity() {
+  const a = ARTICLES[currentArticleIdx];
+  const query = encodeURIComponent(a.title_ja || a.title);
+  window.open(`https://www.perplexity.ai/search?q=${query}`, '_blank');
+}
+</script>
+
+<div class="save-bar">
+  <div class="save-count" id="save-count">チェックした記事: 0件</div>
+  <button class="save-btn" id="save-btn" onclick="saveChecked()" disabled>📥 スプレッドシートに保存</button>
+</div>
+</body>
+</html>
