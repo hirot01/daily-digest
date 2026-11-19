@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>デイリーニュースダイジェスト — 2026年11月19日（Thu）</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f8f9fb; --bg2: #ffffff; --bg3: #f0f2f5;
+      --fg: #1a1d23; --fg2: #4a5168; --fg3: #9299aa;
+      --accent: #1a56db; --accent2: #0e9f6e;
+      --rule: #e5e7eb; --shadow: 0 1px 4px rgba(0,0,0,.07);
+    }
+    body { font-family:'Noto Sans JP',sans-serif; background:var(--bg); color:var(--fg); line-height:1.7; }
+    a { color:var(--accent); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+
+    /* Header */
+    .site-header {
+      position:sticky; top:0; z-index:100;
+      background:#fff; border-bottom:1px solid var(--rule);
+      padding:14px 24px; display:flex; align-items:center; justify-content:space-between;
+      box-shadow:var(--shadow);
+    }
+    .site-logo { font-size:15px; font-weight:700; color:var(--fg); letter-spacing:-.01em; }
+    .site-logo span { color:var(--accent); }
+    .site-date { font-size:12px; color:var(--fg3); }
+    .back-btn {
+      display:none; background:#f0f2f5; border:none;
+      color:var(--fg2); padding:6px 14px; border-radius:20px; cursor:pointer; font-size:12px; font-weight:500;
+    }
+    .back-btn.visible { display:block; }
+
+    /* Navigation */
+    .nav-center { display:flex; align-items:center; gap:6px; }
+    .nav-arrow {
+      background:none; border:1px solid var(--rule); border-radius:8px;
+      width:32px; height:32px; font-size:20px; cursor:pointer;
+      color:var(--fg2); display:flex; align-items:center; justify-content:center;
+      transition:all .15s; line-height:1;
+    }
+    .nav-arrow:hover { background:var(--bg3); }
+    .nav-arrow:disabled { color:var(--rule); cursor:not-allowed; }
+    .date-btn {
+      background:var(--bg3); border:1px solid var(--rule); border-radius:8px;
+      padding:5px 12px; font-size:13px; font-weight:600; cursor:pointer;
+      color:var(--fg); transition:all .15s; white-space:nowrap;
+    }
+    .date-btn:hover { background:#e5e7eb; }
+
+    /* Pages */
+    .page { display:none; max-width:780px; margin:0 auto; padding:28px 20px 80px; }
+    .page.active { display:block; }
+
+    /* Overall summary */
+    .summary-card {
+      background:linear-gradient(135deg, #1a56db 0%, #0e9f6e 100%);
+      border-radius:16px; padding:24px 28px; margin-bottom:28px;
+      box-shadow:0 4px 20px rgba(26,86,219,.2);
+    }
+    .summary-label {
+      font-size:10px; font-weight:700; letter-spacing:.18em;
+      color:rgba(255,255,255,.7); text-transform:uppercase; margin-bottom:10px;
+    }
+    .summary-text { font-size:14px; line-height:1.9; color:#fff; }
+
+    /* Section head */
+    .section-head {
+      font-size:12px; font-weight:700; color:var(--fg3);
+      letter-spacing:.08em; text-transform:uppercase;
+      margin-bottom:14px; padding-bottom:8px;
+      border-bottom:2px solid var(--rule);
+    }
+
+    /* Category cards */
+    .cat-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:32px; }
+    @media(max-width:500px){ .cat-grid { grid-template-columns:1fr; } }
+    .cat-card {
+      background:#fff; border-radius:14px; padding:18px 20px;
+      cursor:pointer; transition:all .2s; border:1px solid var(--rule);
+      box-shadow:var(--shadow);
+    }
+    .cat-card:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(0,0,0,.1); }
+    .cat-card-head { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+    .cat-icon { font-size:22px; }
+    .cat-name { font-size:13px; font-weight:700; flex:1; color:var(--fg); }
+    .cat-count {
+      font-size:11px; color:#fff; font-weight:600;
+      background:var(--accent); padding:2px 10px; border-radius:20px;
+    }
+    .cat-trend { font-size:12px; color:var(--fg2); line-height:1.75; }
+
+    /* Article items */
+    .article-item {
+      background:#fff; border-radius:12px; border:1px solid var(--rule);
+      padding:16px 20px; margin-bottom:10px; cursor:pointer;
+      transition:all .15s; box-shadow:var(--shadow);
+    }
+    .article-item:hover { transform:translateY(-1px); box-shadow:0 4px 16px rgba(0,0,0,.1); }
+    .article-meta { display:flex; gap:10px; font-size:11px; color:var(--fg3); margin-bottom:6px; flex-wrap:wrap; align-items:center; }
+    .art-cat { font-weight:600; font-size:11px; padding:2px 8px; border-radius:4px; background:var(--bg3); }
+    .art-stars { color:#f59e0b; letter-spacing:-1px; }
+    .article-title { font-size:14px; font-weight:600; color:var(--fg); line-height:1.55; margin-bottom:6px; }
+    .article-summary { font-size:12.5px; color:var(--fg2); line-height:1.7; }
+    .no-news { text-align:center; color:var(--fg3); padding:60px 20px; font-size:14px; }
+
+    /* Category page */
+    .cat-page-icon { font-size:32px; margin-bottom:4px; }
+    .cat-page-name { font-size:22px; font-weight:700; margin-bottom:18px; color:var(--fg); }
+    .cat-summary-box {
+      background:#fff; border:1px solid var(--rule);
+      border-radius:12px; padding:18px 22px; margin-bottom:24px;
+      box-shadow:var(--shadow);
+    }
+    .cat-summary-label {
+      font-size:10px; font-weight:700; letter-spacing:.18em;
+      color:var(--accent); text-transform:uppercase; margin-bottom:10px;
+    }
+    .cat-summary-text { font-size:13.5px; color:var(--fg2); line-height:1.85; }
+
+    /* Article detail */
+    .detail-cat { font-size:11px; font-weight:700; margin-bottom:8px; }
+    .detail-title { font-size:20px; font-weight:700; line-height:1.5; margin-bottom:6px; color:var(--fg); }
+    .detail-orig { font-size:11px; color:var(--fg3); font-style:italic; margin-bottom:12px; }
+    .detail-meta { font-size:12px; color:var(--fg3); margin-bottom:18px; display:flex; gap:14px; flex-wrap:wrap; }
+    .detail-body {
+      background:#fff; border:1px solid var(--rule);
+      border-radius:12px; padding:20px 22px;
+      font-size:14px; line-height:1.9; color:var(--fg2); margin-bottom:16px;
+      box-shadow:var(--shadow);
+    }
+    .detail-orig-body {
+      margin-top:14px; padding-top:12px; border-top:1px solid var(--rule);
+      font-size:12px; color:var(--fg3); line-height:1.7;
+    }
+    .detail-orig-label { font-size:10px; color:var(--fg3); margin-bottom:4px; letter-spacing:.1em; font-weight:600; }
+    .source-link {
+      display:inline-flex; align-items:center; gap:6px;
+      font-size:12px; color:var(--accent); margin-top:12px;
+      border:1px solid #c3d5fa; border-radius:6px; padding:5px 12px;
+      background:#eef2ff;
+    }
+
+    /* World trend card */
+    .trend-card {
+      background:#fff; border:1px solid var(--rule);
+      border-radius:16px; padding:22px 26px; margin-bottom:16px;
+      box-shadow:var(--shadow); border-left:4px solid #f59e0b;
+    }
+    .trend-label {
+      font-size:10px; font-weight:700; letter-spacing:.18em;
+      color:#d97706; text-transform:uppercase; margin-bottom:10px;
+    }
+    .trend-text { font-size:14px; line-height:1.9; color:var(--fg2); }
+
+    /* Deep dive */
+    .deep-card {
+      background:linear-gradient(135deg, #eef2ff, #f0fdf4);
+      border:1px solid #c3d5fa; border-radius:14px; padding:22px 24px;
+    }
+    .deep-label {
+      font-size:10px; font-weight:700; letter-spacing:.18em;
+      color:var(--accent); text-transform:uppercase; margin-bottom:12px;
+    }
+    .deep-text { font-size:13.5px; line-height:1.95; color:var(--fg2); }
+    .deep-btn {
+      background:#1a56db; border:none; color:#fff;
+      padding:10px 22px; border-radius:8px; cursor:pointer; font-size:13px; font-weight:600;
+      display:inline-flex; align-items:center; gap:6px;
+      box-shadow:0 2px 8px rgba(26,86,219,.25); transition:all .15s;
+    }
+    .deep-btn:hover { background:#1e40af; transform:translateY(-1px); }
+    .deep-loading { font-size:13px; color:var(--fg3); }
+
+    /* Save bar */
+    .save-bar {
+      position:fixed; bottom:0; left:0; right:0;
+      background:#fff; border-top:1px solid var(--rule);
+      padding:12px 24px; display:flex; align-items:center; justify-content:space-between;
+      z-index:200; box-shadow:0 -2px 12px rgba(0,0,0,.08);
+    }
+    .save-count { font-size:13px; color:var(--fg2); font-weight:500; }
+    .save-btn {
+      background:var(--accent2); border:none; color:#fff;
+      padding:10px 24px; border-radius:8px; cursor:pointer;
+      font-size:14px; font-weight:700; box-shadow:0 2px 8px rgba(14,159,110,.3);
+    }
+    .save-btn:disabled { background:var(--fg3); cursor:not-allowed; box-shadow:none; }
+    .check-wrap { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+    .check-wrap input[type=checkbox] { width:18px; height:18px; cursor:pointer; accent-color:var(--accent); }
+    .check-label { font-size:12px; color:var(--fg3); cursor:pointer; }
+    .saved-badge {
+      display:inline-flex; align-items:center; gap:4px;
+      font-size:11px; font-weight:600; color:var(--accent2);
+      background:#f0fdf4; border:1px solid #bbf7d0;
+      padding:2px 8px; border-radius:20px; margin-bottom:8px;
+    }
+
+    footer {
+      text-align:center; font-size:11px; color:var(--fg3);
+      padding:20px; border-top:1px solid var(--rule); margin-top:40px;
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-logo">📋 Daily Digest</div>
+  <div class="nav-center">
+    <button class="nav-arrow" id="prevBtn" onclick="goToDate('prev')" title="前日">‹</button>
+    <button class="date-btn" onclick="toggleCalendar()" title="カレンダー">
+      📅 2026年11月19日（Thu）
+    </button>
+    <button class="nav-arrow" id="nextBtn" onclick="goToDate('next')" title="翌日">›</button>
+  </div>
+  <button class="back-btn" id="backBtn" onclick="goBack()">← 戻る</button>
+</header>
+
+<!-- カレンダーモーダル -->
+<div id="calendarOverlay" onclick="closeCalendar()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:300;"></div>
+<div id="calendarModal" style="display:none;position:fixed;top:64px;left:50%;transform:translateX(-50%);
+  background:#fff;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.15);
+  padding:20px;z-index:301;width:320px;max-width:90vw;">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+    <button onclick="changeCalMonth(-1)" style="background:none;border:none;font-size:20px;cursor:pointer;color:#4a5168;">‹</button>
+    <div id="calMonthLabel" style="font-weight:700;font-size:15px;color:#1a1d23;"></div>
+    <button onclick="changeCalMonth(1)" style="background:none;border:none;font-size:20px;cursor:pointer;color:#4a5168;">›</button>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;margin-bottom:8px;">
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">日</div>
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">月</div>
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">火</div>
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">水</div>
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">木</div>
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">金</div>
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">土</div>
+  </div>
+  <div id="calGrid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;"></div>
+</div>
+
+<!-- TOP PAGE -->
+<div class="page active" id="page-top">
+  <div class="trend-card">
+    <div class="trend-label">🌍 今日の世界トレンド</div>
+    <div class="trend-text">今日は米中露を巡る国際情勢の緊迫化と、テクノロジー、特にAI関連市場のダイナミズムが主要テーマです。
+
+トランプ氏の中国訪問や習近平・プーチン会談、ウクライナ情勢など、米中露を中心とした国際秩序の再編を巡る動きが活発化しています。同時に、AI関連の大型IPOが市場をけん引し、世界的サーバーソフトの脆弱性やAIの社会実装と課題も注目を集めています。</div>
+  </div>
+  <div class="summary-card">
+    <div class="summary-label">📋 本日の関連ニュースサマリー</div>
+    <div class="summary-text">日タイビジネスでは、エネルギー市場の変動と戦略的連携、EV関連投資、そして米中半導体覇権争いが継続する主要テーマです。特にエネルギー分野では、日本とIEAがアジアの石油安全保障ハブ構築へ進展、タイ政府も電気料金削減とクリーンエネルギー利用促進策を承認しました。タイの10月貿易統計は6カ月連続の赤字ですが、今日新たにタイ株式市場の2027年上昇見込みが示され、首相はAPECでタイの台頭をアピール。米国の半導体「抜け道」監視網強化と、影響を受けるタイ企業への支援表明は、地政学リスク拡大を示唆します。40周年を迎えた「METALEX」の開幕や、タイSECによるステーブルコイン規制案擁護など、産業の多様な動きも注目されます。</div>
+  </div>
+
+  <div class="section-head">カテゴリ別トレンド</div>
+  <div class="cat-grid">
+    
+        <div class="cat-card" onclick="showCategory('企業/ビジネス動向')" style="border-left:4px solid #be123c">
+          <div class="cat-card-head">
+            <span class="cat-icon">🏭</span>
+            <span class="cat-name">企業/ビジネス動向</span>
+            <span class="cat-count">7件</span>
+          </div>
+          <p class="cat-trend">米国の半導体規制がタイ企業に波及し支援策検討。米中覇権争いの第三国への拡大が顕著な新規動向。日系企業はタイでの高付加価値製品量産や材料分野提携を継続し、事業再編も進む。</p>
+        </div>
+        <div class="cat-card" onclick="showCategory('日タイ貿易/マクロ')" style="border-left:4px solid #7c3aed">
+          <div class="cat-card-head">
+            <span class="cat-icon">🤝</span>
+            <span class="cat-name">日タイ貿易/マクロ</span>
+            <span class="cat-count">6件</span>
+          </div>
+          <p class="cat-trend">貿易赤字継続の中、タイはEV税制で国内生産優位化を図り、日本も歓迎。APECでの存在感向上とデジタル金融規制進展が新規動向。中長期的な経済成長期待と自由貿易推進は継続トレンド。</p>
+        </div>
+        <div class="cat-card" onclick="showCategory('エネルギー市場')" style="border-left:4px solid #0369a1">
+          <div class="cat-card-head">
+            <span class="cat-icon">⚡</span>
+            <span class="cat-name">エネルギー市場</span>
+            <span class="cat-count">5件</span>
+          </div>
+          <p class="cat-trend">アジア原油価格は供給過剰懸念で下落。日本の石油ハブ機能不全指摘に対し、IEAと石油安全保障ハブ構築を進めるのが新規動向。タイ政府のクリーンエネルギー促進や日タイ協力による備蓄強化は継続トレンド。</p>
+        </div>
+        <div class="cat-card" onclick="showCategory('ボイラー/産業設備')" style="border-left:4px solid #b45309">
+          <div class="cat-card-head">
+            <span class="cat-icon">🔧</span>
+            <span class="cat-name">ボイラー/産業設備</span>
+            <span class="cat-count">1件</span>
+          </div>
+          <p class="cat-trend">タイで国際的な産業設備展「METALEX」が開催され、最新技術導入への意欲を示す新規動向。タイが製造業ハブとして多様な国の企業を惹きつけ、産業設備の高度化を図る継続トレンドを反映。</p>
+        </div>
+        <div class="cat-card" onclick="showCategory('バイオマス/再生可能エネルギー')" style="border-left:4px solid #2d7a4f">
+          <div class="cat-card-head">
+            <span class="cat-icon">🌿</span>
+            <span class="cat-name">バイオマス/再生可能エネルギー</span>
+            <span class="cat-count">1件</span>
+          </div>
+          <p class="cat-trend">ゼロボードがインドネシアで脱炭素経営支援提携を締結したのが新規動向。これは日系企業がASEAN域内で脱炭素化や再生可能エネルギー、カーボンマネジメント市場への参入を継続的に強化するトレンド。</p>
+        </div>
+  </div>
+
+  <div class="section-head">全記事一覧（20件）</div>
+  <div id="all-articles">
+    
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="0" onclick="showArticle(0)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-0" onchange="updateCount()">
+            <label class="check-label" for="chk-0">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
+            <span class="art-src">Bangkok Post – Business</span>
+            <span class="art-stars">★★★★★</span>
+          </div>
+          <div class="article-title">日本、タイのEV輸入物品税引き上げを歓迎</div>
+          <div class="article-summary">タイがEV輸入物品税を引き上げ、電子部品メーカーなどを誘致する動きを日本が歓迎。これはタイのEV産業育成と国内生産拠点強化を目指す政策で、日タイ間のビジネス環境に影響を与える。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="1" onclick="showArticle(1)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-1" onchange="updateCount()">
+            <label class="check-label" for="chk-1">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
+            <span class="art-src">Google: crude oil Asia</span>
+            <span class="art-stars">★★★★★</span>
+          </div>
+          <div class="article-title">アジア原油価格が下落、供給過剰懸念と中東情勢が背景 - APAC Media</div>
+          <div class="article-summary">アジア市場の原油価格は、供給過剰への懸念と中東地域の緊張を背景に下落した。これは国際的なエネルギー市場の動向を示すもので、原油価格の変動要因となる複数の地政学的・経済的要素が影響している。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="2" onclick="showArticle(2)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-2" onchange="updateCount()">
+            <label class="check-label" for="chk-2">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
+            <span class="art-src">Bangkok Post – Business</span>
+            <span class="art-stars">★★★★★</span>
+          </div>
+          <div class="article-title">タイ政府、電気料金削減とクリーンエネルギー利用促進策を承認</div>
+          <div class="article-summary">タイ国家エネルギー政策評議会は、家計と中小企業向けの電気料金削減策と、クリーンエネルギー利用促進策の3つを承認。これにより、世界のエネルギー市場変動への対応力を高めつつ、エネルギーコスト抑制と再生可能エネルギー導入拡大を図る。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="3" onclick="showArticle(3)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-3" onchange="updateCount()">
+            <label class="check-label" for="chk-3">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
+            <span class="art-src">Google: crude oil Asia</span>
+            <span class="art-stars">★★★★★</span>
+          </div>
+          <div class="article-title">日本とIEA、アジアの石油安全保障ハブを構築へ - IndexBox</div>
+          <div class="article-summary">日本と国際エネルギー機関（IEA）が協力し、アジア地域での石油安全保障ハブ構築を目指す。これはアジア全体のエネルギー安全保障体制強化に貢献するもので、日本の役割と東南アジアへの安定供給にも影響を及ぼす重要な取り組みとなる。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="4" onclick="showArticle(4)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-4" onchange="updateCount()">
+            <label class="check-label" for="chk-4">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">Bangkok Post – Business</span>
+            <span class="art-stars">★★★★★</span>
+          </div>
+          <div class="article-title">PTT、合弁事業設立に向け交渉中</div>
+          <div class="article-summary">タイ国営PTTは、石油精製・石油化学事業で国際エネルギー企業との合弁事業設立に向け交渉中。製油所価格への国家介入が議論される中で、事業再編を通じて国際競争力を強化し、エネルギー市場での地位を固める動きと見られる。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="5" onclick="showArticle(5)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-5" onchange="updateCount()">
+            <label class="check-label" for="chk-5">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">日刊工業新聞</span>
+            <span class="art-stars">★★★★★</span>
+          </div>
+          <div class="article-title">SDS、耐熱巻線を拡充　タイ社と総代理店契約</div>
+          <div class="article-summary">日本のSDSは、耐熱巻線事業を強化するためタイ企業と総代理店契約を結んだ。これにより、タイ市場での事業展開を拡大し、日タイ間のビジネス連携を深める。これは特定の製造業分野における国際協業の事例である。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #b45309" data-cat="ボイラー/産業設備" data-idx="6" onclick="showArticle(6)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-6" onchange="updateCount()">
+            <label class="check-label" for="chk-6">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#b45309">🔧 ボイラー/産業設備</span>
+            <span class="art-src">日刊工業新聞</span>
+            <span class="art-stars">★★★★★</span>
+          </div>
+          <div class="article-title">40周年「METALEX」タイで開幕　50カ国から集う</div>
+          <div class="article-summary">タイで国際工作機械・金属加工機械見本市「METALEX」が40周年を迎え開幕し、50カ国から出展者が集結。これはタイの産業設備分野の最新技術とビジネス機会を示すもので、日タイ間の産業交流にも影響を与える。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="7" onclick="showArticle(7)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-7" onchange="updateCount()">
+            <label class="check-label" for="chk-7">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">日刊工業新聞</span>
+            <span class="art-stars">★★★★★</span>
+          </div>
+          <div class="article-title">AAダイヤ、ハブブレードをタイで量産</div>
+          <div class="article-summary">日本のAAダイヤが、ハブブレードの量産をタイで開始した。これは日本の製造業がタイに生産拠点を設ける具体的な事例であり、日タイ間のサプライチェーン強化やタイの産業発展に貢献する企業動向である。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="8" onclick="showArticle(8)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-8" onchange="updateCount()">
+            <label class="check-label" for="chk-8">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
+            <span class="art-src">Google: crude oil Asia</span>
+            <span class="art-stars">★★★★★</span>
+          </div>
+          <div class="article-title">中東紛争後、世界の石油備蓄は回復基調だが、新たなショックへの余裕は少ない - ThePrint</div>
+          <div class="article-summary">中東紛争後の世界の石油備蓄は回復傾向にあるが、新たな地政学的または経済的ショックに対する脆弱性が指摘されている。これは、国際エネルギー市場の安定性が依然として不安定であることを示唆し、各国にとってエネルギー安全保障が重要な課題であり続けることを意味する。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="9" onclick="showArticle(9)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-9" onchange="updateCount()">
+            <label class="check-label" for="chk-9">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
+            <span class="art-src">Bangkok Post – Business</span>
+            <span class="art-stars">★★★★☆</span>
+          </div>
+          <div class="article-title">首相、APECでタイの台頭をアピール</div>
+          <div class="article-summary">タイのアヌティン首相はAPECで、タイがアジア太平洋地域の戦略的ゲートウェイであると強調。先端産業への投資誘致と地域経済連携の強化を表明し、タイ経済の成長と国際的な役割拡大への意欲を示した。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="10" onclick="showArticle(10)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-10" onchange="updateCount()">
+            <label class="check-label" for="chk-10">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
+            <span class="art-src">Bangkok Post – Business</span>
+            <span class="art-stars">★★★★☆</span>
+          </div>
+          <div class="article-title">タイ株式市場、企業収益改善で2027年に上昇の見込み</div>
+          <div class="article-summary">Krungthai XSpring Securitiesは、企業収益改善、魅力的なバリュエーション、海外資金流入により、タイ株式市場が2027年に上昇し、SET指数が1,477-1,725ポイントで推移すると予測。世界的な金融変動の中でも堅調な見通しを示した。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="11" onclick="showArticle(11)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-11" onchange="updateCount()">
+            <label class="check-label" for="chk-11">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
+            <span class="art-src">Bangkok Post – Business</span>
+            <span class="art-stars">★★★★☆</span>
+          </div>
+          <div class="article-title">マニラでの自由貿易交渉が進展</div>
+          <div class="article-summary">タイと米国の互恵貿易協定（ART）交渉がマニラで進展し、タイの民間セクターはこれをタイ経済にとって前向きな兆候と捉えている。これはタイの貿易政策と国際経済関係における重要な動きを示すものだ。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="12" onclick="showArticle(12)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-12" onchange="updateCount()">
+            <label class="check-label" for="chk-12">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
+            <span class="art-src">Google: crude oil Asia</span>
+            <span class="art-stars">★★★★☆</span>
+          </div>
+          <div class="article-title">日本の石油ハブは多くの約束をするが、東南アジアにはほとんど提供できていない - Yahoo</div>
+          <div class="article-summary">日本が目指す石油ハブが、東南アジアへの供給において期待された役割を果たせていない現状が報じられた。これは、アジア地域のエネルギー安全保障における日本の貢献度や、供給体制の課題を示唆するもので、東南アジア諸国への影響も考えられる。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="13" onclick="showArticle(13)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-13" onchange="updateCount()">
+            <label class="check-label" for="chk-13">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">Bangkok Post – Business</span>
+            <span class="art-stars">★★★★☆</span>
+          </div>
+          <div class="article-title">セントラル・グループ、リーダーシップチームを強化</div>
+          <div class="article-summary">タイのセントラル・グループは、スパラット・チラティワット氏をグループ最高企業開発責任者に任命し、リーダーシップチームを強化。タイ国内外での戦略的事業開発と投資イニシアチブを推進し、グループの成長を加速させる狙いがある。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="14" onclick="showArticle(14)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-14" onchange="updateCount()">
+            <label class="check-label" for="chk-14">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">Bangkok Post – Business</span>
+            <span class="art-stars">★★★★☆</span>
+          </div>
+          <div class="article-title">米国の半導体規制で影響を受けるタイ企業に支援を提供へ</div>
+          <div class="article-summary">米国が先端半導体輸出規制を強化する計画を発表したことを受け、タイ商務省は影響を受けるタイ企業への支援を表明した。これは国際的な半導体サプライチェーンの変動がタイの製造業に及ぼす影響と、それに対する政府の対応を示す。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="15" onclick="showArticle(15)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-15" onchange="updateCount()">
+            <label class="check-label" for="chk-15">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">日経ビジネス</span>
+            <span class="art-stars">★★★★☆</span>
+          </div>
+          <div class="article-title">米国、先端半導体「抜け道」監視網を強化、米中覇権争いが第三国に拡大 (AIデータセンター・エフェクト)</div>
+          <div class="article-summary">米国がAI向け先端半導体の輸出規制を強化し、シンガポールを含む5カ国への迂回輸出や第三国のデータセンター利用時にも許可を求める方針を発表。米中間のAI覇権争いが東南アジアを含む第三国のサプライチェーンに影響を拡大させる。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #2d7a4f" data-cat="バイオマス/再生可能エネルギー" data-idx="16" onclick="showArticle(16)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-16" onchange="updateCount()">
+            <label class="check-label" for="chk-16">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#2d7a4f">🌿 バイオマス/再生可能エネルギー</span>
+            <span class="art-src">Google: 再生可能エネルギー</span>
+            <span class="art-stars">★★★★☆</span>
+          </div>
+          <div class="article-title">ゼロボード、PT Alam Energy Indonesiaとインドネシアで脱炭素経営支援の提携契約を締結</div>
+          <div class="article-summary">ゼロボードは、インドネシアのPT Alam Energy Indonesiaと脱炭素経営支援に向けたパートナーシップ契約を締結。これにより、東南アジアにおける企業の脱炭素化を推進し、再生可能エネルギー分野でのビジネス機会を創出する。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="17" onclick="showArticle(17)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-17" onchange="updateCount()">
+            <label class="check-label" for="chk-17">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
+            <span class="art-src">Bangkok Post – Business</span>
+            <span class="art-stars">★★★☆☆</span>
+          </div>
+          <div class="article-title">タイSEC、ステーブルコイン規制案を擁護</div>
+          <div class="article-summary">タイSECは、外貨担保型ステーブルコインの送金上限を1日500万バーツとする規制案を擁護。この措置は、デジタル資産が国境を越えた送金規制を回避し、マネーロンダリングに利用されるリスクを軽減することを目的としていると表明した。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="18" onclick="showArticle(18)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-18" onchange="updateCount()">
+            <label class="check-label" for="chk-18">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
+            <span class="art-src">日刊工業新聞</span>
+            <span class="art-stars">★★★☆☆</span>
+          </div>
+          <div class="article-title">10月の貿易統計、赤字6カ月連続　原油・半導体値上がり響く</div>
+          <div class="article-summary">日本の10月の貿易統計は、原油や半導体価格の高騰が響き、6カ月連続の赤字となった。これは日本のマクロ経済にとって懸念材料であり、国際的なエネルギー価格やサプライチェーンの動向が日本の経済に大きく影響していることを示している。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="19" onclick="showArticle(19)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-19" onchange="updateCount()">
+            <label class="check-label" for="chk-19">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">日経ビジネス</span>
+            <span class="art-stars">★★★☆☆</span>
+          </div>
+          <div class="article-title">［徹底予測2027 素材］三井化学と三菱ケミカルが石化事業分社化　再編、節目の年に</div>
+          <div class="article-summary">中東危機によるナフサ調達不安を背景に、2027年には三井化学や三菱ケミカルが石化事業を分社化し、素材業界の再編が進むと予測。中国勢との競争激化や供給網の脆弱性から、調達先の多角化と企業間連携による強靱化が課題となる。</div>
+        </div>
+  </div>
+</div>
+
+<!-- CATEGORY PAGE -->
+<div class="page" id="page-cat">
+  <div class="cat-page-head">
+    <div class="cat-page-icon" id="cat-icon"></div>
+    <div class="cat-page-name" id="cat-name"></div>
+    <div class="cat-summary-box">
+      <div class="cat-summary-label">📊 カテゴリトレンド分析</div>
+      <div class="cat-summary-text" id="cat-summary-text"></div>
+    </div>
+    <div class="section-head" id="cat-count-head"></div>
+    <div id="cat-articles"></div>
+  </div>
+</div>
+
+<!-- ARTICLE PAGE -->
+<div class="page" id="page-article">
+  <div class="detail-cat" id="det-cat"></div>
+  <div class="detail-title" id="det-title"></div>
+  <div class="detail-orig" id="det-orig"></div>
+  <div class="detail-meta" id="det-meta"></div>
+  <div class="section-head" id="det-body-label"></div>
+  <div class="detail-body" id="det-body"></div>
+  <div class="deep-card">
+    <div class="deep-label">🔍 もっと調べる</div>
+    <p style="font-size:13px;color:var(--fg2);margin-bottom:12px;line-height:1.7;">
+      Perplexity AIがこの記事のトピックについてウェブ上の最新情報を収集・日本語でまとめます。
+    </p>
+    <button class="deep-btn" id="perplexity-btn" onclick="openPerplexity()">🔍 Perplexityで深掘り</button>
+  </div>
+</div>
+
+<footer>
+  生成: 2026-11-19 13:03 JST　｜　ソース: RSS自動巡回 + Gemini AI　｜
+  取得: 147件 / 候補: 54件 / 掲載: 20件
+</footer>
+
+<script>
+const ARTICLES = [{"title": "Japan welcomes hike in excise tax on imported EVs", "title_ja": "日本、タイのEV輸入物品税引き上げを歓迎", "body_ja": "日本は、タイが輸入電気自動車（EV）に対する物品税を引き上げたことを歓迎している。タイはEV産業を支援するため、電子部品、センサー、車載マイクロコントローラーの製造業者に国内生産拠点の設立を誘致することを目指している。", "summary_ja": "タイがEV輸入物品税を引き上げ、電子部品メーカーなどを誘致する動きを日本が歓迎。これはタイのEV産業育成と国内生産拠点強化を目指す政策で、日タイ間のビジネス環境に影響を与える。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/motoring/3357379/japan-welcomes-hike-in-excise-tax-on-imported-evs", "published": "2026-11-18T22:31:00+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 5}, {"title": "Crude Oil Prices Drop in Asian Trade Amid Supply Glut Concerns, Middle East Tensions - APAC Media", "title_ja": "アジア原油価格が下落、供給過剰懸念と中東情勢が背景 - APAC Media", "body_ja": "供給過剰懸念と中東情勢を背景に、アジア市場で原油価格が下落した。", "summary_ja": "アジア市場の原油価格は、供給過剰への懸念と中東地域の緊張を背景に下落した。これは国際的なエネルギー市場の動向を示すもので、原油価格の変動要因となる複数の地政学的・経済的要素が影響している。", "source": "Google: crude oil Asia", "link": "https://news.google.com/rss/articles/CBMijwFBVV95cUxNNmkzdlJKZGtUWmh3aWtvLV9iYmVGR20tRjl1OVdxOHliRTVOOUJiaE5YbGJrQWNmbkFnSXdvb3p5dmxxUmdjbjhCV1dTblMwNVRSbU5JXzNxU3ROSkVLZ1ZBY0MtZ1QzeExJdVJtSi1CVFNURUtKUE1KSENEb3NxZzdfZW1kR2ozUjBsUHJtaw?oc=5", "published": "2026-11-18T10:19:09+00:00", "category": "エネルギー市場", "relevance_score": 5}, {"title": "Council okays measures to cut electricity costs", "title_ja": "タイ政府、電気料金削減とクリーンエネルギー利用促進策を承認", "body_ja": "タイ国家エネルギー政策評議会（NEPC）は、家計および中小企業（SME）の電気料金削減と、世界のエネルギー市場の変動に適切に対応するためのクリーンエネルギー利用促進を目的とした3つの新措置を承認した。", "summary_ja": "タイ国家エネルギー政策評議会は、家計と中小企業向けの電気料金削減策と、クリーンエネルギー利用促進策の3つを承認。これにより、世界のエネルギー市場変動への対応力を高めつつ、エネルギーコスト抑制と再生可能エネルギー導入拡大を図る。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3357374/council-okays-measures-to-cut-electricity-costs", "published": "2026-11-18T22:26:00+00:00", "category": "エネルギー市場", "relevance_score": 5}, {"title": "Japan and IEA to Create Oil Security Hub for Asia - News and Statistics - IndexBox", "title_ja": "日本とIEA、アジアの石油安全保障ハブを構築へ - IndexBox", "body_ja": "日本とIEA（国際エネルギー機関）は、アジア地域における石油安全保障ハブを構築する。", "summary_ja": "日本と国際エネルギー機関（IEA）が協力し、アジア地域での石油安全保障ハブ構築を目指す。これはアジア全体のエネルギー安全保障体制強化に貢献するもので、日本の役割と東南アジアへの安定供給にも影響を及ぼす重要な取り組みとなる。", "source": "Google: crude oil Asia", "link": "https://news.google.com/rss/articles/CBMikAFBVV95cUxQWFpHU1pCX2VmRlVKOXlZMVhFTmszNWlJaF9sR0xKNTh2U0xNMExKUnlxdGNzTXJQd1FwSG9tSWczbGEtVnY2NzRnTVZHX0xDSEJ5NXhXaWU4NjZJTXlPN0dpNTBURnRRNGpPNElyNXdoUmZnMEkwMlk0WC0teUVJY2JKdHVHc0RUYklDcDk4N3U?oc=5", "published": "2026-11-18T19:01:44+00:00", "category": "エネルギー市場", "relevance_score": 5}, {"title": "PTT negotiating to forge joint ventures", "title_ja": "PTT、合弁事業設立に向け交渉中", "body_ja": "タイの国営石油・ガス複合企業PTT Plcは、製油所価格への国家介入を巡る論争が続く中、石油精製・石油化学事業における合弁事業設立に向けて主要な国際エネルギー企業と積極的に交渉している。", "summary_ja": "タイ国営PTTは、石油精製・石油化学事業で国際エネルギー企業との合弁事業設立に向け交渉中。製油所価格への国家介入が議論される中で、事業再編を通じて国際競争力を強化し、エネルギー市場での地位を固める動きと見られる。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3357219/ptt-negotiating-to-forge-joint-ventures", "published": "2026-11-18T20:35:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 5}, {"title": "SDS、耐熱巻線を拡充　タイ社と総代理店契約", "title_ja": "SDS、耐熱巻線を拡充　タイ社と総代理店契約", "body_ja": "SDSは耐熱巻線事業を拡充するため、タイの企業と総代理店契約を締結した。", "summary_ja": "日本のSDSは、耐熱巻線事業を強化するためタイ企業と総代理店契約を結んだ。これにより、タイ市場での事業展開を拡大し、日タイ間のビジネス連携を深める。これは特定の製造業分野における国際協業の事例である。", "source": "日刊工業新聞", "link": "https://www.nikkan.co.jp/articles/view/797506", "published": "2026-11-18T20:00:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 5}, {"title": "40周年「METALEX」タイで開幕　50カ国から集う", "title_ja": "40周年「METALEX」タイで開幕　50カ国から集う", "body_ja": "タイで開催される40周年を迎える国際工作機械・金属加工機械見本市「METALEX」が開幕し、50カ国から出展者が集う。", "summary_ja": "タイで国際工作機械・金属加工機械見本市「METALEX」が40周年を迎え開幕し、50カ国から出展者が集結。これはタイの産業設備分野の最新技術とビジネス機会を示すもので、日タイ間の産業交流にも影響を与える。", "source": "日刊工業新聞", "link": "https://www.nikkan.co.jp/articles/view/797547", "published": "2026-11-18T20:00:00+00:00", "category": "ボイラー/産業設備", "relevance_score": 5}, {"title": "AAダイヤ、ハブブレード　タイで量産", "title_ja": "AAダイヤ、ハブブレードをタイで量産", "body_ja": "AAダイヤはハブブレードの量産をタイで開始した。", "summary_ja": "日本のAAダイヤが、ハブブレードの量産をタイで開始した。これは日本の製造業がタイに生産拠点を設ける具体的な事例であり、日タイ間のサプライチェーン強化やタイの産業発展に貢献する企業動向である。", "source": "日刊工業新聞", "link": "https://www.nikkan.co.jp/articles/view/797563", "published": "2026-11-18T20:00:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 5}, {"title": "Global oil stockpiles recovering after West Asia war punch. But there’s little room for another shock - ThePrint", "title_ja": "中東紛争後、世界の石油備蓄は回復基調だが、新たなショックへの余裕は少ない - ThePrint", "body_ja": "中東紛争による打撃後、世界の石油備蓄は回復しつつあるが、新たなショックに対する余地はほとんどない。", "summary_ja": "中東紛争後の世界の石油備蓄は回復傾向にあるが、新たな地政学的または経済的ショックに対する脆弱性が指摘されている。これは、国際エネルギー市場の安定性が依然として不安定であることを示唆し、各国にとってエネルギー安全保障が重要な課題であり続けることを意味する。", "source": "Google: crude oil Asia", "link": "https://news.google.com/rss/articles/CBMi0gFBVV95cUxPUlVMOUlhSUlrNld1cnI4Ulg4QW8xd1VnWUUtQjVJbzZISmgtMkhTOHZjbS1zT0cyQVFyNWdqM2lYdjBuTFExemszdHc4cEVZbTZ5MldNNnBNNkJ5RC03NWptMHJSV1JjdEl4WVhiZVl5T09WcFVZUFM2Y3R2SGUyQXpWTUJGdW9feHdydF80dk0tMW12SHM2Tk9pczBCME5Bc2pWOTMzSlJXQmJtS3FqVERxZk9fRTQyRDJZMVBCcU9hclJwQkJYQ2ZfSVJ5NXRwcWfSAdcBQVVfeXFMT1lWQUN3dVZ2aG9CWlVEU1VMZjN6SWdMTkZGaEZVM3UycUJ5czFDUUpDa3NwdC14aHFldURMdGdIaGVQTkJBZG9KYlhMTEJucWdjbzNOUUMzVVVQeVo4Um41bThhblJtU3F2MlZfMi1jTG9jRENmR1V5eXNJX3ZLTUg3ZjBHcWpJTzlhVmpkc1FTaHlKTlNqcnhXTDh6dFNLYmgwQmZTdk4xeDlJcllUQklLakV0MFMzYkF3dURZUzBtdEl3dnlKLWg5RU9QQzJ4S2RlcFd1cGc?oc=5", "published": "2026-11-19T02:30:07+00:00", "category": "エネルギー市場", "relevance_score": 5}, {"title": "PM sells Apec on nation's rise", "title_ja": "首相、APECでタイの台頭をアピール", "body_ja": "アヌティン・チャーンウィーラクーン首相は昨日、タイをアセアンとより広範なアジア太平洋地域を結ぶ戦略的ゲートウェイとして称賛し、先端産業へのさらなる投資誘致と地域経済の連結性強化を誓った。", "summary_ja": "タイのアヌティン首相はAPECで、タイがアジア太平洋地域の戦略的ゲートウェイであると強調。先端産業への投資誘致と地域経済連携の強化を表明し、タイ経済の成長と国際的な役割拡大への意欲を示した。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/investment/3357239/pm-sells-apec-on-nations-rise", "published": "2026-11-18T21:01:00+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 4}, {"title": "Thai stocks poised for gains in 2027 as earnings improve", "title_ja": "タイ株式市場、企業収益改善で2027年に上昇の見込み", "body_ja": "世界的な金融市場の変動が高まる中、Krungthai XSpring Securities (KTX) はタイ株式市場が2027年も上昇を続けると予測しており、今後12ヶ月間でタイ証券取引所（SET）指数が1,477～1,725ポイントの間で推移すると見込んでいる。この見通しは、企業収益の改善、魅力的なバリュエーション、および海外からの資金流入の可能性に支えられている。", "summary_ja": "Krungthai XSpring Securitiesは、企業収益改善、魅力的なバリュエーション、海外資金流入により、タイ株式市場が2027年に上昇し、SET指数が1,477-1,725ポイントで推移すると予測。世界的な金融変動の中でも堅調な見通しを示した。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/investment/3357319/thai-stocks-poised-for-gains-in-2027-as-earnings-improve", "published": "2026-11-19T00:34:00+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 4}, {"title": "Free-trade talks make progress in Manila", "title_ja": "マニラでの自由貿易交渉が進展", "body_ja": "タイと米国間の互恵貿易協定（ART）交渉の進展を、民間部門はタイ経済にとって肯定的な兆候と見ている。", "summary_ja": "タイと米国の互恵貿易協定（ART）交渉がマニラで進展し、タイの民間セクターはこれをタイ経済にとって前向きな兆候と捉えている。これはタイの貿易政策と国際経済関係における重要な動きを示すものだ。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3357249/freetrade-talks-make-progress-in-manila", "published": "2026-11-18T22:21:00+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 4}, {"title": "Japan's oil hub promises much but delivers little for Southeast Asia - Yahoo", "title_ja": "日本の石油ハブは多くの約束をするが、東南アジアにはほとんど提供できていない - Yahoo", "body_ja": "日本の石油ハブは多くの約束をするが、東南アジアにはほとんど提供できていない。", "summary_ja": "日本が目指す石油ハブが、東南アジアへの供給において期待された役割を果たせていない現状が報じられた。これは、アジア地域のエネルギー安全保障における日本の貢献度や、供給体制の課題を示唆するもので、東南アジア諸国への影響も考えられる。", "source": "Google: crude oil Asia", "link": "https://news.google.com/rss/articles/CBMijgFBVV95cUxNOFlTc3BQT19zdWpsVl9PM0E3NkNXV0Zacy1PczdTdjJneU03ZzFzdjF6TjJiOWZVaFZFX2NTeXVERlBOQ1FsaVN5SGtyN21uejFFbERycVAtcW9NVEJ3MW5jWUY4bFBZOFcwUkJrdUFsY0IxV2p4TFlRS3Jnb3hpX0NxanRFd1VtdmFyblF3?oc=5", "published": "2026-11-18T21:21:22+00:00", "category": "エネルギー市場", "relevance_score": 4}, {"title": "Central Group bolsters leadership team", "title_ja": "セントラル・グループ、リーダーシップチームを強化", "body_ja": "セントラル・グループは、スパラット・チラティワットをグループ最高企業開発責任者に任命し、タイ国内外におけるグループ全体の戦略的事業開発と投資イニシアチブを主導する責任を負わせることで、リーダーシップチームを強化した。", "summary_ja": "タイのセントラル・グループは、スパラット・チラティワット氏をグループ最高企業開発責任者に任命し、リーダーシップチームを強化。タイ国内外での戦略的事業開発と投資イニシアチブを推進し、グループの成長を加速させる狙いがある。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3357404/central-group-bolsters-leadership-team", "published": "2026-11-19T01:33:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 4}, {"title": "Thai firms affected by US chip rules to get support", "title_ja": "米国の半導体規制で影響を受けるタイ企業に支援を提供へ", "body_ja": "米国が先端半導体輸出管理の強化計画を発表したことを受け、タイ商務省は影響を受ける企業を支援する用意がある。", "summary_ja": "米国が先端半導体輸出規制を強化する計画を発表したことを受け、タイ商務省は影響を受けるタイ企業への支援を表明した。これは国際的な半導体サプライチェーンの変動がタイの製造業に及ぼす影響と、それに対する政府の対応を示す。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3357309/thai-firms-affected-by-us-chip-rules-to-get-support", "published": "2026-11-18T23:13:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 4}, {"title": "米、先端半導体「抜け道」監視網　NVIDIA騒動で米中覇権争いが第三国に拡大 (AIデータセンター・エフェクト)", "title_ja": "米国、先端半導体「抜け道」監視網を強化、米中覇権争いが第三国に拡大 (AIデータセンター・エフェクト)", "body_ja": "先端半導体を巡る米中のAI覇権争いは、2国間競争のレベルを超え、周辺の第三国も巻き込む形へと拡大する段階に来たーー。米商務省は16日、人工知能（AI）向け先端半導体の輸出規制の強化策を発表した。米国は、新たに、迂回路になる恐れが高いシンガポールなど5カ国への輸出時や中国企業が遠隔利用する第三国のデータセンターへ輸出する際に商務省の許可取得を求める方針だ。", "summary_ja": "米国がAI向け先端半導体の輸出規制を強化し、シンガポールを含む5カ国への迂回輸出や第三国のデータセンター利用時にも許可を求める方針を発表。米中間のAI覇権争いが東南アジアを含む第三国のサプライチェーンに影響を拡大させる。", "source": "日経ビジネス", "link": "https://business.nikkei.com/atcl/gen/19/00887/111700014/", "published": "2026-11-18T20:00:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 4}, {"title": "ゼロボード、PT Alam Energy Indonesiaとインドネシアにおける脱炭素経営支援に向けたパートナーシップ契約を締結 - ニコニコニュース", "title_ja": "ゼロボード、PT Alam Energy Indonesiaとインドネシアで脱炭素経営支援の提携契約を締結", "body_ja": "ゼロボードは、PT Alam Energy Indonesiaとインドネシアにおける脱炭素経営支援に向けたパートナーシップ契約を締結した。", "summary_ja": "ゼロボードは、インドネシアのPT Alam Energy Indonesiaと脱炭素経営支援に向けたパートナーシップ契約を締結。これにより、東南アジアにおける企業の脱炭素化を推進し、再生可能エネルギー分野でのビジネス機会を創出する。", "source": "Google: 再生可能エネルギー", "link": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE1tNno5dndsZDlJY2FHdHVtUi1KWDFjSERQemtDS29oMHJYMU5lODNab2hJNlpNX2ZTY3lPVTBUTVpKU0FaS0t4Z2d6VzhpeE5mRkVwQ2lPUXd5NFJ0SkVIX3hIdGx0Qmk3?oc=5", "published": "2026-11-18T17:30:27+00:00", "category": "バイオマス/再生可能エネルギー", "relevance_score": 4}, {"title": "SEC defends proposed stablecoin rules", "title_ja": "タイSEC、ステーブルコイン規制案を擁護", "body_ja": "タイ証券取引委員会（SEC）は、USDTを含む外貨担保型ステーブルコインの送金上限を1日500万バーツとする提案を擁護した。この措置は、デジタル資産が国境を越えた送金規制を回避するために利用されるのを防ぎ、マネーロンダリングのリスクを軽減することを目的としていると説明した。", "summary_ja": "タイSECは、外貨担保型ステーブルコインの送金上限を1日500万バーツとする規制案を擁護。この措置は、デジタル資産が国境を越えた送金規制を回避し、マネーロンダリングに利用されるリスクを軽減することを目的としていると表明した。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/investment/3357364/sec-defends-proposed-stablecoin-rules", "published": "2026-11-19T01:04:00+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 3}, {"title": "10月の貿易統計、赤字6カ月連続　原油・半導体値上がり響く", "title_ja": "10月の貿易統計、赤字6カ月連続　原油・半導体値上がり響く", "body_ja": "", "summary_ja": "日本の10月の貿易統計は、原油や半導体価格の高騰が響き、6カ月連続の赤字となった。これは日本のマクロ経済にとって懸念材料であり、国際的なエネルギー価格やサプライチェーンの動向が日本の経済に大きく影響していることを示している。", "source": "日刊工業新聞", "link": "https://www.nikkan.co.jp/articles/view/797599", "published": "2026-11-18T20:00:00+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 3}, {"title": "［徹底予測2027 素材］三井化学と三菱ケミカルが石化事業分社化　再編、節目の年に (徹底予測2027)", "title_ja": "［徹底予測2027 素材］三井化学と三菱ケミカルが石化事業分社化　再編、節目の年に", "body_ja": "2026年は中東危機でナフサの調達不安が広がり、素材業界の供給網の脆弱さが露呈した。27年は三井化学や三菱ケミカルの石化事業分社化など再編が進む。中国勢との競争も激化する中、調達先の多角化や企業間連携による供給網の強靱化が問われる。", "summary_ja": "中東危機によるナフサ調達不安を背景に、2027年には三井化学や三菱ケミカルが石化事業を分社化し、素材業界の再編が進むと予測。中国勢との競争激化や供給網の脆弱性から、調達先の多角化と企業間連携による強靱化が課題となる。", "source": "日経ビジネス", "link": "https://business.nikkei.com/atcl/gen/19/00951/111600005/", "published": "2026-11-18T08:00:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 3}];
+const THIS_TAG = "20261119"; // このHTMLの日付タグ
+
+// ── 日付ナビゲーション（available_dates.jsonを動的取得）──
+let AVAILABLE_DATES = [];
+
+function getCurrentTag() {
+  const path = location.pathname;
+  const re = new RegExp('digest_([0-9]{8})\.html');
+  const m = path.match(re);
+  return m ? m[1] : THIS_TAG;
+}
+
+function tagToUrl(tag) {
+  const latestTag = AVAILABLE_DATES[AVAILABLE_DATES.length - 1];
+  if (tag === latestTag) return 'index.html';
+  return `digest_${tag}.html`;
+}
+
+function goToDate(dir) {
+  const cur = getCurrentTag();
+  const idx = AVAILABLE_DATES.indexOf(cur);
+  if (dir === 'prev' && idx > 0) location.href = tagToUrl(AVAILABLE_DATES[idx - 1]);
+  if (dir === 'next' && idx < AVAILABLE_DATES.length - 1) location.href = tagToUrl(AVAILABLE_DATES[idx + 1]);
+}
+
+function initNavButtons() {
+  const cur = getCurrentTag();
+  const idx = AVAILABLE_DATES.indexOf(cur);
+  const prev = document.getElementById('prevBtn');
+  const next = document.getElementById('nextBtn');
+  if (prev) prev.disabled = idx <= 0;
+  if (next) next.disabled = idx >= AVAILABLE_DATES.length - 1;
+}
+
+
+async function loadAvailableDates() {
+  // 固定URLで取得（GitHub Pages: hirot01.github.io/daily-digest/）
+  const DATES_URL = "https://hirot01.github.io/daily-digest/available_dates.json";
+  try {
+    const res = await fetch(DATES_URL + "?t=" + Date.now()); // キャッシュ回避
+    if (res.ok) {
+      AVAILABLE_DATES = await res.json();
+      initNavButtons();
+      if (typeof renderCalendar === "function" && calYear) renderCalendar();
+      return;
+    }
+  } catch(e) { console.log("dates fetch failed:", e); }
+  AVAILABLE_DATES = [THIS_TAG];
+  initNavButtons();
+}
+
+// ── カレンダー ──────────────────────────────────────
+let calYear, calMonth;
+
+function toggleCalendar() {
+  const modal = document.getElementById('calendarModal');
+  const overlay = document.getElementById('calendarOverlay');
+  if (modal.style.display === 'none') {
+    const cur = getCurrentTag();
+    calYear = parseInt(cur.slice(0, 4));
+    calMonth = parseInt(cur.slice(4, 6));
+    renderCalendar();
+    modal.style.display = 'block';
+    overlay.style.display = 'block';
+  } else {
+    closeCalendar();
+  }
+}
+
+function closeCalendar() {
+  document.getElementById('calendarModal').style.display = 'none';
+  document.getElementById('calendarOverlay').style.display = 'none';
+}
+
+function changeCalMonth(dir) {
+  calMonth += dir;
+  if (calMonth > 12) { calMonth = 1; calYear++; }
+  if (calMonth < 1)  { calMonth = 12; calYear--; }
+  renderCalendar();
+}
+
+function renderCalendar() {
+  const label = document.getElementById('calMonthLabel');
+  const grid  = document.getElementById('calGrid');
+  label.textContent = `${calYear}年${calMonth}月`;
+
+  const firstDay = new Date(calYear, calMonth - 1, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth, 0).getDate();
+  const dateSet = new Set(AVAILABLE_DATES);
+  const cur = getCurrentTag();
+
+  let html = '';
+  // 空白セル
+  for (let i = 0; i < firstDay; i++) html += '<div></div>';
+  // 日付セル
+  for (let d = 1; d <= daysInMonth; d++) {
+    const tag = `${calYear}${String(calMonth).padStart(2,'0')}${String(d).padStart(2,'0')}`;
+    const hasData = dateSet.has(tag);
+    const isCur = tag === cur;
+    const style = isCur
+      ? 'background:#1a56db;color:#fff;border-radius:50%;font-weight:700;cursor:pointer;padding:5px 0;font-size:13px;'
+      : hasData
+        ? 'color:#1a56db;font-weight:600;cursor:pointer;padding:5px 0;font-size:13px;border-radius:50%;'
+        : 'color:#d1d5db;padding:5px 0;font-size:13px;';
+    const onclick = hasData ? `onclick="location.href='${tagToUrl(tag)}';"` : '';
+    html += `<div style="${style}" ${onclick}>${d}</div>`;
+  }
+  grid.innerHTML = html;
+}
+
+document.addEventListener('DOMContentLoaded', loadAvailableDates);
+const CAT_ICONS  = {"ボイラー/産業設備": "🔧", "バイオマス/再生可能エネルギー": "🌿", "エネルギー市場": "⚡", "日タイ貿易/マクロ": "🤝", "企業/ビジネス動向": "🏭", "その他": "📰"};
+const CAT_COLORS = {"ボイラー/産業設備": "#b45309", "バイオマス/再生可能エネルギー": "#2d7a4f", "エネルギー市場": "#0369a1", "日タイ貿易/マクロ": "#7c3aed", "企業/ビジネス動向": "#be123c", "その他": "#555"};
+const CAT_SUMMARIES = {"日タイ貿易/マクロ": "貿易赤字継続の中、タイはEV税制で国内生産優位化を図り、日本も歓迎。APECでの存在感向上とデジタル金融規制進展が新規動向。中長期的な経済成長期待と自由貿易推進は継続トレンド。", "エネルギー市場": "アジア原油価格は供給過剰懸念で下落。日本の石油ハブ機能不全指摘に対し、IEAと石油安全保障ハブ構築を進めるのが新規動向。タイ政府のクリーンエネルギー促進や日タイ協力による備蓄強化は継続トレンド。", "企業/ビジネス動向": "米国の半導体規制がタイ企業に波及し支援策検討。米中覇権争いの第三国への拡大が顕著な新規動向。日系企業はタイでの高付加価値製品量産や材料分野提携を継続し、事業再編も進む。", "ボイラー/産業設備": "タイで国際的な産業設備展「METALEX」が開催され、最新技術導入への意欲を示す新規動向。タイが製造業ハブとして多様な国の企業を惹きつけ、産業設備の高度化を図る継続トレンドを反映。", "バイオマス/再生可能エネルギー": "ゼロボードがインドネシアで脱炭素経営支援提携を締結したのが新規動向。これは日系企業がASEAN域内で脱炭素化や再生可能エネルギー、カーボンマネジメント市場への参入を継続的に強化するトレンド。"};
+const GAS_URL = "https://script.google.com/macros/s/AKfycbz9Nc874Azvh8zqv5BySUGToK01aIkInocGYeqxgyyiJ-fN0YCqIW4h2E9NRkYBQ8bO/exec";
+
+let history = ["top"];
+let currentArticleIdx = null;
+
+function showPage(id) {
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  document.getElementById("page-" + id).classList.add("active");
+  document.getElementById("backBtn").classList.toggle("visible", id !== "top");
+  window.scrollTo(0, 0);
+}
+
+function goBack() {
+  history.pop();
+  const prev = history[history.length - 1];
+  if (prev === "top") showPage("top");
+  else if (prev && prev.startsWith("cat:")) showCategory(prev.slice(4), false);
+}
+
+function showCategory(cat, push=true) {
+  if (push) history.push("cat:" + cat);
+  document.getElementById("cat-icon").textContent = CAT_ICONS[cat] || "📰";
+  document.getElementById("cat-name").textContent = cat;
+  document.getElementById("cat-summary-text").textContent = CAT_SUMMARIES[cat] || "";
+  const arts = ARTICLES.filter(a => a.category === cat).sort((a,b) => b.relevance_score - a.relevance_score);
+  document.getElementById("cat-count-head").textContent = arts.length + "件の記事";
+  document.getElementById("cat-articles").innerHTML = arts.map(a => {
+    const idx = ARTICLES.indexOf(a);
+    const color = CAT_COLORS[cat] || "#555";
+    const stars = "★".repeat(a.relevance_score||3) + "☆".repeat(5-(a.relevance_score||3));
+    return `<div class="article-item" onclick="showArticle(${idx})" style="border-left:3px solid ${color}">
+      <div class="article-meta">
+        <span class="art-src">${a.source}</span>
+        <span class="art-stars">${stars}</span>
+      </div>
+      <div class="article-title">${a.title_ja || a.title}</div>
+      <div class="article-summary">${a.summary_ja || ""}</div>
+    </div>`;
+  }).join("");
+  showPage("cat");
+}
+
+function showArticle(idx, push=true) {
+  if (push) history.push("article:" + idx);
+  currentArticleIdx = idx;
+  const a = ARTICLES[idx];
+  const cat = a.category || "その他";
+  const color = CAT_COLORS[cat] || "#555";
+  document.getElementById("det-cat").innerHTML = `<span style="color:${color}">${CAT_ICONS[cat]||"📰"} ${cat}</span>`;
+  document.getElementById("det-title").textContent = a.title_ja || a.title;
+  document.getElementById("det-orig").textContent = a.title_ja && a.title_ja !== a.title ? "原題: " + a.title : "";
+  document.getElementById("det-meta").innerHTML = `<span>${a.source}</span><span>${(a.published||"").slice(0,16).replace("T"," ")}</span>`;
+  const isTranslated = a.body_ja && a.body_ja !== a.body;
+  document.getElementById("det-body-label").textContent = isTranslated ? "記事本文（日本語訳）" : "記事本文";
+  const origText = (a.body && a.body !== "undefined") ? a.body : "";
+  document.getElementById("det-body").innerHTML =
+    (a.body_ja || origText || "") +
+    (isTranslated && origText ? `<div class="detail-orig-body"><div class="detail-orig-label">ORIGINAL</div>${origText}</div>` : "") +
+    `<br><a href="${a.link}" target="_blank" rel="noopener" class="source-link">🔗 元記事を開く</a>`;
+  showPage("article");
+  showPage("article");
+}
+
+function updateCount() {
+  const checked = document.querySelectorAll('#all-articles input[type=checkbox]:checked').length;
+  document.getElementById('save-count').textContent = `チェックした記事: ${checked}件`;
+  document.getElementById('save-btn').disabled = checked === 0;
+}
+
+// 保存済みIDをセッション内で管理
+const savedIds = new Set();
+
+function markAsSaved(idx) {
+  savedIds.add(idx);
+  const item = document.querySelector(`[data-idx="${idx}"]`);
+  if (!item) return;
+  // チェックボックスを非表示にして保存済みバッジを表示
+  const wrap = item.querySelector('.check-wrap');
+  if (wrap) wrap.style.display = 'none';
+  if (!item.querySelector('.saved-badge')) {
+    const badge = document.createElement('div');
+    badge.className = 'saved-badge';
+    badge.textContent = '✅ 保存済み';
+    item.insertBefore(badge, item.firstChild);
+  }
+}
+
+async function saveChecked() {
+  const checkboxes = document.querySelectorAll('#all-articles input[type=checkbox]:checked');
+  if (checkboxes.length === 0) return;
+  const articles = [];
+  const idxList = [];
+  checkboxes.forEach(cb => {
+    const idx = parseInt(cb.id.replace('chk-', ''));
+    articles.push(ARTICLES[idx]);
+    idxList.push(idx);
+  });
+  const btn = document.getElementById('save-btn');
+  btn.disabled = true;
+  btn.textContent = '保存中...';
+  try {
+    await fetch(GAS_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ articles })
+    });
+    btn.textContent = '✅ 保存しました';
+    // 保存済みバッジを付与
+    idxList.forEach(idx => markAsSaved(idx));
+    updateCount();
+    setTimeout(() => {
+      btn.textContent = '📥 スプレッドシートに保存';
+    }, 3000);
+  } catch(e) {
+    btn.textContent = 'エラー: ' + e.message;
+    btn.disabled = false;
+  }
+}
+
+function openPerplexity() {
+  const a = ARTICLES[currentArticleIdx];
+  const query = encodeURIComponent(a.title_ja || a.title);
+  window.open(`https://www.perplexity.ai/search?q=${query}`, '_blank');
+}
+</script>
+
+<div class="save-bar">
+  <div class="save-count" id="save-count">チェックした記事: 0件</div>
+  <button class="save-btn" id="save-btn" onclick="saveChecked()" disabled>📥 スプレッドシートに保存</button>
+</div>
+</body>
+</html>
