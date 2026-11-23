@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>デイリーニュースダイジェスト — 2026年11月23日（Mon）</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f8f9fb; --bg2: #ffffff; --bg3: #f0f2f5;
+      --fg: #1a1d23; --fg2: #4a5168; --fg3: #9299aa;
+      --accent: #1a56db; --accent2: #0e9f6e;
+      --rule: #e5e7eb; --shadow: 0 1px 4px rgba(0,0,0,.07);
+    }
+    body { font-family:'Noto Sans JP',sans-serif; background:var(--bg); color:var(--fg); line-height:1.7; }
+    a { color:var(--accent); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+
+    /* Header */
+    .site-header {
+      position:sticky; top:0; z-index:100;
+      background:#fff; border-bottom:1px solid var(--rule);
+      padding:14px 24px; display:flex; align-items:center; justify-content:space-between;
+      box-shadow:var(--shadow);
+    }
+    .site-logo { font-size:15px; font-weight:700; color:var(--fg); letter-spacing:-.01em; }
+    .site-logo span { color:var(--accent); }
+    .site-date { font-size:12px; color:var(--fg3); }
+    .back-btn {
+      display:none; background:#f0f2f5; border:none;
+      color:var(--fg2); padding:6px 14px; border-radius:20px; cursor:pointer; font-size:12px; font-weight:500;
+    }
+    .back-btn.visible { display:block; }
+
+    /* Navigation */
+    .nav-center { display:flex; align-items:center; gap:6px; }
+    .nav-arrow {
+      background:none; border:1px solid var(--rule); border-radius:8px;
+      width:32px; height:32px; font-size:20px; cursor:pointer;
+      color:var(--fg2); display:flex; align-items:center; justify-content:center;
+      transition:all .15s; line-height:1;
+    }
+    .nav-arrow:hover { background:var(--bg3); }
+    .nav-arrow:disabled { color:var(--rule); cursor:not-allowed; }
+    .date-btn {
+      background:var(--bg3); border:1px solid var(--rule); border-radius:8px;
+      padding:5px 12px; font-size:13px; font-weight:600; cursor:pointer;
+      color:var(--fg); transition:all .15s; white-space:nowrap;
+    }
+    .date-btn:hover { background:#e5e7eb; }
+
+    /* Pages */
+    .page { display:none; max-width:780px; margin:0 auto; padding:28px 20px 80px; }
+    .page.active { display:block; }
+
+    /* Overall summary */
+    .summary-card {
+      background:linear-gradient(135deg, #1a56db 0%, #0e9f6e 100%);
+      border-radius:16px; padding:24px 28px; margin-bottom:28px;
+      box-shadow:0 4px 20px rgba(26,86,219,.2);
+    }
+    .summary-label {
+      font-size:10px; font-weight:700; letter-spacing:.18em;
+      color:rgba(255,255,255,.7); text-transform:uppercase; margin-bottom:10px;
+    }
+    .summary-text { font-size:14px; line-height:1.9; color:#fff; }
+
+    /* Section head */
+    .section-head {
+      font-size:12px; font-weight:700; color:var(--fg3);
+      letter-spacing:.08em; text-transform:uppercase;
+      margin-bottom:14px; padding-bottom:8px;
+      border-bottom:2px solid var(--rule);
+    }
+
+    /* Category cards */
+    .cat-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:32px; }
+    @media(max-width:500px){ .cat-grid { grid-template-columns:1fr; } }
+    .cat-card {
+      background:#fff; border-radius:14px; padding:18px 20px;
+      cursor:pointer; transition:all .2s; border:1px solid var(--rule);
+      box-shadow:var(--shadow);
+    }
+    .cat-card:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(0,0,0,.1); }
+    .cat-card-head { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+    .cat-icon { font-size:22px; }
+    .cat-name { font-size:13px; font-weight:700; flex:1; color:var(--fg); }
+    .cat-count {
+      font-size:11px; color:#fff; font-weight:600;
+      background:var(--accent); padding:2px 10px; border-radius:20px;
+    }
+    .cat-trend { font-size:12px; color:var(--fg2); line-height:1.75; }
+
+    /* Article items */
+    .article-item {
+      background:#fff; border-radius:12px; border:1px solid var(--rule);
+      padding:16px 20px; margin-bottom:10px; cursor:pointer;
+      transition:all .15s; box-shadow:var(--shadow);
+    }
+    .article-item:hover { transform:translateY(-1px); box-shadow:0 4px 16px rgba(0,0,0,.1); }
+    .article-meta { display:flex; gap:10px; font-size:11px; color:var(--fg3); margin-bottom:6px; flex-wrap:wrap; align-items:center; }
+    .art-cat { font-weight:600; font-size:11px; padding:2px 8px; border-radius:4px; background:var(--bg3); }
+    .art-stars { color:#f59e0b; letter-spacing:-1px; }
+    .article-title { font-size:14px; font-weight:600; color:var(--fg); line-height:1.55; margin-bottom:6px; }
+    .article-summary { font-size:12.5px; color:var(--fg2); line-height:1.7; }
+    .no-news { text-align:center; color:var(--fg3); padding:60px 20px; font-size:14px; }
+
+    /* Category page */
+    .cat-page-icon { font-size:32px; margin-bottom:4px; }
+    .cat-page-name { font-size:22px; font-weight:700; margin-bottom:18px; color:var(--fg); }
+    .cat-summary-box {
+      background:#fff; border:1px solid var(--rule);
+      border-radius:12px; padding:18px 22px; margin-bottom:24px;
+      box-shadow:var(--shadow);
+    }
+    .cat-summary-label {
+      font-size:10px; font-weight:700; letter-spacing:.18em;
+      color:var(--accent); text-transform:uppercase; margin-bottom:10px;
+    }
+    .cat-summary-text { font-size:13.5px; color:var(--fg2); line-height:1.85; }
+
+    /* Article detail */
+    .detail-cat { font-size:11px; font-weight:700; margin-bottom:8px; }
+    .detail-title { font-size:20px; font-weight:700; line-height:1.5; margin-bottom:6px; color:var(--fg); }
+    .detail-orig { font-size:11px; color:var(--fg3); font-style:italic; margin-bottom:12px; }
+    .detail-meta { font-size:12px; color:var(--fg3); margin-bottom:18px; display:flex; gap:14px; flex-wrap:wrap; }
+    .detail-body {
+      background:#fff; border:1px solid var(--rule);
+      border-radius:12px; padding:20px 22px;
+      font-size:14px; line-height:1.9; color:var(--fg2); margin-bottom:16px;
+      box-shadow:var(--shadow);
+    }
+    .detail-orig-body {
+      margin-top:14px; padding-top:12px; border-top:1px solid var(--rule);
+      font-size:12px; color:var(--fg3); line-height:1.7;
+    }
+    .detail-orig-label { font-size:10px; color:var(--fg3); margin-bottom:4px; letter-spacing:.1em; font-weight:600; }
+    .source-link {
+      display:inline-flex; align-items:center; gap:6px;
+      font-size:12px; color:var(--accent); margin-top:12px;
+      border:1px solid #c3d5fa; border-radius:6px; padding:5px 12px;
+      background:#eef2ff;
+    }
+
+    /* World trend card */
+    .trend-card {
+      background:#fff; border:1px solid var(--rule);
+      border-radius:16px; padding:22px 26px; margin-bottom:16px;
+      box-shadow:var(--shadow); border-left:4px solid #f59e0b;
+    }
+    .trend-label {
+      font-size:10px; font-weight:700; letter-spacing:.18em;
+      color:#d97706; text-transform:uppercase; margin-bottom:10px;
+    }
+    .trend-text { font-size:14px; line-height:1.9; color:var(--fg2); }
+
+    /* Deep dive */
+    .deep-card {
+      background:linear-gradient(135deg, #eef2ff, #f0fdf4);
+      border:1px solid #c3d5fa; border-radius:14px; padding:22px 24px;
+    }
+    .deep-label {
+      font-size:10px; font-weight:700; letter-spacing:.18em;
+      color:var(--accent); text-transform:uppercase; margin-bottom:12px;
+    }
+    .deep-text { font-size:13.5px; line-height:1.95; color:var(--fg2); }
+    .deep-btn {
+      background:#1a56db; border:none; color:#fff;
+      padding:10px 22px; border-radius:8px; cursor:pointer; font-size:13px; font-weight:600;
+      display:inline-flex; align-items:center; gap:6px;
+      box-shadow:0 2px 8px rgba(26,86,219,.25); transition:all .15s;
+    }
+    .deep-btn:hover { background:#1e40af; transform:translateY(-1px); }
+    .deep-loading { font-size:13px; color:var(--fg3); }
+
+    /* Save bar */
+    .save-bar {
+      position:fixed; bottom:0; left:0; right:0;
+      background:#fff; border-top:1px solid var(--rule);
+      padding:12px 24px; display:flex; align-items:center; justify-content:space-between;
+      z-index:200; box-shadow:0 -2px 12px rgba(0,0,0,.08);
+    }
+    .save-count { font-size:13px; color:var(--fg2); font-weight:500; }
+    .save-btn {
+      background:var(--accent2); border:none; color:#fff;
+      padding:10px 24px; border-radius:8px; cursor:pointer;
+      font-size:14px; font-weight:700; box-shadow:0 2px 8px rgba(14,159,110,.3);
+    }
+    .save-btn:disabled { background:var(--fg3); cursor:not-allowed; box-shadow:none; }
+    .check-wrap { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+    .check-wrap input[type=checkbox] { width:18px; height:18px; cursor:pointer; accent-color:var(--accent); }
+    .check-label { font-size:12px; color:var(--fg3); cursor:pointer; }
+    .saved-badge {
+      display:inline-flex; align-items:center; gap:4px;
+      font-size:11px; font-weight:600; color:var(--accent2);
+      background:#f0fdf4; border:1px solid #bbf7d0;
+      padding:2px 8px; border-radius:20px; margin-bottom:8px;
+    }
+
+    footer {
+      text-align:center; font-size:11px; color:var(--fg3);
+      padding:20px; border-top:1px solid var(--rule); margin-top:40px;
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-logo">📋 Daily Digest</div>
+  <div class="nav-center">
+    <button class="nav-arrow" id="prevBtn" onclick="goToDate('prev')" title="前日">‹</button>
+    <button class="date-btn" onclick="toggleCalendar()" title="カレンダー">
+      📅 2026年11月23日（Mon）
+    </button>
+    <button class="nav-arrow" id="nextBtn" onclick="goToDate('next')" title="翌日">›</button>
+  </div>
+  <button class="back-btn" id="backBtn" onclick="goBack()">← 戻る</button>
+</header>
+
+<!-- カレンダーモーダル -->
+<div id="calendarOverlay" onclick="closeCalendar()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:300;"></div>
+<div id="calendarModal" style="display:none;position:fixed;top:64px;left:50%;transform:translateX(-50%);
+  background:#fff;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.15);
+  padding:20px;z-index:301;width:320px;max-width:90vw;">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+    <button onclick="changeCalMonth(-1)" style="background:none;border:none;font-size:20px;cursor:pointer;color:#4a5168;">‹</button>
+    <div id="calMonthLabel" style="font-weight:700;font-size:15px;color:#1a1d23;"></div>
+    <button onclick="changeCalMonth(1)" style="background:none;border:none;font-size:20px;cursor:pointer;color:#4a5168;">›</button>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;margin-bottom:8px;">
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">日</div>
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">月</div>
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">火</div>
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">水</div>
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">木</div>
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">金</div>
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">土</div>
+  </div>
+  <div id="calGrid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;"></div>
+</div>
+
+<!-- TOP PAGE -->
+<div class="page active" id="page-top">
+  <div class="trend-card">
+    <div class="trend-label">🌍 今日の世界トレンド</div>
+    <div class="trend-text">今日は**国際情勢の多層的な緊張**と**先端技術の進化と経済的影響**が主要テーマです。
+
+ウクライナ・リビアでの軍艦攻撃報道やイランによる米レーダー攻撃など地政学的リスクが増大。COP31交渉が化石燃料巡り決裂し国際協調の難しさも浮き彫りになりました。一方、AIの資産形成と規制議論、NVIDIA半導体の対中密輸問題、宇宙開発の進展やスマートフォン市場の変化など、先端技術が経済・社会に与える影響が注目されています。</div>
+  </div>
+  <div class="summary-card">
+    <div class="summary-label">📋 本日の関連ニュースサマリー</div>
+    <div class="summary-text">日タイビジネスでは、次世代産業への投資連携と再生可能エネルギー移行の動きが継続しています。特に、タイ投資委員会が日系車6社による5年で6200億円相当のタイ投資を発表したことは、従来の「自動車から半導体・宇宙分野へ」という方針の中でも、自動車産業が依然主要投資分野であることを明確化しました。また、タイ財務相が訪日し、片山財務相とLINEやAI活用など具体的な3計画を協議した点は、連携の進展を示します。エネルギー市場ではPCEがB20バイオディーゼル拡大計画を支持する一方、原油価格は急騰せず越年かとの見方が。本日新たに「タイ中央銀行（BoT）は万全か？」との問いかけが出ており、金融政策への懸念が顕在化、マクロ経済の不確実性がより具体化しつつあります。</div>
+  </div>
+
+  <div class="section-head">カテゴリ別トレンド</div>
+  <div class="cat-grid">
+    
+        <div class="cat-card" onclick="showCategory('企業/ビジネス動向')" style="border-left:4px solid #be123c">
+          <div class="cat-card-head">
+            <span class="cat-icon">🏭</span>
+            <span class="cat-name">企業/ビジネス動向</span>
+            <span class="cat-count">11件</span>
+          </div>
+          <p class="cat-trend">日系車6社のタイへの大型新規投資（6200億円）が注目される一方、自動車業界は不確実性に直面。IT企業は堅調な成長を続け、駆動型AI活用やサイバー対策、CVC設立による新事業創出が新規動向。非鉄金属はAI特需を追い風に投資を加速し、大企業の連携や中小企業の技能承継も継続トレンド。</p>
+        </div>
+        <div class="cat-card" onclick="showCategory('日タイ貿易/マクロ')" style="border-left:4px solid #7c3aed">
+          <div class="cat-card-head">
+            <span class="cat-icon">🤝</span>
+            <span class="cat-name">日タイ貿易/マクロ</span>
+            <span class="cat-count">4件</span>
+          </div>
+          <p class="cat-trend">タイ財務相の訪日で日本とAI活用・LINE連携含む3計画が発表されたのが新規動向。ブロードバンドの経済価値拡大や、タイ中銀の安定性、対米貿易交渉を巡る議論といったマクロ経済政策に関する継続トレンドが見られる。</p>
+        </div>
+        <div class="cat-card" onclick="showCategory('エネルギー市場')" style="border-left:4px solid #0369a1">
+          <div class="cat-card-head">
+            <span class="cat-icon">⚡</span>
+            <span class="cat-name">エネルギー市場</span>
+            <span class="cat-count">3件</span>
+          </div>
+          <p class="cat-trend">米国のエネルギー輸出が記録を更新し、世界的な競争激化が新規動向。原油価格は株安で下落も、イランの情勢が損失を限定的に留めるという継続トレンド。原油価格が急騰せず越年するとの見通しも示された。</p>
+        </div>
+        <div class="cat-card" onclick="showCategory('バイオマス/再生可能エネルギー')" style="border-left:4px solid #2d7a4f">
+          <div class="cat-card-head">
+            <span class="cat-icon">🌿</span>
+            <span class="cat-name">バイオマス/再生可能エネルギー</span>
+            <span class="cat-count">2件</span>
+          </div>
+          <p class="cat-trend">PCEがタイ政府のB20バイオディーゼル使用拡大計画を支持し、再生可能エネルギー普及の新規動向。太平洋セメントが大分工場で災害廃棄物を受け入れるなど、産業廃棄物の有効活用という継続トレンドの中で具体的な取り組みが進む。</p>
+        </div>
+  </div>
+
+  <div class="section-head">全記事一覧（20件）</div>
+  <div id="all-articles">
+    
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="0" onclick="showArticle(0)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-0" onchange="updateCount()">
+            <label class="check-label" for="chk-0">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">newsclip: タイ経済・企業</span>
+            <span class="art-stars">★★★★★</span>
+          </div>
+          <div class="article-title">タイ投資委員会、日系車6社のタイ投資発表　5年で6200億円相当</div>
+          <div class="article-summary">タイ投資委員会（BOI）は11月20日、日系自動車メーカー6社が2026～2030年の5年間で総額1340億バーツ（約6200億円）超をタイに投資する計画を表明したと発表した。これはタイの自動車産業と日タイ間の経済連携強化を示す重要な動きとなる。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #2d7a4f" data-cat="バイオマス/再生可能エネルギー" data-idx="1" onclick="showArticle(1)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-1" onchange="updateCount()">
+            <label class="check-label" for="chk-1">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#2d7a4f">🌿 バイオマス/再生可能エネルギー</span>
+            <span class="art-src">Bangkok Post – Business</span>
+            <span class="art-stars">★★★★★</span>
+          </div>
+          <div class="article-title">PCE、B20バイオディーゼル使用拡大の政府計画を支持</div>
+          <div class="article-summary">SET上場企業Petchsrivichai Enterprise (PCE)は、タイ政府のB20バイオディーゼル使用拡大計画を支持する意向を示した。ヤシ油生産への懸念があるものの、同社は十分な生産能力と強力なサプライチェーンを有すると述べている。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="2" onclick="showArticle(2)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-2" onchange="updateCount()">
+            <label class="check-label" for="chk-2">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
+            <span class="art-src">newsclip: タイ経済・企業</span>
+            <span class="art-stars">★★★★★</span>
+          </div>
+          <div class="article-title">タイ財務相が訪日、片山財務相と経済連携強化を協議　LINEとAI活用など3計画発表</div>
+          <div class="article-summary">タイのエークニティ副首相兼財務相が11月19日に訪日し、片山財務相やLINEヤフー幹部と会談。未来産業への投資誘致や日タイ経済連携強化を協議し、LINEとAIを活用した3計画を発表した。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="3" onclick="showArticle(3)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-3" onchange="updateCount()">
+            <label class="check-label" for="chk-3">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
+            <span class="art-src">Google: crude oil Asia</span>
+            <span class="art-stars">★★★★☆</span>
+          </div>
+          <div class="article-title">米国のエネルギー輸出が記録を更新、世界的な競争が激化 - 今日の原油価格 | OilPrice.com</div>
+          <div class="article-summary">米国のエネルギー輸出が過去最高を記録し、世界的な競争が激化している。これは国際原油価格やエネルギー市場の動向に影響を与える可能性があり、グローバルなエネルギー安全保障の観点からも注目される。日タイビジネスにおいても、間接的にエネルギーコストに影響を及ぼす。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="4" onclick="showArticle(4)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-4" onchange="updateCount()">
+            <label class="check-label" for="chk-4">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">Bangkok Post – Business</span>
+            <span class="art-stars">★★★★☆</span>
+          </div>
+          <div class="article-title">自動車メーカーは不確実な未来に直面</div>
+          <div class="article-summary">タイの自動車産業は、経済の不確実性、地政学的緊張、激しい価格競争、新エネルギー車への移行といった複合的な課題に直面し、歴史上重要な変革期にある。これはタイに進出する日系自動車メーカーにも大きな影響を与える。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="5" onclick="showArticle(5)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-5" onchange="updateCount()">
+            <label class="check-label" for="chk-5">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
+            <span class="art-src">日刊工業新聞</span>
+            <span class="art-stars">★★★★☆</span>
+          </div>
+          <div class="article-title">産業春秋／原油価格、急騰せず越年か</div>
+          <div class="article-summary">世界の原油価格は年末にかけて急騰せず、安定した推移で年を越す可能性が指摘されている。これは国際的なエネルギー市場の動向を示すものであり、日タイを含む各国の経済や産業活動に影響を与える重要な要素となる。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="6" onclick="showArticle(6)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-6" onchange="updateCount()">
+            <label class="check-label" for="chk-6">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
+            <span class="art-src">Google: crude oil Asia</span>
+            <span class="art-stars">★★★★☆</span>
+          </div>
+          <div class="article-title">株売りの中で原油価格は下落、イランの戦争攻撃が損失を限定 - ロイター</div>
+          <div class="article-summary">株売りが進行する中、原油価格は下落傾向にあるが、イランでの戦争攻撃が損失を限定している。これは中東情勢が国際原油市場に与える影響を示しており、グローバルなエネルギー市場の不安定さを反映している。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="7" onclick="showArticle(7)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-7" onchange="updateCount()">
+            <label class="check-label" for="chk-7">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
+            <span class="art-src">Bangkok Post – Business</span>
+            <span class="art-stars">★★★☆☆</span>
+          </div>
+          <div class="article-title">モバイル・固定ブロードバンドの経済価値、4520億バーツに到達見込み</div>
+          <div class="article-summary">タイのデジタル経済社会庁（BDE）によると、モバイルおよび固定ブロードバンド産業の経済価値は2026年に4060億バーツ、2030年には4520億バーツに達すると予測されている。これはタイ経済におけるデジタル分野の力強い成長を示唆し、関連産業のビジネスチャンスに影響を与える可能性がある。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="8" onclick="showArticle(8)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-8" onchange="updateCount()">
+            <label class="check-label" for="chk-8">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
+            <span class="art-src">Bangkok Post – Business</span>
+            <span class="art-stars">★★★☆☆</span>
+          </div>
+          <div class="article-title">タイ中央銀行（BoT）は万全か？</div>
+          <div class="article-summary">タイ中央銀行（BoT）のソンチャイ議長が、法改正検討の遅れと17四半期連続の中小企業向け融資縮小を理由にBoTを公に批判し、異例の対立が発生した。これはタイの金融政策やマクロ経済に影響を及ぼす可能性がある。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="9" onclick="showArticle(9)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-9" onchange="updateCount()">
+            <label class="check-label" for="chk-9">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
+            <span class="art-src">newsclip: タイ経済・企業</span>
+            <span class="art-stars">★★★☆☆</span>
+          </div>
+          <div class="article-title">対米貿易交渉巡り元首相が批判、タイ政府が反論　「市場開放は購入義務ではない」</div>
+          <div class="article-summary">タイのラリダー副報道官は11月20日、対米貿易交渉に関するアピシット元首相の批判に反論した。元首相は政府が市場開放を約束したと批判したが、報道官は「市場開放は購入義務ではない」と述べ、事実関係の混同を指摘した。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="10" onclick="showArticle(10)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-10" onchange="updateCount()">
+            <label class="check-label" for="chk-10">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">日刊工業新聞</span>
+            <span class="art-stars">★★★☆☆</span>
+          </div>
+          <div class="article-title">日本精工・NTN統合効果　連結営業益600億円</div>
+          <div class="article-summary">日本精工とNTNの統合による効果で、連結営業利益が600億円に達する見込み。これは日本の主要な製造業におけるM&Aと事業再編の動向を示すものであり、グローバルなサプライチェーンにも影響を与える可能性がある。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="11" onclick="showArticle(11)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-11" onchange="updateCount()">
+            <label class="check-label" for="chk-11">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">Bangkok Post – Business</span>
+            <span class="art-stars">★★★☆☆</span>
+          </div>
+          <div class="article-title">IT企業が堅調な収益成長を報告</div>
+          <div class="article-summary">2026年1〜9月、SET上場IT企業は、プレミアムスマホ購入、サイバーセキュリティ、エネルギー管理、高性能コンピューティング、AIプロジェクトへのビジネス支出が貢献し、堅調な収益成長を記録した。タイのIT市場の動向とエネルギー管理関連の投資を示唆する。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="12" onclick="showArticle(12)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-12" onchange="updateCount()">
+            <label class="check-label" for="chk-12">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">日刊工業新聞</span>
+            <span class="art-stars">★★★☆☆</span>
+          </div>
+          <div class="article-title">豊田中研とダイハツ、高効率電力変換器が米社技術賞受賞</div>
+          <div class="article-summary">豊田中央研究所とダイハツ工業が共同開発した高効率電力変換器が米国の技術賞を受賞した。これは、日本の自動車関連企業が電力効率向上技術で高い評価を得たことを示し、電動化技術の進展に貢献するものである。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="13" onclick="showArticle(13)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-13" onchange="updateCount()">
+            <label class="check-label" for="chk-13">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">日刊工業新聞</span>
+            <span class="art-stars">★★★☆☆</span>
+          </div>
+          <div class="article-title">非鉄、AI特需追い風　通期業績底堅く　半導体材や銅箔に投資</div>
+          <div class="article-summary">非鉄金属業界はAI特需を背景に、通期業績が底堅く推移しており、半導体材料や銅箔への投資を強化している。これは日本の製造業における半導体関連分野の活況を示し、グローバルなサプライチェーンにも影響を与える動向である。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="14" onclick="showArticle(14)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-14" onchange="updateCount()">
+            <label class="check-label" for="chk-14">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">日刊工業新聞</span>
+            <span class="art-stars">★★★☆☆</span>
+          </div>
+          <div class="article-title">アクセンチュア、工場・インフラのサイバー対策　米ドラゴスと連携</div>
+          <div class="article-summary">アクセンチュアが米ドラゴスと連携し、工場やインフラのサイバー対策サービスを強化する。これは産業用制御システム（ICS）のセキュリティ強化に向けた動きであり、日本の製造業や重要インフラにおけるサイバーリスク対策の重要性を示す。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="15" onclick="showArticle(15)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-15" onchange="updateCount()">
+            <label class="check-label" for="chk-15">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">日刊工業新聞</span>
+            <span class="art-stars">★★☆☆☆</span>
+          </div>
+          <div class="article-title">大成建設、米ペガサス・テックと240億円規模のCVCファンド　競争力強化・事業創出に</div>
+          <div class="article-summary">大成建設は米ペガサス・テックと共同で240億円規模のコーポレートベンチャーキャピタル（CVC）ファンドを設立した。これは日本の建設大手による技術革新と新規事業創出を目指す動きであり、将来的な産業界の競争力強化に貢献する可能性がある。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="16" onclick="showArticle(16)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-16" onchange="updateCount()">
+            <label class="check-label" for="chk-16">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">日刊工業新聞</span>
+            <span class="art-stars">★★☆☆☆</span>
+          </div>
+          <div class="article-title">挑戦する企業／パナソニックHD（6）現場で進む事業会社間連携</div>
+          <div class="article-summary">パナソニックHDは、グループ内の事業会社間で現場レベルでの連携を推進している。これは大手製造業の組織戦略や効率化の取り組みを示し、多様な事業を持つ企業の競争力強化につながる動向である。日本の産業界における連携強化の重要性を浮き彫りにする。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="17" onclick="showArticle(17)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-17" onchange="updateCount()">
+            <label class="check-label" for="chk-17">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">日刊工業新聞</span>
+            <span class="art-stars">★★☆☆☆</span>
+          </div>
+          <div class="article-title">開発支援に駆動型AI　CTC・日本IBMが協業</div>
+          <div class="article-summary">CTCと日本IBMが、開発支援に駆動型AIを導入するため協業。この連携は、AI技術を活用したソフトウェア開発の効率化と品質向上を目指すものであり、日本のIT業界における技術革新の動向を示す。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="18" onclick="showArticle(18)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-18" onchange="updateCount()">
+            <label class="check-label" for="chk-18">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">日刊工業新聞</span>
+            <span class="art-stars">★★☆☆☆</span>
+          </div>
+          <div class="article-title">次代を担う中小企業（32）都製作所　技能承継で成長軌道描く</div>
+          <div class="article-summary">都製作所は、技能承継を通じて成長軌道を描く中小企業の事例として紹介された。これは日本の製造業における人材育成と技術伝承の重要性を示し、中小企業の持続的な発展に向けた取り組みを浮き彫りにする。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #2d7a4f" data-cat="バイオマス/再生可能エネルギー" data-idx="19" onclick="showArticle(19)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-19" onchange="updateCount()">
+            <label class="check-label" for="chk-19">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#2d7a4f">🌿 バイオマス/再生可能エネルギー</span>
+            <span class="art-src">日刊工業新聞</span>
+            <span class="art-stars">★★☆☆☆</span>
+          </div>
+          <div class="article-title">太平洋セメント、大分工場で災害廃棄物受け入れ</div>
+          <div class="article-summary">太平洋セメントが大分工場で災害廃棄物の受け入れを開始した。これは、災害復旧への貢献だけでなく、廃棄物を燃料や資源として活用するサーキュラーエコノミーの取り組みの一環であり、セメント産業における環境配慮型事業の推進を示す。</div>
+        </div>
+  </div>
+</div>
+
+<!-- CATEGORY PAGE -->
+<div class="page" id="page-cat">
+  <div class="cat-page-head">
+    <div class="cat-page-icon" id="cat-icon"></div>
+    <div class="cat-page-name" id="cat-name"></div>
+    <div class="cat-summary-box">
+      <div class="cat-summary-label">📊 カテゴリトレンド分析</div>
+      <div class="cat-summary-text" id="cat-summary-text"></div>
+    </div>
+    <div class="section-head" id="cat-count-head"></div>
+    <div id="cat-articles"></div>
+  </div>
+</div>
+
+<!-- ARTICLE PAGE -->
+<div class="page" id="page-article">
+  <div class="detail-cat" id="det-cat"></div>
+  <div class="detail-title" id="det-title"></div>
+  <div class="detail-orig" id="det-orig"></div>
+  <div class="detail-meta" id="det-meta"></div>
+  <div class="section-head" id="det-body-label"></div>
+  <div class="detail-body" id="det-body"></div>
+  <div class="deep-card">
+    <div class="deep-label">🔍 もっと調べる</div>
+    <p style="font-size:13px;color:var(--fg2);margin-bottom:12px;line-height:1.7;">
+      Perplexity AIがこの記事のトピックについてウェブ上の最新情報を収集・日本語でまとめます。
+    </p>
+    <button class="deep-btn" id="perplexity-btn" onclick="openPerplexity()">🔍 Perplexityで深掘り</button>
+  </div>
+</div>
+
+<footer>
+  生成: 2026-11-23 12:35 JST　｜　ソース: RSS自動巡回 + Gemini AI　｜
+  取得: 102件 / 候補: 27件 / 掲載: 20件
+</footer>
+
+<script>
+const ARTICLES = [{"title": "タイ投資委員会、日系車6社のタイ投資発表　5年で6200億円相当", "title_ja": "タイ投資委員会、日系車6社のタイ投資発表　5年で6200億円相当", "body_ja": "【タイ・日本】投資委員会（BOI）のナリット・トゥートサティーラサック事務局長は11月20日、日本の自動車メーカー6社が2026～2030年の5年間にタイで総額1340億バーツ（6200億円相当）超を投資する計画を表明した。", "summary_ja": "タイ投資委員会（BOI）は11月20日、日系自動車メーカー6社が2026～2030年の5年間で総額1340億バーツ（約6200億円）超をタイに投資する計画を表明したと発表した。これはタイの自動車産業と日タイ間の経済連携強化を示す重要な動きとなる。", "source": "newsclip: タイ経済・企業", "link": "https://newsclip.be/thai-news/thai-economy/44623", "published": "2026-11-22T17:10:41+00:00", "category": "企業/ビジネス動向", "relevance_score": 5}, {"title": "PCE backs state plan to expand B20 biodiesel use", "title_ja": "PCE、B20バイオディーゼル使用拡大の政府計画を支持", "body_ja": "SET上場企業のPetchsrivichai Enterprise (PCE) は、政府のB20バイオディーゼル使用拡大計画を支持する用意があるとしている。ヤシ油生産の天候関連圧力への懸念にもかかわらず、十分な生産能力と強力なサプライチェーンを挙げている。", "summary_ja": "SET上場企業Petchsrivichai Enterprise (PCE)は、タイ政府のB20バイオディーゼル使用拡大計画を支持する意向を示した。ヤシ油生産への懸念があるものの、同社は十分な生産能力と強力なサプライチェーンを有すると述べている。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3359550/pce-backs-state-plan-to-expand-b20-biodiesel-use", "published": "2026-11-22T22:10:00+00:00", "category": "バイオマス/再生可能エネルギー", "relevance_score": 5}, {"title": "タイ財務相が訪日、片山財務相と経済連携強化を協議　LINEとAI活用など3計画発表", "title_ja": "タイ財務相が訪日、片山財務相と経済連携強化を協議　LINEとAI活用など3計画発表", "body_ja": "【タイ・日本】エークニティ・ニティタンプラパート副首相兼財務相は11月19日、東京都内で片山さつき財務相およびLYコーポレーション（LINEヤフー）幹部と会談した。官民代表団を率いた今回の訪日では、未来産業への投資誘致や経済連携強化などを協議し、LINEとAIを活用した3計画を発表した。", "summary_ja": "タイのエークニティ副首相兼財務相が11月19日に訪日し、片山財務相やLINEヤフー幹部と会談。未来産業への投資誘致や日タイ経済連携強化を協議し、LINEとAIを活用した3計画を発表した。", "source": "newsclip: タイ経済・企業", "link": "https://newsclip.be/thai-news/thai-economy/44584", "published": "2026-11-22T17:04:39+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 5}, {"title": "U.S. Energy Exports Hit Records as Global Competition Intensifies - Crude Oil Prices Today | OilPrice.com", "title_ja": "米国のエネルギー輸出が記録を更新、世界的な競争が激化 - 今日の原油価格 | OilPrice.com", "body_ja": "米国のエネルギー輸出が記録を更新し、世界的な競争が激化している。", "summary_ja": "米国のエネルギー輸出が過去最高を記録し、世界的な競争が激化している。これは国際原油価格やエネルギー市場の動向に影響を与える可能性があり、グローバルなエネルギー安全保障の観点からも注目される。日タイビジネスにおいても、間接的にエネルギーコストに影響を及ぼす。", "source": "Google: crude oil Asia", "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxOLV94SkZoRzAwMjMxMW5aMjBYSkJ5VE5aN0NkTXZ3dElvZVB1WWFvS3JfMk4wV092aHdEZkxwMWhMdThxbzFxRmluU1F5bURXQXg1b3h4cHM0S0lKQjVfc2JidFhKNmFKZE93eGJuTnNMWHJFeUV6RHh0U1lpUGZUMzVWSTdvdks4TkZXR2JVR2xQendFUDVVNUpSN3E5NE1JYXdGTjhKVWtZcUIzdjE1UlBFUGlRUdIBtgFBVV95cUxOLV94SkZoRzAwMjMxMW5aMjBYSkJ5VE5aN0NkTXZ3dElvZVB1WWFvS3JfMk4wV092aHdEZkxwMWhMdThxbzFxRmluU1F5bURXQXg1b3h4cHM0S0lKQjVfc2JidFhKNmFKZE93eGJuTnNMWHJFeUV6RHh0U1lpUGZUMzVWSTdvdks4TkZXR2JVR2xQendFUDVVNUpSN3E5NE1JYXdGTjhKVWtZcUIzdjE1UlBFUGlRUQ?oc=5", "published": "2026-11-22T22:00:00+00:00", "category": "エネルギー市場", "relevance_score": 4}, {"title": "Carmakers face uncertain future", "title_ja": "自動車メーカーは不確実な未来に直面", "body_ja": "タイの自動車産業は、経済の不確実性、地政学的な緊張、激しい価格競争、新エネルギー車への急速な移行といった課題の組み合わせに直面し、その歴史上最も重要な変革期の一つを迎えている。", "summary_ja": "タイの自動車産業は、経済の不確実性、地政学的緊張、激しい価格競争、新エネルギー車への移行といった複合的な課題に直面し、歴史上重要な変革期にある。これはタイに進出する日系自動車メーカーにも大きな影響を与える。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/motoring/3359600/carmakers-face-uncertain-future", "published": "2026-11-22T21:39:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 4}, {"title": "産業春秋／原油価格、急騰せず越年か", "title_ja": "産業春秋／原油価格、急騰せず越年か", "body_ja": "", "summary_ja": "世界の原油価格は年末にかけて急騰せず、安定した推移で年を越す可能性が指摘されている。これは国際的なエネルギー市場の動向を示すものであり、日タイを含む各国の経済や産業活動に影響を与える重要な要素となる。", "source": "日刊工業新聞", "link": "https://www.nikkan.co.jp/articles/view/797897", "published": "2026-11-22T20:00:00+00:00", "category": "エネルギー市場", "relevance_score": 4}, {"title": "Oil prices fall amid equity selloff though Iran war attacks limit losses - Reuters", "title_ja": "株売りの中で原油価格は下落、イランの戦争攻撃が損失を限定 - ロイター", "body_ja": "株売りの中で原油価格は下落しているが、イランの戦争攻撃が損失を限定している。", "summary_ja": "株売りが進行する中、原油価格は下落傾向にあるが、イランでの戦争攻撃が損失を限定している。これは中東情勢が国際原油市場に与える影響を示しており、グローバルなエネルギー市場の不安定さを反映している。", "source": "Google: crude oil Asia", "link": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxQb016TW1Rc3N2Q0h6TVJZUFBSeXZqWklRWXgwZ2QyUnRCa0tnWnI4b0Z2YkVVZlVGWTJwa0E3SEVqNnotSE4zOFpOdjJUSE5GcjB5RHJxaklsM0I2U1owemZ4aUJmYkRhUUM2VjVFd09paWhIWHhFUWxmcmhzT3Y5RWhCTENfNE00a3RaYnhnOGgweEJoNEVtNTVKS0pLTWNiY2ZfM1pvbFNieG5DbWpGcUdOM19xZFF5QXl5LWZXNVRrZw?oc=5", "published": "2026-11-23T02:24:00+00:00", "category": "エネルギー市場", "relevance_score": 4}, {"title": "Mobile, fixed broadband value set to reach B452bn", "title_ja": "モバイル・固定ブロードバンドの経済価値、4520億バーツに到達見込み", "body_ja": "タイのモバイルおよび固定ブロードバンド産業は、デジタル経済社会庁（BDE）によると、2026年には合計4060億バーツの経済価値を生み出し、2030年までに4520億バーツに増加すると予測されている。", "summary_ja": "タイのデジタル経済社会庁（BDE）によると、モバイルおよび固定ブロードバンド産業の経済価値は2026年に4060億バーツ、2030年には4520億バーツに達すると予測されている。これはタイ経済におけるデジタル分野の力強い成長を示唆し、関連産業のビジネスチャンスに影響を与える可能性がある。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3359545/mobile-fixed-broadband-value-set-to-reach-b452bn", "published": "2026-11-22T23:02:00+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 3}, {"title": "Is all well at the BoT?", "title_ja": "タイ中央銀行（BoT）は万全か？", "body_ja": "タイ中央銀行（BoT）内で異例の公的な対立が最近発生した。ソンチャイ・スッチャポンセ議長が11月15日、中央銀行が提案された法改正の検討を遅らせ、17四半期連続で続いている中小企業（SME）向け融資の長期的な縮小を逆転できていないと厳しく批判したためだ。", "summary_ja": "タイ中央銀行（BoT）のソンチャイ議長が、法改正検討の遅れと17四半期連続の中小企業向け融資縮小を理由にBoTを公に批判し、異例の対立が発生した。これはタイの金融政策やマクロ経済に影響を及ぼす可能性がある。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3359665/is-all-well-at-the-bot", "published": "2026-11-22T21:17:00+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 3}, {"title": "対米貿易交渉巡り元首相が批判、タイ政府が反論　「市場開放は購入義務ではない」", "title_ja": "対米貿易交渉巡り元首相が批判、タイ政府が反論　「市場開放は購入義務ではない」", "body_ja": "【タイ】ラリダー・プルートウィワタナー副報道官は11月20日、対米貿易交渉に関するアピシット・ウェーチャチーワ元首相（野党民主党党首）の批判に対し、事実関係を混同していると反論した。アピシット元首相は19日、政府が詳細を公表せずに米国に市場開放を約束したと批判していた。", "summary_ja": "タイのラリダー副報道官は11月20日、対米貿易交渉に関するアピシット元首相の批判に反論した。元首相は政府が市場開放を約束したと批判したが、報道官は「市場開放は購入義務ではない」と述べ、事実関係の混同を指摘した。", "source": "newsclip: タイ経済・企業", "link": "https://newsclip.be/thai-news/thai-economy/44581", "published": "2026-11-22T17:03:24+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 3}, {"title": "日本精工・NTN統合効果　連結営業益600億円", "title_ja": "日本精工・NTN統合効果　連結営業益600億円", "body_ja": "", "summary_ja": "日本精工とNTNの統合による効果で、連結営業利益が600億円に達する見込み。これは日本の主要な製造業におけるM&Aと事業再編の動向を示すものであり、グローバルなサプライチェーンにも影響を与える可能性がある。", "source": "日刊工業新聞", "link": "https://www.nikkan.co.jp/articles/view/797905", "published": "2026-11-22T20:00:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 3}, {"title": "IT firms report solid earnings growth", "title_ja": "IT企業が堅調な収益成長を報告", "body_ja": "2026年最初の9ヶ月間において、SET上場IT企業の収益成長に貢献したのは、主に分割払いを通じたプレミアムスマートフォンの新規購入、サイバーセキュリティへのビジネス支出、エネルギー管理、高性能コンピューティング、人工知能プロジェクトである。", "summary_ja": "2026年1〜9月、SET上場IT企業は、プレミアムスマホ購入、サイバーセキュリティ、エネルギー管理、高性能コンピューティング、AIプロジェクトへのビジネス支出が貢献し、堅調な収益成長を記録した。タイのIT市場の動向とエネルギー管理関連の投資を示唆する。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3359625/it-firms-report-solid-earnings-growth", "published": "2026-11-23T00:08:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 3}, {"title": "豊田中研とダイハツ、高効率電力変換器が米社技術賞受賞", "title_ja": "豊田中研とダイハツ、高効率電力変換器が米社技術賞受賞", "body_ja": "", "summary_ja": "豊田中央研究所とダイハツ工業が共同開発した高効率電力変換器が米国の技術賞を受賞した。これは、日本の自動車関連企業が電力効率向上技術で高い評価を得たことを示し、電動化技術の進展に貢献するものである。", "source": "日刊工業新聞", "link": "https://www.nikkan.co.jp/articles/view/797831", "published": "2026-11-22T20:00:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 3}, {"title": "非鉄、AI特需追い風　通期業績底堅く　半導体材や銅箔に投資", "title_ja": "非鉄、AI特需追い風　通期業績底堅く　半導体材や銅箔に投資", "body_ja": "", "summary_ja": "非鉄金属業界はAI特需を背景に、通期業績が底堅く推移しており、半導体材料や銅箔への投資を強化している。これは日本の製造業における半導体関連分野の活況を示し、グローバルなサプライチェーンにも影響を与える動向である。", "source": "日刊工業新聞", "link": "https://www.nikkan.co.jp/articles/view/797865", "published": "2026-11-22T20:00:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 3}, {"title": "アクセンチュア、工場・インフラのサイバー対策　米ドラゴスと連携", "title_ja": "アクセンチュア、工場・インフラのサイバー対策　米ドラゴスと連携", "body_ja": "", "summary_ja": "アクセンチュアが米ドラゴスと連携し、工場やインフラのサイバー対策サービスを強化する。これは産業用制御システム（ICS）のセキュリティ強化に向けた動きであり、日本の製造業や重要インフラにおけるサイバーリスク対策の重要性を示す。", "source": "日刊工業新聞", "link": "https://www.nikkan.co.jp/articles/view/797906", "published": "2026-11-22T20:00:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 3}, {"title": "大成建設、米ペガサス・テックと240億円規模のCVCファンド　競争力強化・事業創出に", "title_ja": "大成建設、米ペガサス・テックと240億円規模のCVCファンド　競争力強化・事業創出に", "body_ja": "", "summary_ja": "大成建設は米ペガサス・テックと共同で240億円規模のコーポレートベンチャーキャピタル（CVC）ファンドを設立した。これは日本の建設大手による技術革新と新規事業創出を目指す動きであり、将来的な産業界の競争力強化に貢献する可能性がある。", "source": "日刊工業新聞", "link": "https://www.nikkan.co.jp/articles/view/797808", "published": "2026-11-22T20:00:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 2}, {"title": "挑戦する企業／パナソニックHD（6）現場で進む事業会社間連携", "title_ja": "挑戦する企業／パナソニックHD（6）現場で進む事業会社間連携", "body_ja": "", "summary_ja": "パナソニックHDは、グループ内の事業会社間で現場レベルでの連携を推進している。これは大手製造業の組織戦略や効率化の取り組みを示し、多様な事業を持つ企業の競争力強化につながる動向である。日本の産業界における連携強化の重要性を浮き彫りにする。", "source": "日刊工業新聞", "link": "https://www.nikkan.co.jp/articles/view/797829", "published": "2026-11-22T20:00:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 2}, {"title": "開発支援に駆動型AI　CTC・日本IBMが協業", "title_ja": "開発支援に駆動型AI　CTC・日本IBMが協業", "body_ja": "", "summary_ja": "CTCと日本IBMが、開発支援に駆動型AIを導入するため協業。この連携は、AI技術を活用したソフトウェア開発の効率化と品質向上を目指すものであり、日本のIT業界における技術革新の動向を示す。", "source": "日刊工業新聞", "link": "https://www.nikkan.co.jp/articles/view/797830", "published": "2026-11-22T20:00:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 2}, {"title": "次代を担う中小企業（32）都製作所　技能承継で成長軌道描く", "title_ja": "次代を担う中小企業（32）都製作所　技能承継で成長軌道描く", "body_ja": "", "summary_ja": "都製作所は、技能承継を通じて成長軌道を描く中小企業の事例として紹介された。これは日本の製造業における人材育成と技術伝承の重要性を示し、中小企業の持続的な発展に向けた取り組みを浮き彫りにする。", "source": "日刊工業新聞", "link": "https://www.nikkan.co.jp/articles/view/797862", "published": "2026-11-22T20:00:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 2}, {"title": "太平洋セメント、大分工場で災害廃棄物受け入れ", "title_ja": "太平洋セメント、大分工場で災害廃棄物受け入れ", "body_ja": "", "summary_ja": "太平洋セメントが大分工場で災害廃棄物の受け入れを開始した。これは、災害復旧への貢献だけでなく、廃棄物を燃料や資源として活用するサーキュラーエコノミーの取り組みの一環であり、セメント産業における環境配慮型事業の推進を示す。", "source": "日刊工業新聞", "link": "https://www.nikkan.co.jp/articles/view/797882", "published": "2026-11-22T20:00:00+00:00", "category": "バイオマス/再生可能エネルギー", "relevance_score": 2}];
+const THIS_TAG = "20261123"; // このHTMLの日付タグ
+
+// ── 日付ナビゲーション（available_dates.jsonを動的取得）──
+let AVAILABLE_DATES = [];
+
+function getCurrentTag() {
+  const path = location.pathname;
+  const re = new RegExp('digest_([0-9]{8})\.html');
+  const m = path.match(re);
+  return m ? m[1] : THIS_TAG;
+}
+
+function tagToUrl(tag) {
+  const latestTag = AVAILABLE_DATES[AVAILABLE_DATES.length - 1];
+  if (tag === latestTag) return 'index.html';
+  return `digest_${tag}.html`;
+}
+
+function goToDate(dir) {
+  const cur = getCurrentTag();
+  const idx = AVAILABLE_DATES.indexOf(cur);
+  if (dir === 'prev' && idx > 0) location.href = tagToUrl(AVAILABLE_DATES[idx - 1]);
+  if (dir === 'next' && idx < AVAILABLE_DATES.length - 1) location.href = tagToUrl(AVAILABLE_DATES[idx + 1]);
+}
+
+function initNavButtons() {
+  const cur = getCurrentTag();
+  const idx = AVAILABLE_DATES.indexOf(cur);
+  const prev = document.getElementById('prevBtn');
+  const next = document.getElementById('nextBtn');
+  if (prev) prev.disabled = idx <= 0;
+  if (next) next.disabled = idx >= AVAILABLE_DATES.length - 1;
+}
+
+
+async function loadAvailableDates() {
+  // 固定URLで取得（GitHub Pages: hirot01.github.io/daily-digest/）
+  const DATES_URL = "https://hirot01.github.io/daily-digest/available_dates.json";
+  try {
+    const res = await fetch(DATES_URL + "?t=" + Date.now()); // キャッシュ回避
+    if (res.ok) {
+      AVAILABLE_DATES = await res.json();
+      initNavButtons();
+      if (typeof renderCalendar === "function" && calYear) renderCalendar();
+      return;
+    }
+  } catch(e) { console.log("dates fetch failed:", e); }
+  AVAILABLE_DATES = [THIS_TAG];
+  initNavButtons();
+}
+
+// ── カレンダー ──────────────────────────────────────
+let calYear, calMonth;
+
+function toggleCalendar() {
+  const modal = document.getElementById('calendarModal');
+  const overlay = document.getElementById('calendarOverlay');
+  if (modal.style.display === 'none') {
+    const cur = getCurrentTag();
+    calYear = parseInt(cur.slice(0, 4));
+    calMonth = parseInt(cur.slice(4, 6));
+    renderCalendar();
+    modal.style.display = 'block';
+    overlay.style.display = 'block';
+  } else {
+    closeCalendar();
+  }
+}
+
+function closeCalendar() {
+  document.getElementById('calendarModal').style.display = 'none';
+  document.getElementById('calendarOverlay').style.display = 'none';
+}
+
+function changeCalMonth(dir) {
+  calMonth += dir;
+  if (calMonth > 12) { calMonth = 1; calYear++; }
+  if (calMonth < 1)  { calMonth = 12; calYear--; }
+  renderCalendar();
+}
+
+function renderCalendar() {
+  const label = document.getElementById('calMonthLabel');
+  const grid  = document.getElementById('calGrid');
+  label.textContent = `${calYear}年${calMonth}月`;
+
+  const firstDay = new Date(calYear, calMonth - 1, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth, 0).getDate();
+  const dateSet = new Set(AVAILABLE_DATES);
+  const cur = getCurrentTag();
+
+  let html = '';
+  // 空白セル
+  for (let i = 0; i < firstDay; i++) html += '<div></div>';
+  // 日付セル
+  for (let d = 1; d <= daysInMonth; d++) {
+    const tag = `${calYear}${String(calMonth).padStart(2,'0')}${String(d).padStart(2,'0')}`;
+    const hasData = dateSet.has(tag);
+    const isCur = tag === cur;
+    const style = isCur
+      ? 'background:#1a56db;color:#fff;border-radius:50%;font-weight:700;cursor:pointer;padding:5px 0;font-size:13px;'
+      : hasData
+        ? 'color:#1a56db;font-weight:600;cursor:pointer;padding:5px 0;font-size:13px;border-radius:50%;'
+        : 'color:#d1d5db;padding:5px 0;font-size:13px;';
+    const onclick = hasData ? `onclick="location.href='${tagToUrl(tag)}';"` : '';
+    html += `<div style="${style}" ${onclick}>${d}</div>`;
+  }
+  grid.innerHTML = html;
+}
+
+document.addEventListener('DOMContentLoaded', loadAvailableDates);
+const CAT_ICONS  = {"ボイラー/産業設備": "🔧", "バイオマス/再生可能エネルギー": "🌿", "エネルギー市場": "⚡", "日タイ貿易/マクロ": "🤝", "企業/ビジネス動向": "🏭", "その他": "📰"};
+const CAT_COLORS = {"ボイラー/産業設備": "#b45309", "バイオマス/再生可能エネルギー": "#2d7a4f", "エネルギー市場": "#0369a1", "日タイ貿易/マクロ": "#7c3aed", "企業/ビジネス動向": "#be123c", "その他": "#555"};
+const CAT_SUMMARIES = {"企業/ビジネス動向": "日系車6社のタイへの大型新規投資（6200億円）が注目される一方、自動車業界は不確実性に直面。IT企業は堅調な成長を続け、駆動型AI活用やサイバー対策、CVC設立による新事業創出が新規動向。非鉄金属はAI特需を追い風に投資を加速し、大企業の連携や中小企業の技能承継も継続トレンド。", "エネルギー市場": "米国のエネルギー輸出が記録を更新し、世界的な競争激化が新規動向。原油価格は株安で下落も、イランの情勢が損失を限定的に留めるという継続トレンド。原油価格が急騰せず越年するとの見通しも示された。", "日タイ貿易/マクロ": "タイ財務相の訪日で日本とAI活用・LINE連携含む3計画が発表されたのが新規動向。ブロードバンドの経済価値拡大や、タイ中銀の安定性、対米貿易交渉を巡る議論といったマクロ経済政策に関する継続トレンドが見られる。", "バイオマス/再生可能エネルギー": "PCEがタイ政府のB20バイオディーゼル使用拡大計画を支持し、再生可能エネルギー普及の新規動向。太平洋セメントが大分工場で災害廃棄物を受け入れるなど、産業廃棄物の有効活用という継続トレンドの中で具体的な取り組みが進む。"};
+const GAS_URL = "https://script.google.com/macros/s/AKfycbz9Nc874Azvh8zqv5BySUGToK01aIkInocGYeqxgyyiJ-fN0YCqIW4h2E9NRkYBQ8bO/exec";
+
+let history = ["top"];
+let currentArticleIdx = null;
+
+function showPage(id) {
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  document.getElementById("page-" + id).classList.add("active");
+  document.getElementById("backBtn").classList.toggle("visible", id !== "top");
+  window.scrollTo(0, 0);
+}
+
+function goBack() {
+  history.pop();
+  const prev = history[history.length - 1];
+  if (prev === "top") showPage("top");
+  else if (prev && prev.startsWith("cat:")) showCategory(prev.slice(4), false);
+}
+
+function showCategory(cat, push=true) {
+  if (push) history.push("cat:" + cat);
+  document.getElementById("cat-icon").textContent = CAT_ICONS[cat] || "📰";
+  document.getElementById("cat-name").textContent = cat;
+  document.getElementById("cat-summary-text").textContent = CAT_SUMMARIES[cat] || "";
+  const arts = ARTICLES.filter(a => a.category === cat).sort((a,b) => b.relevance_score - a.relevance_score);
+  document.getElementById("cat-count-head").textContent = arts.length + "件の記事";
+  document.getElementById("cat-articles").innerHTML = arts.map(a => {
+    const idx = ARTICLES.indexOf(a);
+    const color = CAT_COLORS[cat] || "#555";
+    const stars = "★".repeat(a.relevance_score||3) + "☆".repeat(5-(a.relevance_score||3));
+    return `<div class="article-item" onclick="showArticle(${idx})" style="border-left:3px solid ${color}">
+      <div class="article-meta">
+        <span class="art-src">${a.source}</span>
+        <span class="art-stars">${stars}</span>
+      </div>
+      <div class="article-title">${a.title_ja || a.title}</div>
+      <div class="article-summary">${a.summary_ja || ""}</div>
+    </div>`;
+  }).join("");
+  showPage("cat");
+}
+
+function showArticle(idx, push=true) {
+  if (push) history.push("article:" + idx);
+  currentArticleIdx = idx;
+  const a = ARTICLES[idx];
+  const cat = a.category || "その他";
+  const color = CAT_COLORS[cat] || "#555";
+  document.getElementById("det-cat").innerHTML = `<span style="color:${color}">${CAT_ICONS[cat]||"📰"} ${cat}</span>`;
+  document.getElementById("det-title").textContent = a.title_ja || a.title;
+  document.getElementById("det-orig").textContent = a.title_ja && a.title_ja !== a.title ? "原題: " + a.title : "";
+  document.getElementById("det-meta").innerHTML = `<span>${a.source}</span><span>${(a.published||"").slice(0,16).replace("T"," ")}</span>`;
+  const isTranslated = a.body_ja && a.body_ja !== a.body;
+  document.getElementById("det-body-label").textContent = isTranslated ? "記事本文（日本語訳）" : "記事本文";
+  const origText = (a.body && a.body !== "undefined") ? a.body : "";
+  document.getElementById("det-body").innerHTML =
+    (a.body_ja || origText || "") +
+    (isTranslated && origText ? `<div class="detail-orig-body"><div class="detail-orig-label">ORIGINAL</div>${origText}</div>` : "") +
+    `<br><a href="${a.link}" target="_blank" rel="noopener" class="source-link">🔗 元記事を開く</a>`;
+  showPage("article");
+  showPage("article");
+}
+
+function updateCount() {
+  const checked = document.querySelectorAll('#all-articles input[type=checkbox]:checked').length;
+  document.getElementById('save-count').textContent = `チェックした記事: ${checked}件`;
+  document.getElementById('save-btn').disabled = checked === 0;
+}
+
+// 保存済みIDをセッション内で管理
+const savedIds = new Set();
+
+function markAsSaved(idx) {
+  savedIds.add(idx);
+  const item = document.querySelector(`[data-idx="${idx}"]`);
+  if (!item) return;
+  // チェックボックスを非表示にして保存済みバッジを表示
+  const wrap = item.querySelector('.check-wrap');
+  if (wrap) wrap.style.display = 'none';
+  if (!item.querySelector('.saved-badge')) {
+    const badge = document.createElement('div');
+    badge.className = 'saved-badge';
+    badge.textContent = '✅ 保存済み';
+    item.insertBefore(badge, item.firstChild);
+  }
+}
+
+async function saveChecked() {
+  const checkboxes = document.querySelectorAll('#all-articles input[type=checkbox]:checked');
+  if (checkboxes.length === 0) return;
+  const articles = [];
+  const idxList = [];
+  checkboxes.forEach(cb => {
+    const idx = parseInt(cb.id.replace('chk-', ''));
+    articles.push(ARTICLES[idx]);
+    idxList.push(idx);
+  });
+  const btn = document.getElementById('save-btn');
+  btn.disabled = true;
+  btn.textContent = '保存中...';
+  try {
+    await fetch(GAS_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ articles })
+    });
+    btn.textContent = '✅ 保存しました';
+    // 保存済みバッジを付与
+    idxList.forEach(idx => markAsSaved(idx));
+    updateCount();
+    setTimeout(() => {
+      btn.textContent = '📥 スプレッドシートに保存';
+    }, 3000);
+  } catch(e) {
+    btn.textContent = 'エラー: ' + e.message;
+    btn.disabled = false;
+  }
+}
+
+function openPerplexity() {
+  const a = ARTICLES[currentArticleIdx];
+  const query = encodeURIComponent(a.title_ja || a.title);
+  window.open(`https://www.perplexity.ai/search?q=${query}`, '_blank');
+}
+</script>
+
+<div class="save-bar">
+  <div class="save-count" id="save-count">チェックした記事: 0件</div>
+  <button class="save-btn" id="save-btn" onclick="saveChecked()" disabled>📥 スプレッドシートに保存</button>
+</div>
+</body>
+</html>
