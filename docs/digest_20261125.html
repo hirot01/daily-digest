@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>デイリーニュースダイジェスト — 2026年11月25日（Wed）</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f8f9fb; --bg2: #ffffff; --bg3: #f0f2f5;
+      --fg: #1a1d23; --fg2: #4a5168; --fg3: #9299aa;
+      --accent: #1a56db; --accent2: #0e9f6e;
+      --rule: #e5e7eb; --shadow: 0 1px 4px rgba(0,0,0,.07);
+    }
+    body { font-family:'Noto Sans JP',sans-serif; background:var(--bg); color:var(--fg); line-height:1.7; }
+    a { color:var(--accent); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+
+    /* Header */
+    .site-header {
+      position:sticky; top:0; z-index:100;
+      background:#fff; border-bottom:1px solid var(--rule);
+      padding:14px 24px; display:flex; align-items:center; justify-content:space-between;
+      box-shadow:var(--shadow);
+    }
+    .site-logo { font-size:15px; font-weight:700; color:var(--fg); letter-spacing:-.01em; }
+    .site-logo span { color:var(--accent); }
+    .site-date { font-size:12px; color:var(--fg3); }
+    .back-btn {
+      display:none; background:#f0f2f5; border:none;
+      color:var(--fg2); padding:6px 14px; border-radius:20px; cursor:pointer; font-size:12px; font-weight:500;
+    }
+    .back-btn.visible { display:block; }
+
+    /* Navigation */
+    .nav-center { display:flex; align-items:center; gap:6px; }
+    .nav-arrow {
+      background:none; border:1px solid var(--rule); border-radius:8px;
+      width:32px; height:32px; font-size:20px; cursor:pointer;
+      color:var(--fg2); display:flex; align-items:center; justify-content:center;
+      transition:all .15s; line-height:1;
+    }
+    .nav-arrow:hover { background:var(--bg3); }
+    .nav-arrow:disabled { color:var(--rule); cursor:not-allowed; }
+    .date-btn {
+      background:var(--bg3); border:1px solid var(--rule); border-radius:8px;
+      padding:5px 12px; font-size:13px; font-weight:600; cursor:pointer;
+      color:var(--fg); transition:all .15s; white-space:nowrap;
+    }
+    .date-btn:hover { background:#e5e7eb; }
+
+    /* Pages */
+    .page { display:none; max-width:780px; margin:0 auto; padding:28px 20px 80px; }
+    .page.active { display:block; }
+
+    /* Overall summary */
+    .summary-card {
+      background:linear-gradient(135deg, #1a56db 0%, #0e9f6e 100%);
+      border-radius:16px; padding:24px 28px; margin-bottom:28px;
+      box-shadow:0 4px 20px rgba(26,86,219,.2);
+    }
+    .summary-label {
+      font-size:10px; font-weight:700; letter-spacing:.18em;
+      color:rgba(255,255,255,.7); text-transform:uppercase; margin-bottom:10px;
+    }
+    .summary-text { font-size:14px; line-height:1.9; color:#fff; }
+
+    /* Section head */
+    .section-head {
+      font-size:12px; font-weight:700; color:var(--fg3);
+      letter-spacing:.08em; text-transform:uppercase;
+      margin-bottom:14px; padding-bottom:8px;
+      border-bottom:2px solid var(--rule);
+    }
+
+    /* Category cards */
+    .cat-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:32px; }
+    @media(max-width:500px){ .cat-grid { grid-template-columns:1fr; } }
+    .cat-card {
+      background:#fff; border-radius:14px; padding:18px 20px;
+      cursor:pointer; transition:all .2s; border:1px solid var(--rule);
+      box-shadow:var(--shadow);
+    }
+    .cat-card:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(0,0,0,.1); }
+    .cat-card-head { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+    .cat-icon { font-size:22px; }
+    .cat-name { font-size:13px; font-weight:700; flex:1; color:var(--fg); }
+    .cat-count {
+      font-size:11px; color:#fff; font-weight:600;
+      background:var(--accent); padding:2px 10px; border-radius:20px;
+    }
+    .cat-trend { font-size:12px; color:var(--fg2); line-height:1.75; }
+
+    /* Article items */
+    .article-item {
+      background:#fff; border-radius:12px; border:1px solid var(--rule);
+      padding:16px 20px; margin-bottom:10px; cursor:pointer;
+      transition:all .15s; box-shadow:var(--shadow);
+    }
+    .article-item:hover { transform:translateY(-1px); box-shadow:0 4px 16px rgba(0,0,0,.1); }
+    .article-meta { display:flex; gap:10px; font-size:11px; color:var(--fg3); margin-bottom:6px; flex-wrap:wrap; align-items:center; }
+    .art-cat { font-weight:600; font-size:11px; padding:2px 8px; border-radius:4px; background:var(--bg3); }
+    .art-stars { color:#f59e0b; letter-spacing:-1px; }
+    .article-title { font-size:14px; font-weight:600; color:var(--fg); line-height:1.55; margin-bottom:6px; }
+    .article-summary { font-size:12.5px; color:var(--fg2); line-height:1.7; }
+    .no-news { text-align:center; color:var(--fg3); padding:60px 20px; font-size:14px; }
+
+    /* Category page */
+    .cat-page-icon { font-size:32px; margin-bottom:4px; }
+    .cat-page-name { font-size:22px; font-weight:700; margin-bottom:18px; color:var(--fg); }
+    .cat-summary-box {
+      background:#fff; border:1px solid var(--rule);
+      border-radius:12px; padding:18px 22px; margin-bottom:24px;
+      box-shadow:var(--shadow);
+    }
+    .cat-summary-label {
+      font-size:10px; font-weight:700; letter-spacing:.18em;
+      color:var(--accent); text-transform:uppercase; margin-bottom:10px;
+    }
+    .cat-summary-text { font-size:13.5px; color:var(--fg2); line-height:1.85; }
+
+    /* Article detail */
+    .detail-cat { font-size:11px; font-weight:700; margin-bottom:8px; }
+    .detail-title { font-size:20px; font-weight:700; line-height:1.5; margin-bottom:6px; color:var(--fg); }
+    .detail-orig { font-size:11px; color:var(--fg3); font-style:italic; margin-bottom:12px; }
+    .detail-meta { font-size:12px; color:var(--fg3); margin-bottom:18px; display:flex; gap:14px; flex-wrap:wrap; }
+    .detail-body {
+      background:#fff; border:1px solid var(--rule);
+      border-radius:12px; padding:20px 22px;
+      font-size:14px; line-height:1.9; color:var(--fg2); margin-bottom:16px;
+      box-shadow:var(--shadow);
+    }
+    .detail-orig-body {
+      margin-top:14px; padding-top:12px; border-top:1px solid var(--rule);
+      font-size:12px; color:var(--fg3); line-height:1.7;
+    }
+    .detail-orig-label { font-size:10px; color:var(--fg3); margin-bottom:4px; letter-spacing:.1em; font-weight:600; }
+    .source-link {
+      display:inline-flex; align-items:center; gap:6px;
+      font-size:12px; color:var(--accent); margin-top:12px;
+      border:1px solid #c3d5fa; border-radius:6px; padding:5px 12px;
+      background:#eef2ff;
+    }
+
+    /* World trend card */
+    .trend-card {
+      background:#fff; border:1px solid var(--rule);
+      border-radius:16px; padding:22px 26px; margin-bottom:16px;
+      box-shadow:var(--shadow); border-left:4px solid #f59e0b;
+    }
+    .trend-label {
+      font-size:10px; font-weight:700; letter-spacing:.18em;
+      color:#d97706; text-transform:uppercase; margin-bottom:10px;
+    }
+    .trend-text { font-size:14px; line-height:1.9; color:var(--fg2); }
+
+    /* Deep dive */
+    .deep-card {
+      background:linear-gradient(135deg, #eef2ff, #f0fdf4);
+      border:1px solid #c3d5fa; border-radius:14px; padding:22px 24px;
+    }
+    .deep-label {
+      font-size:10px; font-weight:700; letter-spacing:.18em;
+      color:var(--accent); text-transform:uppercase; margin-bottom:12px;
+    }
+    .deep-text { font-size:13.5px; line-height:1.95; color:var(--fg2); }
+    .deep-btn {
+      background:#1a56db; border:none; color:#fff;
+      padding:10px 22px; border-radius:8px; cursor:pointer; font-size:13px; font-weight:600;
+      display:inline-flex; align-items:center; gap:6px;
+      box-shadow:0 2px 8px rgba(26,86,219,.25); transition:all .15s;
+    }
+    .deep-btn:hover { background:#1e40af; transform:translateY(-1px); }
+    .deep-loading { font-size:13px; color:var(--fg3); }
+
+    /* Save bar */
+    .save-bar {
+      position:fixed; bottom:0; left:0; right:0;
+      background:#fff; border-top:1px solid var(--rule);
+      padding:12px 24px; display:flex; align-items:center; justify-content:space-between;
+      z-index:200; box-shadow:0 -2px 12px rgba(0,0,0,.08);
+    }
+    .save-count { font-size:13px; color:var(--fg2); font-weight:500; }
+    .save-btn {
+      background:var(--accent2); border:none; color:#fff;
+      padding:10px 24px; border-radius:8px; cursor:pointer;
+      font-size:14px; font-weight:700; box-shadow:0 2px 8px rgba(14,159,110,.3);
+    }
+    .save-btn:disabled { background:var(--fg3); cursor:not-allowed; box-shadow:none; }
+    .check-wrap { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+    .check-wrap input[type=checkbox] { width:18px; height:18px; cursor:pointer; accent-color:var(--accent); }
+    .check-label { font-size:12px; color:var(--fg3); cursor:pointer; }
+    .saved-badge {
+      display:inline-flex; align-items:center; gap:4px;
+      font-size:11px; font-weight:600; color:var(--accent2);
+      background:#f0fdf4; border:1px solid #bbf7d0;
+      padding:2px 8px; border-radius:20px; margin-bottom:8px;
+    }
+
+    footer {
+      text-align:center; font-size:11px; color:var(--fg3);
+      padding:20px; border-top:1px solid var(--rule); margin-top:40px;
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-logo">📋 Daily Digest</div>
+  <div class="nav-center">
+    <button class="nav-arrow" id="prevBtn" onclick="goToDate('prev')" title="前日">‹</button>
+    <button class="date-btn" onclick="toggleCalendar()" title="カレンダー">
+      📅 2026年11月25日（Wed）
+    </button>
+    <button class="nav-arrow" id="nextBtn" onclick="goToDate('next')" title="翌日">›</button>
+  </div>
+  <button class="back-btn" id="backBtn" onclick="goBack()">← 戻る</button>
+</header>
+
+<!-- カレンダーモーダル -->
+<div id="calendarOverlay" onclick="closeCalendar()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:300;"></div>
+<div id="calendarModal" style="display:none;position:fixed;top:64px;left:50%;transform:translateX(-50%);
+  background:#fff;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.15);
+  padding:20px;z-index:301;width:320px;max-width:90vw;">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+    <button onclick="changeCalMonth(-1)" style="background:none;border:none;font-size:20px;cursor:pointer;color:#4a5168;">‹</button>
+    <div id="calMonthLabel" style="font-weight:700;font-size:15px;color:#1a1d23;"></div>
+    <button onclick="changeCalMonth(1)" style="background:none;border:none;font-size:20px;cursor:pointer;color:#4a5168;">›</button>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;margin-bottom:8px;">
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">日</div>
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">月</div>
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">火</div>
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">水</div>
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">木</div>
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">金</div>
+    <div style="font-size:11px;color:#9299aa;font-weight:600;">土</div>
+  </div>
+  <div id="calGrid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;"></div>
+</div>
+
+<!-- TOP PAGE -->
+<div class="page active" id="page-top">
+  <div class="trend-card">
+    <div class="trend-label">🌍 今日の世界トレンド</div>
+    <div class="trend-text">今日は**国際情勢の多極化と地政学的緊張**、そして**テクノロジーの進化が経済・安全保障に与える影響**が主要テーマです。
+
+米中間選挙後の政局、中東・ウクライナ情勢の緊迫化、中国の宇宙開発、北朝鮮外交など、世界の不安定さが浮き彫りに。国内政治も課題を抱える中、AI半導体市場の変動やサイバーセキュリティの脅威が経済を揺るがし、技術覇権が国家戦略の核であることを示唆する一日でした。</div>
+  </div>
+  <div class="summary-card">
+    <div class="summary-label">📋 本日の関連ニュースサマリー</div>
+    <div class="summary-text">日タイビジネスでは、B.GrimmとNTTによる1,130億バーツのデータセンター計画に見るように、インフラ投資と次世代産業への移行が継続。タイ部品メーカーの日本の衛星市場への注目も加わりました。一方、タイ中央銀行がインフォーマル経済の縮小に意欲を示すなど、経済改革への動きも健在です。しかし本日、洪水によりタイの自動車輸出が34%急落し、2100億円もの被害が出たことで、マクロ経済リスクが深刻化。これは、過去の「自動車から半導体・宇宙へ」という方針が、足元の環境変動への対応に迫られている現状と相まって、自動車産業の構造転換を加速させる可能性を示唆します。PTTとバーンジャークによる軽油・B20の0.60バーツ値下げは、供給過剰懸念からくる原油価格下落が消費者レベルに到達した変化と言えるでしょう。</div>
+  </div>
+
+  <div class="section-head">カテゴリ別トレンド</div>
+  <div class="cat-grid">
+    
+        <div class="cat-card" onclick="showCategory('エネルギー市場')" style="border-left:4px solid #0369a1">
+          <div class="cat-card-head">
+            <span class="cat-icon">⚡</span>
+            <span class="cat-name">エネルギー市場</span>
+            <span class="cat-count">12件</span>
+          </div>
+          <p class="cat-trend">新規は原油価格下落、軽油・B20値下げ、アジアのエネルギー安全保障システム構築への意識。継続トレンドは、中東情勢起因の供給リスクと需給の不確実性。アジアは高まる需要と投資必要性に直面し、LNG含むパートナーシップ多様化を進める。</p>
+        </div>
+        <div class="cat-card" onclick="showCategory('日タイ貿易/マクロ')" style="border-left:4px solid #7c3aed">
+          <div class="cat-card-head">
+            <span class="cat-icon">🤝</span>
+            <span class="cat-name">日タイ貿易/マクロ</span>
+            <span class="cat-count">8件</span>
+          </div>
+          <p class="cat-trend">新規はタイ中銀のインフォーマル経済縮小意欲と日本の輸出持ち直し報告。継続トレンドは、洪水・干ばつによるタイ経済（農業・自動車輸出）への悪影響と政府の支援策。国際的な政治・安全保障リスクも継続。</p>
+        </div>
+        <div class="cat-card" onclick="showCategory('企業/ビジネス動向')" style="border-left:4px solid #be123c">
+          <div class="cat-card-head">
+            <span class="cat-icon">🏭</span>
+            <span class="cat-name">企業/ビジネス動向</span>
+            <span class="cat-count">5件</span>
+          </div>
+          <p class="cat-trend">新規はNTT-B.Grimm巨額DC計画、タイ部品メーカーの衛星市場参入、CPオール撤退。継続トレンドはタイ自動車産業の減産とBEV化進展、洪水影響、次世代車ハブ化推進と産業多様化（特に宇宙分野）への動き。</p>
+        </div>
+        <div class="cat-card" onclick="showCategory('バイオマス/再生可能エネルギー')" style="border-left:4px solid #2d7a4f">
+          <div class="cat-card-head">
+            <span class="cat-icon">🌿</span>
+            <span class="cat-name">バイオマス/再生可能エネルギー</span>
+            <span class="cat-count">1件</span>
+          </div>
+          <p class="cat-trend">新規はカナデビアによる中国企業へのバイオ炭技術供与という具体的な国際協力。継続トレンドとしては、限定的ながら、環境技術や再生可能エネルギー、特にバイオマス分野における技術開発と国際的な連携への関心の高まりが伺える。</p>
+        </div>
+  </div>
+
+  <div class="section-head">全記事一覧（26件）</div>
+  <div id="all-articles">
+    
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="0" onclick="showArticle(0)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-0" onchange="updateCount()">
+            <label class="check-label" for="chk-0">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">Bangkok Post – Business</span>
+            <span class="art-stars">★★★★★</span>
+          </div>
+          <div class="article-title">B.GrimmとNTT、1,130億バーツのデータセンターを計画</div>
+          <div class="article-summary">タイの電力大手B.Grimm PowerとNTTグローバルデータセンタース（タイランド）が、チョンブリ県で1,130億バーツ規模のハイパースケールデータセンターを開発すると発表した。タイを東南アジアのAI・デジタルハブとする狙いがあり、日タイ企業間の協力事例として注目される。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="1" onclick="showArticle(1)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-1" onchange="updateCount()">
+            <label class="check-label" for="chk-1">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">Google: Japan Thailand</span>
+            <span class="art-stars">★★★★★</span>
+          </div>
+          <div class="article-title">タイの部品メーカーが日本の衛星市場に注目</div>
+          <div class="article-summary">タイの部品メーカーが、日本の衛星市場への進出を検討している。これは日タイ間の新たなビジネス機会を示すものであり、両国の製造業におけるサプライチェーンや技術連携の深化に繋がる可能性がある。日本の宇宙産業とタイの製造業の連携に注目。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="2" onclick="showArticle(2)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-2" onchange="updateCount()">
+            <label class="check-label" for="chk-2">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">newsclip: タイ経済・企業</span>
+            <span class="art-stars">★★★★★</span>
+          </div>
+          <div class="article-title">タイの自動車生産、10月は35％減　洪水での部品不足・輸出減が響く、BEV販売は9割増</div>
+          <div class="article-summary">タイ工業連盟（FTI）によると、2026年10月の自動車生産台数は洪水による部品不足と輸出減で前年同月比35.19%減の8万7938台だった。特に内燃機関（ICE）車は64.23%減。しかし、バッテリー式電気自動車（BEV）の販売は90.23%増の1万9571台と大幅に伸び、産業構造の変化を示唆する。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="3" onclick="showArticle(3)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-3" onchange="updateCount()">
+            <label class="check-label" for="chk-3">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">newsclip: タイ経済・企業</span>
+            <span class="art-stars">★★★★★</span>
+          </div>
+          <div class="article-title">タイ政府、次世代自動車ハブ化へ日中メーカーと協議　バイオ燃料普及で合意</div>
+          <div class="article-summary">タイ政府は11月23日、日中主要自動車メーカー幹部と次世代自動車ハブ化に向け協議し、電気自動車（EV）、ハイブリッド車（HEV）、バイオ燃料対応車の共存と国内部品調達の促進で合意した。バイオ燃料の普及とタイの自動車産業の方向性を示し、日タイビジネスにとって重要な動向である。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="4" onclick="showArticle(4)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-4" onchange="updateCount()">
+            <label class="check-label" for="chk-4">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
+            <span class="art-src">Google: crude oil Asia</span>
+            <span class="art-stars">★★★★★</span>
+          </div>
+          <div class="article-title">供給過剰懸念が西アジアの混乱懸念を相殺し、原油価格が下落</div>
+          <div class="article-summary">世界の原油価格が下落。供給過剰懸念が西アジアの混乱による供給途絶の恐れを相殺したためとされる。国際原油価格の動向はタイの燃料費や電力価格に直接影響するため、エネルギー市場およびマクロ経済にとって非常に重要なニュースである。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="5" onclick="showArticle(5)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-5" onchange="updateCount()">
+            <label class="check-label" for="chk-5">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
+            <span class="art-src">Google: crude oil Asia</span>
+            <span class="art-stars">★★★★★</span>
+          </div>
+          <div class="article-title">トレーダーが競合する供給リスクを比較検討する中、原油先物が下落</div>
+          <div class="article-summary">原油先物価格が下落。供給過剰と地政学的リスクによる供給途絶の可能性という、競合する供給リスクをトレーダーが比較検討した結果。国際原油価格の動向はタイの燃料費や電力価格に直接影響するため、エネルギー市場およびマクロ経済にとって非常に重要なニュースである。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="6" onclick="showArticle(6)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-6" onchange="updateCount()">
+            <label class="check-label" for="chk-6">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
+            <span class="art-src">Bangkok Post – Business</span>
+            <span class="art-stars">★★★★☆</span>
+          </div>
+          <div class="article-title">洪水によりタイの自動車輸出が34%急落</div>
+          <div class="article-summary">タイ工業連盟（FTI）は、10月のタイの自動車輸出が前年比34%減の54,503台に急落したと発表した。東部地域やバンコクでの大規模な洪水により、内燃機関（ICE）車の生産が減少したことが主な原因。タイの主要産業である自動車産業の動向はマクロ経済に影響を与える。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="7" onclick="showArticle(7)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-7" onchange="updateCount()">
+            <label class="check-label" for="chk-7">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
+            <span class="art-src">newsclip: タイ経済・企業</span>
+            <span class="art-stars">★★★★☆</span>
+          </div>
+          <div class="article-title">PTTとバーンジャーク、軽油とB20を値下げ　11月25日から0.60バーツ安</div>
+          <div class="article-summary">タイの国営エネルギー大手PTTオイル・アンド・リテール・ビジネス（OR）とバーンジャーク・コーポレーションが、11月25日午前5時より軽油と軽油B20の店頭価格を1リットルあたり0.60バーツ値下げすると発表した。タイ国内の燃料価格動向としてエネルギー市場のカテゴリに該当する。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="8" onclick="showArticle(8)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-8" onchange="updateCount()">
+            <label class="check-label" for="chk-8">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
+            <span class="art-src">Bangkok Post – Business</span>
+            <span class="art-stars">★★★★☆</span>
+          </div>
+          <div class="article-title">タイ中央銀行、インフォーマル経済の縮小に意欲</div>
+          <div class="article-summary">タイ中央銀行は、インフォーマル経済を縮小し、生産性向上、金融アクセス拡大、家計の金融安定強化を目指す取り組みを強化している。これはタイの経済政策の一環であり、マクロ経済の健全性向上に寄与する可能性がある。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="9" onclick="showArticle(9)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-9" onchange="updateCount()">
+            <label class="check-label" for="chk-9">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
+            <span class="art-src">newsclip: タイ経済・企業</span>
+            <span class="art-stars">★★★★☆</span>
+          </div>
+          <div class="article-title">タイ洪水被害2100億円相当、農業が最大打撃　エルニーニョの干ばつにも警戒</div>
+          <div class="article-summary">タイ国家経済社会開発委員会（NESDC）は、9月16日～11月10日の洪水被害が推計450.7億バーツ（2,100億円相当）に上り、農業部門が最大の打撃を受けたと発表。全国58県で人口の9.65%に影響が出た。エルニーニョ現象による干ばつへの警戒も促されており、タイ経済への影響が懸念される。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="10" onclick="showArticle(10)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-10" onchange="updateCount()">
+            <label class="check-label" for="chk-10">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
+            <span class="art-src">Google: crude oil Asia</span>
+            <span class="art-stars">★★★★☆</span>
+          </div>
+          <div class="article-title">2026年のエネルギー市場の進化：供給ボトルネックと「問題のない原油」の探求</div>
+          <div class="article-summary">2026年のエネルギー市場は、供給ボトルネックと「問題のない原油」の探求によって変化している。地政学的リスクや生産能力制約が世界の原油供給に影響を与え、エネルギー安全保障上の課題を提起しており、タイを含む国際エネルギー情勢全体に影響を及ぼす重要な動向である。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="11" onclick="showArticle(11)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-11" onchange="updateCount()">
+            <label class="check-label" for="chk-11">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
+            <span class="art-src">Google: crude oil Asia</span>
+            <span class="art-stars">★★★★☆</span>
+          </div>
+          <div class="article-title">アジアは新たなエネルギー安全保障システム構築のためにヘンリー・キッシンジャーを必要としている</div>
+          <div class="article-summary">アジアは、複雑な地政学的状況と高まるエネルギー需要に対応するため、新たなエネルギー安全保障システムの構築が求められている。この記事は、その課題と戦略的リーダーシップの必要性を示唆しており、タイを含むアジア全体のエネルギー政策や安全保障に広範な影響を与える可能性がある。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="12" onclick="showArticle(12)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-12" onchange="updateCount()">
+            <label class="check-label" for="chk-12">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
+            <span class="art-src">Bangkok Post – Business</span>
+            <span class="art-stars">★★★★☆</span>
+          </div>
+          <div class="article-title">タイ信用保証公社、1,200億バーツの融資保証を割り当て</div>
+          <div class="article-summary">タイ信用保証公社（TCG）は、今年最初の10ヶ月間で1,200億バーツ超の融資保証を提供した。これは中小企業を含む事業者への資金アクセスを支援し、タイ経済の活性化を目的とした政府の経済政策の一環であり、マクロ経済に影響を与える可能性がある。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="13" onclick="showArticle(13)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-13" onchange="updateCount()">
+            <label class="check-label" for="chk-13">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
+            <span class="art-src">Google: crude oil Asia</span>
+            <span class="art-stars">★★★★☆</span>
+          </div>
+          <div class="article-title">論評：イランの膠着状態の偽装により中東の原油輸出が減少傾向に</div>
+          <div class="article-summary">中東からの原油輸出がイラン情勢を巡る偽装された膠着状態の中で減少傾向にあると報じられた。これは世界の原油供給に影響を及ぼす可能性があり、国際エネルギー市場における重要な動向として、タイのエネルギー安全保障にも間接的な影響を与えると考えられる。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="14" onclick="showArticle(14)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-14" onchange="updateCount()">
+            <label class="check-label" for="chk-14">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
+            <span class="art-src">Google: crude oil Asia</span>
+            <span class="art-stars">★★★★☆</span>
+          </div>
+          <div class="article-title">アジアは年間1兆ドルのエネルギー投資を必要としている</div>
+          <div class="article-summary">アジア地域は、増大するエネルギー需要と持続可能な移行のため、年間1兆ドルのエネルギー投資が必要とされている。この莫大な投資は、再生可能エネルギー開発やインフラ強化に充てられ、タイを含む東南アジア各国のエネルギー政策やビジネス環境に広範かつ重要な影響を与える可能性が高い。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="15" onclick="showArticle(15)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-15" onchange="updateCount()">
+            <label class="check-label" for="chk-15">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
+            <span class="art-src">Bangkok Post – Business</span>
+            <span class="art-stars">★★★★☆</span>
+          </div>
+          <div class="article-title">不動産開発業者への支援を提供する協定</div>
+          <div class="article-summary">政府住宅銀行（GH Bank）がタイ信用保証公社（TCG）と提携し、不動産開発業者向けに融資保証を提供。資金調達を容易にし、タイの不動産市場の安定化と成長を支援する経済政策の一環。タイ経済のマクロ動向として注目される。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="16" onclick="showArticle(16)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-16" onchange="updateCount()">
+            <label class="check-label" for="chk-16">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
+            <span class="art-src">Google: crude oil Asia</span>
+            <span class="art-stars">★★★★☆</span>
+          </div>
+          <div class="article-title">中国とインド、2026年にロシア産原油輸入が記録を更新する見込みだが、需要はピークに達する兆候</div>
+          <div class="article-summary">中国とインドは2026年にロシア産原油輸入が記録を更新する見込みだが、同時に原油需要はピークに達する兆候を示している。これはアジア主要国のエネルギー消費構造の変化を反映しており、世界のエネルギー市場およびタイを含む地域のエネルギー安全保障に影響を及ぼす可能性があるため重要。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="17" onclick="showArticle(17)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-17" onchange="updateCount()">
+            <label class="check-label" for="chk-17">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
+            <span class="art-src">Google: crude oil Asia</span>
+            <span class="art-stars">★★★★☆</span>
+          </div>
+          <div class="article-title">大手石油会社、アジアの不安定な海域を注視</div>
+          <div class="article-summary">大手石油会社は、アジア地域の不安定な地政学的状況、特に南シナ海での動向を警戒して注視している。これはアジアのエネルギー供給の安全性やルートに影響を及ぼす可能性があり、タイを含む東南アジア地域のエネルギー安全保障にとって非常に重要な問題である。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="18" onclick="showArticle(18)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-18" onchange="updateCount()">
+            <label class="check-label" for="chk-18">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
+            <span class="art-src">Google: crude oil Asia</span>
+            <span class="art-stars">★★★★☆</span>
+          </div>
+          <div class="article-title">論評：2026年の世界の主要エネルギー動向に関する6つのチャート</div>
+          <div class="article-summary">2026年の世界の主要エネルギー動向に関する6つのチャートを用いた論評が発表された。原油価格、LNG需要、再生可能エネルギー普及、エネルギー安全保障など広範なトピックをカバーしており、タイを含む国際エネルギー市場全体に影響を及ぼす重要な情報である。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="19" onclick="showArticle(19)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-19" onchange="updateCount()">
+            <label class="check-label" for="chk-19">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
+            <span class="art-src">Google: crude oil Asia</span>
+            <span class="art-stars">★★★☆☆</span>
+          </div>
+          <div class="article-title">湾岸諸国とアジアのエネルギーパートナーシップの多様化におけるLNG</div>
+          <div class="article-summary">湾岸諸国とアジア間のエネルギーパートナーシップの多様化において、LNGが重要性を増している。これはアジア全体のエネルギー安全保障と供給源多様化の動きを示しており、タイを含む東南アジア諸国のエネルギー市場にも影響を及ぼす可能性があるため、関連性が認められる。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #0369a1" data-cat="エネルギー市場" data-idx="20" onclick="showArticle(20)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-20" onchange="updateCount()">
+            <label class="check-label" for="chk-20">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#0369a1">⚡ エネルギー市場</span>
+            <span class="art-src">Google: crude oil Asia</span>
+            <span class="art-stars">★★★☆☆</span>
+          </div>
+          <div class="article-title">韓国、冬期を通じた原油供給は安定していると発表</div>
+          <div class="article-summary">韓国政府は、今年の冬期を通じて同国の原油供給が安定していると発表した。これはアジア地域のエネルギー安全保障におけるポジティブな情報であり、タイを含む東アジア各国のエネルギー政策決定にも影響を与える可能性がある。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #be123c" data-cat="企業/ビジネス動向" data-idx="21" onclick="showArticle(21)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-21" onchange="updateCount()">
+            <label class="check-label" for="chk-21">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#be123c">🏭 企業/ビジネス動向</span>
+            <span class="art-src">newsclip: タイ経済・企業</span>
+            <span class="art-stars">★★★☆☆</span>
+          </div>
+          <div class="article-title">タイ小売大手CPオール、カンボジアの「セブン-イレブン」事業から撤退　不買運動が直撃</div>
+          <div class="article-summary">タイ最大財閥CPグループ傘下のCPオールが、カンボジアでのセブン-イレブン事業を12月25日付で終了すると発表した。不買運動が直撃したことが撤退の主因とみられる。これはタイ企業の東南アジア地域におけるビジネス展開動向を示す事例として関連する。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #2d7a4f" data-cat="バイオマス/再生可能エネルギー" data-idx="22" onclick="showArticle(22)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-22" onchange="updateCount()">
+            <label class="check-label" for="chk-22">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#2d7a4f">🌿 バイオマス/再生可能エネルギー</span>
+            <span class="art-src">日刊工業新聞</span>
+            <span class="art-stars">★★★☆☆</span>
+          </div>
+          <div class="article-title">カナデビア、中国企業にバイオ炭技術供与</div>
+          <div class="article-summary">カナデビアが中国企業にバイオ炭技術を供与する。バイオ炭はバイオマスを熱分解した炭素質物質で、土壌改良やCO2固定に利用される。これは日本企業によるバイオマス/再生可能エネルギー技術の海外展開事例として注目され、将来的に東南アジア地域への波及も期待される。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="23" onclick="showArticle(23)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-23" onchange="updateCount()">
+            <label class="check-label" for="chk-23">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
+            <span class="art-src">日刊工業新聞</span>
+            <span class="art-stars">★★★☆☆</span>
+          </div>
+          <div class="article-title">輸出「持ち直しの動き」　11月月例報告　5カ月ぶり上方修正</div>
+          <div class="article-summary">11月の月例経済報告で、日本の輸出が「持ち直しの動き」を見せ、5カ月ぶりに上方修正された。これは世界経済の回復を示す兆候であり、タイを含む日本の主要貿易相手国との取引にもポジティブな影響を与える可能性があり、日タイ貿易の観点から注目される。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="24" onclick="showArticle(24)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-24" onchange="updateCount()">
+            <label class="check-label" for="chk-24">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
+            <span class="art-src">日経ビジネス</span>
+            <span class="art-stars">★★★☆☆</span>
+          </div>
+          <div class="article-title">日本商船隊の85％は外国籍　ホルムズ危機で露呈、「非常時」の輸送力確保</div>
+          <div class="article-summary">日本商船隊の85%が外国籍であることがホルムズ危機で露呈し、非常時の輸送力確保が日本の経済安全保障上の課題となっている。政府は外航海運の制度見直しに着手しており、この動向は日本とタイ間の貿易やサプライチェーンの安定性にも影響を及ぼす可能性がある。</div>
+        </div>
+        <div class="article-item" style="border-left:3px solid #7c3aed" data-cat="日タイ貿易/マクロ" data-idx="25" onclick="showArticle(25)">
+          <div class="check-wrap" onclick="event.stopPropagation()">
+            <input type="checkbox" id="chk-25" onchange="updateCount()">
+            <label class="check-label" for="chk-25">保存する</label>
+          </div>
+          <div class="article-meta">
+            <span class="art-cat" style="color:#7c3aed">🤝 日タイ貿易/マクロ</span>
+            <span class="art-src">日経ビジネス</span>
+            <span class="art-stars">★★★☆☆</span>
+          </div>
+          <div class="article-title">同床異夢の米中ロ首脳会談　新ヤルタは杞憂だったが「グレートゲーム」の懸念</div>
+          <div class="article-summary">米中ロ首脳会談は「同床異夢」であり、新ヤルタ体制への懸念は杞憂だったが、「グレートゲーム」の懸念が残ると分析されている。これは主要国の覇権争いや国際秩序の変動が、タイを含む東南アジアの地政学的・経済的環境に間接的な影響を及ぼす可能性があり、国際情勢として関連する。</div>
+        </div>
+  </div>
+</div>
+
+<!-- CATEGORY PAGE -->
+<div class="page" id="page-cat">
+  <div class="cat-page-head">
+    <div class="cat-page-icon" id="cat-icon"></div>
+    <div class="cat-page-name" id="cat-name"></div>
+    <div class="cat-summary-box">
+      <div class="cat-summary-label">📊 カテゴリトレンド分析</div>
+      <div class="cat-summary-text" id="cat-summary-text"></div>
+    </div>
+    <div class="section-head" id="cat-count-head"></div>
+    <div id="cat-articles"></div>
+  </div>
+</div>
+
+<!-- ARTICLE PAGE -->
+<div class="page" id="page-article">
+  <div class="detail-cat" id="det-cat"></div>
+  <div class="detail-title" id="det-title"></div>
+  <div class="detail-orig" id="det-orig"></div>
+  <div class="detail-meta" id="det-meta"></div>
+  <div class="section-head" id="det-body-label"></div>
+  <div class="detail-body" id="det-body"></div>
+  <div class="deep-card">
+    <div class="deep-label">🔍 もっと調べる</div>
+    <p style="font-size:13px;color:var(--fg2);margin-bottom:12px;line-height:1.7;">
+      Perplexity AIがこの記事のトピックについてウェブ上の最新情報を収集・日本語でまとめます。
+    </p>
+    <button class="deep-btn" id="perplexity-btn" onclick="openPerplexity()">🔍 Perplexityで深掘り</button>
+  </div>
+</div>
+
+<footer>
+  生成: 2026-11-25 14:18 JST　｜　ソース: RSS自動巡回 + Gemini AI　｜
+  取得: 130件 / 候補: 48件 / 掲載: 26件
+</footer>
+
+<script>
+const ARTICLES = [{"title": "B.Grimm, NTT plan B113bn data centre", "title_ja": "B.GrimmとNTT、1,130億バーツのデータセンターを計画", "body_ja": "タイの電力会社B.Grimm Power Plc（BGRIM）は、日本のNTTグローバルデータセンタース（タイランド）と協力し、チョンブリ県でハイパースケールデータセンターの開発を推進している。この動きは、タイを東南アジアの主要な人工知能（AI）およびデジタルハブに変革する取り組みの一環とみられている。", "summary_ja": "タイの電力大手B.Grimm PowerとNTTグローバルデータセンタース（タイランド）が、チョンブリ県で1,130億バーツ規模のハイパースケールデータセンターを開発すると発表した。タイを東南アジアのAI・デジタルハブとする狙いがあり、日タイ企業間の協力事例として注目される。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3360699/bgrimm-ntt-plan-b113bn-data-centre", "published": "2026-11-25T01:08:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 5}, {"title": "Thai parts makers eye Japan's satellites - Bangkok Post", "title_ja": "タイの部品メーカーが日本の衛星市場に注目", "body_ja": "タイの部品メーカーが日本の衛星市場への参入を目指している。この動きは、両国間の製造業における協力関係を深化させる可能性を秘めている。", "summary_ja": "タイの部品メーカーが、日本の衛星市場への進出を検討している。これは日タイ間の新たなビジネス機会を示すものであり、両国の製造業におけるサプライチェーンや技術連携の深化に繋がる可能性がある。日本の宇宙産業とタイの製造業の連携に注目。", "source": "Google: Japan Thailand", "link": "https://news.google.com/rss/articles/CBMilwFBVV95cUxNLXdpT29MZTNvbWtaQ0VmUlJtY3hFSmQxOEZXejNDaWJ1WTk3emVqdGNVaVowRlBBdjQwMTZxOFRCazM0VF8yc3pOR2IzTjJGbXRadlRVZFROVmJtWHljRzBmVkJpaW1OaTFOUDN5MURGTGl4UHh6c3VKZUdYYU5CaDBKb1lSaDA3LWVLUGVWeG1EM0JUZGFz?oc=5", "published": "2026-11-24T22:05:00+00:00", "category": "企業/ビジネス動向", "relevance_score": 5}, {"title": "タイの自動車生産、10月は35％減　洪水での部品不足・輸出減が響く、BEV販売は9割増", "title_ja": "タイの自動車生産、10月は35％減　洪水での部品不足・輸出減が響く、BEV販売は9割増", "body_ja": "タイ工業連盟（FTI）自動車部会の発表によると、2026年10月の自動車生産台数は前年同月比35.19％減の8万7938台だった。乗用車は同42.6％減の3万2141台で、内燃機関（ICE）車が同64.23％減の2万3140台。洪水の部品不足と輸出減が響いた。一方、BEV販売は90.23％増の1万9571台と大幅に伸びた。", "summary_ja": "タイ工業連盟（FTI）によると、2026年10月の自動車生産台数は洪水による部品不足と輸出減で前年同月比35.19%減の8万7938台だった。特に内燃機関（ICE）車は64.23%減。しかし、バッテリー式電気自動車（BEV）の販売は90.23%増の1万9571台と大幅に伸び、産業構造の変化を示唆する。", "source": "newsclip: タイ経済・企業", "link": "https://newsclip.be/thai-news/thai-economy/44683", "published": "2026-11-24T17:10:50+00:00", "category": "企業/ビジネス動向", "relevance_score": 5}, {"title": "タイ政府、次世代自動車ハブ化へ日中メーカーと協議　バイオ燃料普及で合意", "title_ja": "タイ政府、次世代自動車ハブ化へ日中メーカーと協議　バイオ燃料普及で合意", "body_ja": "エーカーポップ・ピアンピセート政府報道官は11月23日、首相府で開かれた日本と中国の主要自動車メーカー幹部との会合の成果を発表した。電気自動車（EV）、ハイブリッド車（HEV）、バイオ燃料対応車の共存と国内部品調達の促進について合意。タイの次世代自動車ハブ化とバイオ燃料普及を強力に推進する。", "summary_ja": "タイ政府は11月23日、日中主要自動車メーカー幹部と次世代自動車ハブ化に向け協議し、電気自動車（EV）、ハイブリッド車（HEV）、バイオ燃料対応車の共存と国内部品調達の促進で合意した。バイオ燃料の普及とタイの自動車産業の方向性を示し、日タイビジネスにとって重要な動向である。", "source": "newsclip: タイ経済・企業", "link": "https://newsclip.be/thai-news/thai-economy/44669", "published": "2026-11-24T17:07:47+00:00", "category": "企業/ビジネス動向", "relevance_score": 5}, {"title": "Oil prices fall as supply glut concerns offset West Asia disruption fears - Business Standard", "title_ja": "供給過剰懸念が西アジアの混乱懸念を相殺し、原油価格が下落", "body_ja": "原油価格が下落している。これは、世界的な供給過剰への懸念が、西アジアにおける地政学的混乱による供給途絶の恐れを相殺しているためだ。国際原油価格の変動は、タイの経済およびエネルギー市場に直接的な影響を与えるため、重要な動向である。", "summary_ja": "世界の原油価格が下落。供給過剰懸念が西アジアの混乱による供給途絶の恐れを相殺したためとされる。国際原油価格の動向はタイの燃料費や電力価格に直接影響するため、エネルギー市場およびマクロ経済にとって非常に重要なニュースである。", "source": "Google: crude oil Asia", "link": "https://news.google.com/rss/articles/CBMi4AFBVV95cUxQWVFoVXoyUkFNWWdHSmZLQlhmV2pRc3Z0SXFPS0hNdk8zTjIwUmk5c1VCSVdXUndRUG5sZEc2OThocjJuNk5zbjRvNlJROWdKZ2djRHFxWGZ1OXQ0eDN3V0sxYjQtak03SHg2VEw3bVZkMU1Td0YycHNTTHkzdHZySHg1cHFmb0xfb2ItTXlIZll6aXBfSVVVNW9venp2WkRJSVM2cTZXQnRpTlpQNEZ3a1hnUlp3UzlRbzU4TXVqVC00eFF6cmdfMlpkVm5DVGw2aTNkc1MtaGNybFNrVGZrOdIB5gFBVV95cUxQdXgyZ2hZa1ZlczN5MzhjRk9yQXh0bFdTOUhOa3BpbzZUU3p3NW96cFhtVUhtcVJaS3NaNkFleDBlTWV4S2dmbkF0aGFlS3J5QWJkTy03TGZQdl9HUkt0T2VvNDgtRWdXZmphYkJsSHdXRlF5STU5bUE2cDZvVE05dkFCbXB6RFdkMWFrc2JqXzRDdFNINWtiS0k2NW9IMnJZbnVzMURCUUVkYkh0TU12MHNqeDVuc2JXQXR5VXgzcnhMcmJ5dGpwRWVFMXVmLXpodml2MWtTN0J1R3VEdlhJdmZuZ3V1dw?oc=5", "published": "2026-11-25T02:38:47+00:00", "category": "エネルギー市場", "relevance_score": 5}, {"title": "Oil Futures Decline as Traders Weigh Competing Supply Risks - WSJ", "title_ja": "トレーダーが競合する供給リスクを比較検討する中、原油先物が下落", "body_ja": "トレーダーが供給過剰と地政学的リスクによる供給途絶の可能性という競合する供給リスクを比較検討する中、原油先物価格が下落している。この国際原油価格の変動は、タイの燃料費や電力価格に直接影響を与え、タイ経済にとって重要な動向である。", "summary_ja": "原油先物価格が下落。供給過剰と地政学的リスクによる供給途絶の可能性という、競合する供給リスクをトレーダーが比較検討した結果。国際原油価格の動向はタイの燃料費や電力価格に直接影響するため、エネルギー市場およびマクロ経済にとって非常に重要なニュースである。", "source": "Google: crude oil Asia", "link": "https://news.google.com/rss/articles/CBMitwFBVV95cUxQbVlpZnAybHVSc2FubFZDcXE2VkkwaWRUcXZaSnlWUzU0Nlp4YnFHdEtTaUlfYzlfVjZ1eTNIOEZsVGZsYlhiU0gzV25SZTFvRHgwQTE2cENhVHZpd19IcjFJU3JvLUUtUkZKNDVnM0h0SDQzVzY2cE1yNGVjRG44R1laRmx5OUt3VzNPTlRSZTc0d0RTT1VVel9hazVLQkFOWU1ORVBWcE8wRUxlTER6WHozOXMyLVE?oc=5", "published": "2026-11-25T02:00:00+00:00", "category": "エネルギー市場", "relevance_score": 5}, {"title": "Flooding sees Thai auto exports plunge by 34%", "title_ja": "洪水によりタイの自動車輸出が34%急落", "body_ja": "タイ工業連盟（FTI）によると、東部地域およびバンコクでの大規模な洪水により、内燃機関（ICE）車の生産が落ち込み、10月のタイの自動車輸出は前年比34%減の54,503台となった。", "summary_ja": "タイ工業連盟（FTI）は、10月のタイの自動車輸出が前年比34%減の54,503台に急落したと発表した。東部地域やバンコクでの大規模な洪水により、内燃機関（ICE）車の生産が減少したことが主な原因。タイの主要産業である自動車産業の動向はマクロ経済に影響を与える。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/motoring/3360769/flooding-sees-thai-auto-exports-plunge-by-34", "published": "2026-11-24T23:03:00+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 4}, {"title": "PTTとバーンジャーク、軽油とB20を値下げ　11月25日から0.60バーツ安", "title_ja": "PTTとバーンジャーク、軽油とB20を値下げ　11月25日から0.60バーツ安", "body_ja": "国営エネルギー大手PTTグループのPTTオイル・アンド・リテール・ビジネス（OR）とタイ政府系石油会社バーンジャーク・コーポレーションは11月25日午前5時、一部油種の店頭価格を引き下げる。値下げ対象は軽油と軽油B20で、それぞれ0.60バーツ安となる。", "summary_ja": "タイの国営エネルギー大手PTTオイル・アンド・リテール・ビジネス（OR）とバーンジャーク・コーポレーションが、11月25日午前5時より軽油と軽油B20の店頭価格を1リットルあたり0.60バーツ値下げすると発表した。タイ国内の燃料価格動向としてエネルギー市場のカテゴリに該当する。", "source": "newsclip: タイ経済・企業", "link": "https://newsclip.be/thai-news/thai-economy/44685", "published": "2026-11-24T17:05:18+00:00", "category": "エネルギー市場", "relevance_score": 4}, {"title": "BoT eager to shrink informal economy", "title_ja": "タイ中央銀行、インフォーマル経済の縮小に意欲", "body_ja": "タイ中央銀行は、インフォーマルな事業や労働者を公式経済に取り込むための取り組みを強化している。これにより、生産性の向上、金融アクセス拡大、長期的な家計の金融安定強化を目指す。", "summary_ja": "タイ中央銀行は、インフォーマル経済を縮小し、生産性向上、金融アクセス拡大、家計の金融安定強化を目指す取り組みを強化している。これはタイの経済政策の一環であり、マクロ経済の健全性向上に寄与する可能性がある。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3360754/bot-eager-to-shrink-informal-economy", "published": "2026-11-24T22:45:00+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 4}, {"title": "タイ洪水被害2100億円相当、農業が最大打撃　エルニーニョの干ばつにも警戒", "title_ja": "タイ洪水被害2100億円相当、農業が最大打撃　エルニーニョの干ばつにも警戒", "body_ja": "国家経済社会開発委員会（NESDC）は、今年9月16日から11月10日にかけて全国58県で発生した洪水による経済損失が推計450億7000万バーツ（2100億円相当）に上ったと発表した。全国人口の9.65％に相当する人々に影響があり、農業部門が最大の打撃を受けた。さらに、エルニーニョ現象による干ばつへの警戒も必要だとしている。", "summary_ja": "タイ国家経済社会開発委員会（NESDC）は、9月16日～11月10日の洪水被害が推計450.7億バーツ（2,100億円相当）に上り、農業部門が最大の打撃を受けたと発表。全国58県で人口の9.65%に影響が出た。エルニーニョ現象による干ばつへの警戒も促されており、タイ経済への影響が懸念される。", "source": "newsclip: タイ経済・企業", "link": "https://newsclip.be/thai-news/thai-economy/44645", "published": "2026-11-24T17:08:48+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 4}, {"title": "Evolution of Energy Markets in 2026: Supply Bottlenecks and the Search for Problem-Free Barrels - CSIS | Center for Strategic and International Studies", "title_ja": "2026年のエネルギー市場の進化：供給ボトルネックと「問題のない原油」の探求", "body_ja": "2026年のエネルギー市場は、供給のボトルネックと「問題のない原油（problem-free barrels）」の探求によって進化している。これは、地政学的リスクや生産能力の制約が世界の原油供給に影響を与え、エネルギー安全保障の課題を提起していることを示している。", "summary_ja": "2026年のエネルギー市場は、供給ボトルネックと「問題のない原油」の探求によって変化している。地政学的リスクや生産能力制約が世界の原油供給に影響を与え、エネルギー安全保障上の課題を提起しており、タイを含む国際エネルギー情勢全体に影響を及ぼす重要な動向である。", "source": "Google: crude oil Asia", "link": "https://news.google.com/rss/articles/CBMirwFBVV95cUxOWl9RQm8xbGFNLWkzUVBrVFBVX2Q4aGdhWm5Od0JZRUFzRzdkeGRLeUNkTDdKLS1XNVJXcUpVT0RGOVg1OWNSaGhjemtoS3lMWjF0enBkbW1COEpWdWxvWmJKaE55dVhNbnRyU0xmdTQzZUFpZzVsX3ZNLW5RVUJNdGI0WS1UTEJ6YUFSOXZOdzc3X1RYYnc4aWI0X1ZPbEo0RGVfc2ZNRlBUUG85V0pr?oc=5", "published": "2026-11-24T21:01:56+00:00", "category": "エネルギー市場", "relevance_score": 4}, {"title": "Asia Needs a Henry Kissinger to Build a New Energy Security System - The National Interest", "title_ja": "アジアは新たなエネルギー安全保障システム構築のためにヘンリー・キッシンジャーを必要としている", "body_ja": "アジアは、複雑な地政学的状況と需要増大の中で、新たなエネルギー安全保障システムを構築する必要がある。この記事は、その課題と、ヘンリー・キッシンジャーのような戦略的思考を持つ人物が求められていることを示唆している。アジア全体のエネルギー安全保障は、タイのエネルギー政策にも影響を及ぼす重要な要素である。", "summary_ja": "アジアは、複雑な地政学的状況と高まるエネルギー需要に対応するため、新たなエネルギー安全保障システムの構築が求められている。この記事は、その課題と戦略的リーダーシップの必要性を示唆しており、タイを含むアジア全体のエネルギー政策や安全保障に広範な影響を与える可能性がある。", "source": "Google: crude oil Asia", "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxQSkNILUFyaF9VUmRVYUhoc09EMG1MMFhESE1iVnF2aGpnTmRMYXczRU5XMGNvNlE2ZjRqNHZYZW03a0UteUhIVzUzajJWQ0tsWi1zV0JSX3dUaVp0SkIxNy1wcmprN2YzVEtnZ0IzeDFGZ1lSV1BaaEVkWVVTblp2WmMxUVRFSTVVR2pnVUgteVpjbFVkcGhEX19QRTkzMXE1cGozaW1iZDIxWFhOak9QMks4QQ?oc=5", "published": "2026-11-24T14:29:55+00:00", "category": "エネルギー市場", "relevance_score": 4}, {"title": "TCG allocates loan guarantees worth B120bn", "title_ja": "タイ信用保証公社、1,200億バーツの融資保証を割り当て", "body_ja": "タイ信用保証公社（TCG）は、今年の最初の10ヶ月間で1,200億バーツを超える融資保証を提供した。これは中小企業を含む幅広い事業者が資金調達しやすくなるよう支援するもので、タイ経済の活性化に寄与すると期待される。", "summary_ja": "タイ信用保証公社（TCG）は、今年最初の10ヶ月間で1,200億バーツ超の融資保証を提供した。これは中小企業を含む事業者への資金アクセスを支援し、タイ経済の活性化を目的とした政府の経済政策の一環であり、マクロ経済に影響を与える可能性がある。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3360904/tcg-allocates-loan-guarantees-worth-b120bn", "published": "2026-11-25T00:41:00+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 4}, {"title": "COMMENTARY: Middle East crude oil exports trend lower amid fake Iran stalemate - Reuters", "title_ja": "論評：イランの膠着状態の偽装により中東の原油輸出が減少傾向に", "body_ja": "中東からの原油輸出が減少傾向にある。これは、イランの核協議を巡る状況が偽装されている中での地政学的な要因が背景にあると分析されている。世界の原油供給に影響を及ぼす可能性があり、タイを含むアジアのエネルギー市場にとって重要な動向である。", "summary_ja": "中東からの原油輸出がイラン情勢を巡る偽装された膠着状態の中で減少傾向にあると報じられた。これは世界の原油供給に影響を及ぼす可能性があり、国際エネルギー市場における重要な動向として、タイのエネルギー安全保障にも間接的な影響を与えると考えられる。", "source": "Google: crude oil Asia", "link": "https://news.google.com/rss/articles/CBMi0AFBVV95cUxPVzZpMHFTclFHbWV5MGFQbmJCOHhtaS02NUQyVmFmU09tZHVJRXZCeHRNWTFNQ0hVenFvQ1JnS2p0aHd0LVFjRE5KTi0tQkVZdElhcko2YXRmWnpkbGtkc0lJX0JjVGtXSE1TbWwyVklTcHVrSWNaTExxT1hXcmR0b3Y3LTdMQU1YQnRDWEhjaVF5VWVkdGRELTNRRGlmQWJMeGJXRTBUX1ExV3FLZGVLWmx5cElDdnBoMGpqTnN3b0d3c0ZhbWc1RV9kRGNHSmg?oc=5", "published": "2026-11-24T22:18:25+00:00", "category": "エネルギー市場", "relevance_score": 4}, {"title": "Asia Faces $1 Trillion Yearly Energy Investment Need - Wisevoter", "title_ja": "アジアは年間1兆ドルのエネルギー投資を必要としている", "body_ja": "アジア地域は、増大するエネルギー需要に対応し、かつ持続可能なエネルギー移行を進めるために、年間1兆ドルもの膨大なエネルギー投資を必要としている。この投資は、再生可能エネルギー開発やエネルギーインフラ強化に充てられるとみられ、タイを含む東南アジア各国のエネルギー政策やビジネス環境に大きな影響を与える。", "summary_ja": "アジア地域は、増大するエネルギー需要と持続可能な移行のため、年間1兆ドルのエネルギー投資が必要とされている。この莫大な投資は、再生可能エネルギー開発やインフラ強化に充てられ、タイを含む東南アジア各国のエネルギー政策やビジネス環境に広範かつ重要な影響を与える可能性が高い。", "source": "Google: crude oil Asia", "link": "https://news.google.com/rss/articles/CBMijAFBVV95cUxOUURUbkFsWlpWYVBEY0s0YkJSZnZrU3hxb0o4QXo3OGlaMWRiVjF2Y2JQRWo4d05HRThvWk9kSGlvdmRPY1NEb1QzVG5jT05nb3dmbHRRWExKWWxIZnZQVFVSYThLT3RZbDd5XzQyU3R1ZGdxY19jZ0xhMklNUkdib3RaeTFTT2Y5WVNGTw?oc=5", "published": "2026-11-24T16:23:21+00:00", "category": "エネルギー市場", "relevance_score": 4}, {"title": "Agreement offers backing for real estate developers", "title_ja": "不動産開発業者への支援を提供する協定", "body_ja": "政府住宅銀行（GH Bank）はタイ信用保証公社（TCG）と提携し、不動産セクターの起業家向けに融資保証を提供することで、彼らが資金調達しやすくする。これはタイの不動産市場の安定化と成長を支援するための重要な経済政策である。", "summary_ja": "政府住宅銀行（GH Bank）がタイ信用保証公社（TCG）と提携し、不動産開発業者向けに融資保証を提供。資金調達を容易にし、タイの不動産市場の安定化と成長を支援する経済政策の一環。タイ経済のマクロ動向として注目される。", "source": "Bangkok Post – Business", "link": "https://www.bangkokpost.com/business/general/3360909/agreement-offers-backing-for-real-estate-developers", "published": "2026-11-24T23:26:00+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 4}, {"title": "China, India set for record Russian oil imports in 2026, but demand seen peaking - Reuters", "title_ja": "中国とインド、2026年にロシア産原油輸入が記録を更新する見込みだが、需要はピークに達する兆候", "body_ja": "中国とインドは2026年にロシア産原油の輸入量が記録を更新する見込みだが、同時に原油需要はピークに達する兆候を見せている。これは、アジアの主要経済国のエネルギー消費構造の変化を示唆しており、世界のエネルギー市場およびタイを含む地域のエネルギー安全保障に影響を与える可能性がある。", "summary_ja": "中国とインドは2026年にロシア産原油輸入が記録を更新する見込みだが、同時に原油需要はピークに達する兆候を示している。これはアジア主要国のエネルギー消費構造の変化を反映しており、世界のエネルギー市場およびタイを含む地域のエネルギー安全保障に影響を及ぼす可能性があるため重要。", "source": "Google: crude oil Asia", "link": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxOZEl6LThLbVZLWTlSU3lNdHJLa2dnanBPQjdqRGdaeDd2bGU4VmpzVnRRZ1VETzdRelFLWnI0QVVkUE0tUUE0TDkyR2lpcEMzUGNFS09iWW1LREpvOHJkb25Fdkd2MWFSYWZQRkwwbGpQR21sYkxvRXI5ZHBJTGcxTzVDdGNWdjktUFQ2OTRsYmlUSEkyRU5qUWJKeTNkbF9FX2dYNTJsdXN1RlBsVDZVc3EzUGxOeFNZNm53?oc=5", "published": "2026-11-24T09:05:44+00:00", "category": "エネルギー市場", "relevance_score": 4}, {"title": "Big Oil watches troubled waters in Asia - Politico", "title_ja": "大手石油会社、アジアの不安定な海域を注視", "body_ja": "大手石油会社は、アジア地域の不安定な地政学的状況、特に南シナ海などの紛争地域における動向を警戒して注視している。これは、アジアにおけるエネルギー供給の安全性やルートに影響を及ぼす可能性があり、タイを含む東南アジアのエネルギー安全保障にとって重要な問題である。", "summary_ja": "大手石油会社は、アジア地域の不安定な地政学的状況、特に南シナ海での動向を警戒して注視している。これはアジアのエネルギー供給の安全性やルートに影響を及ぼす可能性があり、タイを含む東南アジア地域のエネルギー安全保障にとって非常に重要な問題である。", "source": "Google: crude oil Asia", "link": "https://news.google.com/rss/articles/CBMisAFBVV95cUxQenJFN3dfazBPTHVPQWNkWFBOOFQ3SldhSVBUdXpzNzc3XzFYRzhxZXBjVHVYNncxSXdsVjRMUm5ZYUVrODlaTHhjT1ZmVVRVQkt6TWhTSWRmaVFLM1ZJOXg0LWsydFpUNU1TYTZpYnloemVCZWo5RmV5M1Y4SVAycGhjMFV5d0xEY2JYT2hQYjJ5cVphZGtMSGZYeWFFamt5aDdWRm04a0xKejVwT2Zsaw?oc=5", "published": "2026-11-24T18:11:48+00:00", "category": "エネルギー市場", "relevance_score": 4}, {"title": "COMMENTARY: Six charts on key global energy trends in 2026 - Reuters", "title_ja": "論評：2026年の世界の主要エネルギー動向に関する6つのチャート", "body_ja": "2026年の世界の主要なエネルギー動向について、6つのチャートを用いて分析された論評が発表された。これは、原油価格、LNG需要、再生可能エネルギーの普及、エネルギー安全保障といった広範なトピックをカバーしており、タイを含む国際エネルギー市場全体にとって重要な情報を提供する。", "summary_ja": "2026年の世界の主要エネルギー動向に関する6つのチャートを用いた論評が発表された。原油価格、LNG需要、再生可能エネルギー普及、エネルギー安全保障など広範なトピックをカバーしており、タイを含む国際エネルギー市場全体に影響を及ぼす重要な情報である。", "source": "Google: crude oil Asia", "link": "https://news.google.com/rss/articles/CBMirgFBVV95cUxQdDNnNko1ZG5VSkxUeTNOaHRPbTI5U0lNeTZDQjZ2Z3B3eTJKcFZpRTZ4dVZfNnZUNUFVeFktd2Z1ZnA1RnlDM2pQREQxRWxUQ0hMYjFON3JCQ0x1Uzg2Yzc0TzI4UjJfZEMxR2JiRklVamphRUJsN2ZFaDhuTzViMHY2bVYzdllJZWhjW29mc29yeE11Qk1CNzdWM1BLdWlRV3U1aXFyQ2pwLWxZbVE?oc=5", "published": "2026-11-24T06:00:00+00:00", "category": "エネルギー市場", "relevance_score": 4}, {"title": "LNG and the Diversification of Gulf‑Asia Energy Partnerships - Mepei", "title_ja": "湾岸諸国とアジアのエネルギーパートナーシップの多様化におけるLNG", "body_ja": "湾岸諸国とアジア間のエネルギーパートナーシップの多様化において、液化天然ガス（LNG）が重要な役割を果たしている。アジア全体のエネルギー安全保障と供給源の多様化は、タイを含む東南アジア諸国にも影響を及ぼす。", "summary_ja": "湾岸諸国とアジア間のエネルギーパートナーシップの多様化において、LNGが重要性を増している。これはアジア全体のエネルギー安全保障と供給源多様化の動きを示しており、タイを含む東南アジア諸国のエネルギー市場にも影響を及ぼす可能性があるため、関連性が認められる。", "source": "Google: crude oil Asia", "link": "https://news.google.com/rss/articles/CBMihgFBVV95cUxNRFZpV29TVk5jVWN0bl9YSEZfNTlFdWtaM2pwUW1iSVp3TWdVcDVRWGtSS0VpLTF6bEVwTDBKd3R1M1NwWHdKYmNYejJ1ejQ0X3NJMF9SY0NpUlhJY1oxYW14a3RaYV9reEh4b2pxenlQZ21mZ183ZlV5MnhkSmlhWnVDZkgxUQ?oc=5", "published": "2026-11-24T14:03:58+00:00", "category": "エネルギー市場", "relevance_score": 3}, {"title": "South Korea Says Its Crude Supply Is Stable Through the Winter - Crude Oil Prices Today | OilPrice.com", "title_ja": "韓国、冬期を通じた原油供給は安定していると発表", "body_ja": "韓国政府は、冬期を通じて同国の原油供給が安定していると発表した。これは、地政学的緊張や市場の変動にもかかわらず、韓国が十分な供給源を確保していることを示唆している。アジア地域のエネルギー安全保障の観点から、タイにも間接的な示唆がある。", "summary_ja": "韓国政府は、今年の冬期を通じて同国の原油供給が安定していると発表した。これはアジア地域のエネルギー安全保障におけるポジティブな情報であり、タイを含む東アジア各国のエネルギー政策決定にも影響を与える可能性がある。", "source": "Google: crude oil Asia", "link": "https://news.google.com/rss/articles/CBMiugFBVV95cUxNaUNSQWRkZmZPZUQ5UVlzZXlYQ3l0RmJjN256VUlnRHp1RWlFT3dxdUZseVVfQURrUlo4cTFuUFpNUnNMOE1NZUJyVWQxaXUtNlVGVmt2MFRiQUN2R3lQOHRudFFUWjlKV3liQkdENzVTb0lUSFJqMkJMbnpSNTYyb3NWV3otS2pBNkhLdWJkaldsVjhHNnBfT2ZYWzNnTngwU2JQdkpUSnlKNmlsZ3pzUFd2eGNTb2habHfSAb8BQVVfeXFMUGh1OFpZUm1LN1RoUTlUZ3FUbUYzSFNEd25zYTRMaVpZLWtGQk5zT1o4VGNfVkJHZzFDYnhnUmhmU2VHUVRycnhVdmNscUJERkZCbG5NeEl0dWhSTlZlQUR4bUs3ajVXNDNVZ1lQWXZxNm1xMnZsbnppWFZ3eWQyUEFaV0pMMXR6a0pZeW1ZTXhUNlFxOGRVeHdlNkJLYjZXUTdtMmM2REhYMEsxR0pNdjNOall1VHk0bUFXcGdOblE?oc=5", "published": "2026-11-24T13:00:00+00:00", "category": "エネルギー市場", "relevance_score": 3}, {"title": "タイ小売大手CPオール、カンボジアの「セブン-イレブン」事業から撤退　不買運動が直撃", "title_ja": "タイ小売大手CPオール、カンボジアの「セブン-イレブン」事業から撤退　不買運動が直撃", "body_ja": "タイ最大財閥CPグループ傘下でコンビニエンスストア「セブン-イレブン（7-Eleven）」を運営するシーピー・オールは11月24日、カンボジアにおけるセブン-イレブン事業を12月25日付で終了するとタイ証券取引所に発表した。不買運動が直撃したことが主な理由とみられる。", "summary_ja": "タイ最大財閥CPグループ傘下のCPオールが、カンボジアでのセブン-イレブン事業を12月25日付で終了すると発表した。不買運動が直撃したことが撤退の主因とみられる。これはタイ企業の東南アジア地域におけるビジネス展開動向を示す事例として関連する。", "source": "newsclip: タイ経済・企業", "link": "https://newsclip.be/thai-news/thai-economy/44691", "published": "2026-11-24T22:10:10+00:00", "category": "企業/ビジネス動向", "relevance_score": 3}, {"title": "カナデビア、中国企業にバイオ炭技術供与", "title_ja": "カナデビア、中国企業にバイオ炭技術供与", "body_ja": "カナデビアは、中国企業にバイオ炭技術を供与する。バイオ炭は、バイオマスを熱分解して作られる炭素質物質で、土壌改良材やCO2固定材として注目されており、再生可能エネルギー・脱炭素化の文脈で重要な技術である。これは日本企業の海外へのバイオマス技術展開の事例となる。", "summary_ja": "カナデビアが中国企業にバイオ炭技術を供与する。バイオ炭はバイオマスを熱分解した炭素質物質で、土壌改良やCO2固定に利用される。これは日本企業によるバイオマス/再生可能エネルギー技術の海外展開事例として注目され、将来的に東南アジア地域への波及も期待される。", "source": "日刊工業新聞", "link": "https://www.nikkan.co.jp/articles/view/797955", "published": "2026-11-24T20:00:00+00:00", "category": "バイオマス/再生可能エネルギー", "relevance_score": 3}, {"title": "輸出「持ち直しの動き」　11月月例報告　5カ月ぶり上方修正", "title_ja": "輸出「持ち直しの動き」　11月月例報告　5カ月ぶり上方修正", "body_ja": "11月の月例経済報告において、日本の輸出が「持ち直しの動き」を見せ、5カ月ぶりに上方修正された。これは世界経済の回復を示唆するものであり、日本とタイ間の貿易にも好影響をもたらす可能性がある。", "summary_ja": "11月の月例経済報告で、日本の輸出が「持ち直しの動き」を見せ、5カ月ぶりに上方修正された。これは世界経済の回復を示す兆候であり、タイを含む日本の主要貿易相手国との取引にもポジティブな影響を与える可能性があり、日タイ貿易の観点から注目される。", "source": "日刊工業新聞", "link": "https://www.nikkan.co.jp/articles/view/798019", "published": "2026-11-24T20:00:00+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 3}, {"title": "日本商船隊の85％は外国籍　ホルムズ危機で露呈、「非常時」の輸送力確保 (分断時代の経済安保)", "title_ja": "日本商船隊の85％は外国籍　ホルムズ危機で露呈、「非常時」の輸送力確保", "body_ja": "日本商船隊約2200隻のうち、日本籍船はわずか15％にとどまり、85％が外国籍であることがホルムズ危機をきっかけに露呈した。国は外航海運の制度見直しに着手しており、非常時の輸送力確保が課題となっている。これは日本の経済安全保障に関わる問題で、日本とタイ間の貿易やサプライチェーンにも影響しうる。", "summary_ja": "日本商船隊の85%が外国籍であることがホルムズ危機で露呈し、非常時の輸送力確保が日本の経済安全保障上の課題となっている。政府は外航海運の制度見直しに着手しており、この動向は日本とタイ間の貿易やサプライチェーンの安定性にも影響を及ぼす可能性がある。", "source": "日経ビジネス", "link": "https://business.nikkei.com/atcl/gen/19/00800/112400054/", "published": "2026-11-24T20:00:00+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 3}, {"title": "同床異夢の米中ロ首脳会談　新ヤルタは杞憂だったが「グレートゲーム」の懸念 (世界の今日本の将来)", "title_ja": "同床異夢の米中ロ首脳会談　新ヤルタは杞憂だったが「グレートゲーム」の懸念", "body_ja": "米中ロ首脳会談は「同床異夢」であり、新ヤルタ体制への懸念は杞憂だったものの、「グレートゲーム」の懸念が残ると分析されている。これは、主要国の覇権争いや国際秩序の変動が、タイを含む東南アジア地域の地政学的・経済的環境に間接的な影響を及ぼす可能性を示唆している。", "summary_ja": "米中ロ首脳会談は「同床異夢」であり、新ヤルタ体制への懸念は杞憂だったが、「グレートゲーム」の懸念が残ると分析されている。これは主要国の覇権争いや国際秩序の変動が、タイを含む東南アジアの地政学的・経済的環境に間接的な影響を及ぼす可能性があり、国際情勢として関連する。", "source": "日経ビジネス", "link": "https://business.nikkei.com/atcl/gen/19/00179/112400354/", "published": "2026-11-24T20:00:00+00:00", "category": "日タイ貿易/マクロ", "relevance_score": 3}];
+const THIS_TAG = "20261125"; // このHTMLの日付タグ
+
+// ── 日付ナビゲーション（available_dates.jsonを動的取得）──
+let AVAILABLE_DATES = [];
+
+function getCurrentTag() {
+  const path = location.pathname;
+  const re = new RegExp('digest_([0-9]{8})\.html');
+  const m = path.match(re);
+  return m ? m[1] : THIS_TAG;
+}
+
+function tagToUrl(tag) {
+  const latestTag = AVAILABLE_DATES[AVAILABLE_DATES.length - 1];
+  if (tag === latestTag) return 'index.html';
+  return `digest_${tag}.html`;
+}
+
+function goToDate(dir) {
+  const cur = getCurrentTag();
+  const idx = AVAILABLE_DATES.indexOf(cur);
+  if (dir === 'prev' && idx > 0) location.href = tagToUrl(AVAILABLE_DATES[idx - 1]);
+  if (dir === 'next' && idx < AVAILABLE_DATES.length - 1) location.href = tagToUrl(AVAILABLE_DATES[idx + 1]);
+}
+
+function initNavButtons() {
+  const cur = getCurrentTag();
+  const idx = AVAILABLE_DATES.indexOf(cur);
+  const prev = document.getElementById('prevBtn');
+  const next = document.getElementById('nextBtn');
+  if (prev) prev.disabled = idx <= 0;
+  if (next) next.disabled = idx >= AVAILABLE_DATES.length - 1;
+}
+
+
+async function loadAvailableDates() {
+  // 固定URLで取得（GitHub Pages: hirot01.github.io/daily-digest/）
+  const DATES_URL = "https://hirot01.github.io/daily-digest/available_dates.json";
+  try {
+    const res = await fetch(DATES_URL + "?t=" + Date.now()); // キャッシュ回避
+    if (res.ok) {
+      AVAILABLE_DATES = await res.json();
+      initNavButtons();
+      if (typeof renderCalendar === "function" && calYear) renderCalendar();
+      return;
+    }
+  } catch(e) { console.log("dates fetch failed:", e); }
+  AVAILABLE_DATES = [THIS_TAG];
+  initNavButtons();
+}
+
+// ── カレンダー ──────────────────────────────────────
+let calYear, calMonth;
+
+function toggleCalendar() {
+  const modal = document.getElementById('calendarModal');
+  const overlay = document.getElementById('calendarOverlay');
+  if (modal.style.display === 'none') {
+    const cur = getCurrentTag();
+    calYear = parseInt(cur.slice(0, 4));
+    calMonth = parseInt(cur.slice(4, 6));
+    renderCalendar();
+    modal.style.display = 'block';
+    overlay.style.display = 'block';
+  } else {
+    closeCalendar();
+  }
+}
+
+function closeCalendar() {
+  document.getElementById('calendarModal').style.display = 'none';
+  document.getElementById('calendarOverlay').style.display = 'none';
+}
+
+function changeCalMonth(dir) {
+  calMonth += dir;
+  if (calMonth > 12) { calMonth = 1; calYear++; }
+  if (calMonth < 1)  { calMonth = 12; calYear--; }
+  renderCalendar();
+}
+
+function renderCalendar() {
+  const label = document.getElementById('calMonthLabel');
+  const grid  = document.getElementById('calGrid');
+  label.textContent = `${calYear}年${calMonth}月`;
+
+  const firstDay = new Date(calYear, calMonth - 1, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth, 0).getDate();
+  const dateSet = new Set(AVAILABLE_DATES);
+  const cur = getCurrentTag();
+
+  let html = '';
+  // 空白セル
+  for (let i = 0; i < firstDay; i++) html += '<div></div>';
+  // 日付セル
+  for (let d = 1; d <= daysInMonth; d++) {
+    const tag = `${calYear}${String(calMonth).padStart(2,'0')}${String(d).padStart(2,'0')}`;
+    const hasData = dateSet.has(tag);
+    const isCur = tag === cur;
+    const style = isCur
+      ? 'background:#1a56db;color:#fff;border-radius:50%;font-weight:700;cursor:pointer;padding:5px 0;font-size:13px;'
+      : hasData
+        ? 'color:#1a56db;font-weight:600;cursor:pointer;padding:5px 0;font-size:13px;border-radius:50%;'
+        : 'color:#d1d5db;padding:5px 0;font-size:13px;';
+    const onclick = hasData ? `onclick="location.href='${tagToUrl(tag)}';"` : '';
+    html += `<div style="${style}" ${onclick}>${d}</div>`;
+  }
+  grid.innerHTML = html;
+}
+
+document.addEventListener('DOMContentLoaded', loadAvailableDates);
+const CAT_ICONS  = {"ボイラー/産業設備": "🔧", "バイオマス/再生可能エネルギー": "🌿", "エネルギー市場": "⚡", "日タイ貿易/マクロ": "🤝", "企業/ビジネス動向": "🏭", "その他": "📰"};
+const CAT_COLORS = {"ボイラー/産業設備": "#b45309", "バイオマス/再生可能エネルギー": "#2d7a4f", "エネルギー市場": "#0369a1", "日タイ貿易/マクロ": "#7c3aed", "企業/ビジネス動向": "#be123c", "その他": "#555"};
+const CAT_SUMMARIES = {"企業/ビジネス動向": "新規はNTT-B.Grimm巨額DC計画、タイ部品メーカーの衛星市場参入、CPオール撤退。継続トレンドはタイ自動車産業の減産とBEV化進展、洪水影響、次世代車ハブ化推進と産業多様化（特に宇宙分野）への動き。", "日タイ貿易/マクロ": "新規はタイ中銀のインフォーマル経済縮小意欲と日本の輸出持ち直し報告。継続トレンドは、洪水・干ばつによるタイ経済（農業・自動車輸出）への悪影響と政府の支援策。国際的な政治・安全保障リスクも継続。", "エネルギー市場": "新規は原油価格下落、軽油・B20値下げ、アジアのエネルギー安全保障システム構築への意識。継続トレンドは、中東情勢起因の供給リスクと需給の不確実性。アジアは高まる需要と投資必要性に直面し、LNG含むパートナーシップ多様化を進める。", "バイオマス/再生可能エネルギー": "新規はカナデビアによる中国企業へのバイオ炭技術供与という具体的な国際協力。継続トレンドとしては、限定的ながら、環境技術や再生可能エネルギー、特にバイオマス分野における技術開発と国際的な連携への関心の高まりが伺える。"};
+const GAS_URL = "https://script.google.com/macros/s/AKfycbz9Nc874Azvh8zqv5BySUGToK01aIkInocGYeqxgyyiJ-fN0YCqIW4h2E9NRkYBQ8bO/exec";
+
+let history = ["top"];
+let currentArticleIdx = null;
+
+function showPage(id) {
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  document.getElementById("page-" + id).classList.add("active");
+  document.getElementById("backBtn").classList.toggle("visible", id !== "top");
+  window.scrollTo(0, 0);
+}
+
+function goBack() {
+  history.pop();
+  const prev = history[history.length - 1];
+  if (prev === "top") showPage("top");
+  else if (prev && prev.startsWith("cat:")) showCategory(prev.slice(4), false);
+}
+
+function showCategory(cat, push=true) {
+  if (push) history.push("cat:" + cat);
+  document.getElementById("cat-icon").textContent = CAT_ICONS[cat] || "📰";
+  document.getElementById("cat-name").textContent = cat;
+  document.getElementById("cat-summary-text").textContent = CAT_SUMMARIES[cat] || "";
+  const arts = ARTICLES.filter(a => a.category === cat).sort((a,b) => b.relevance_score - a.relevance_score);
+  document.getElementById("cat-count-head").textContent = arts.length + "件の記事";
+  document.getElementById("cat-articles").innerHTML = arts.map(a => {
+    const idx = ARTICLES.indexOf(a);
+    const color = CAT_COLORS[cat] || "#555";
+    const stars = "★".repeat(a.relevance_score||3) + "☆".repeat(5-(a.relevance_score||3));
+    return `<div class="article-item" onclick="showArticle(${idx})" style="border-left:3px solid ${color}">
+      <div class="article-meta">
+        <span class="art-src">${a.source}</span>
+        <span class="art-stars">${stars}</span>
+      </div>
+      <div class="article-title">${a.title_ja || a.title}</div>
+      <div class="article-summary">${a.summary_ja || ""}</div>
+    </div>`;
+  }).join("");
+  showPage("cat");
+}
+
+function showArticle(idx, push=true) {
+  if (push) history.push("article:" + idx);
+  currentArticleIdx = idx;
+  const a = ARTICLES[idx];
+  const cat = a.category || "その他";
+  const color = CAT_COLORS[cat] || "#555";
+  document.getElementById("det-cat").innerHTML = `<span style="color:${color}">${CAT_ICONS[cat]||"📰"} ${cat}</span>`;
+  document.getElementById("det-title").textContent = a.title_ja || a.title;
+  document.getElementById("det-orig").textContent = a.title_ja && a.title_ja !== a.title ? "原題: " + a.title : "";
+  document.getElementById("det-meta").innerHTML = `<span>${a.source}</span><span>${(a.published||"").slice(0,16).replace("T"," ")}</span>`;
+  const isTranslated = a.body_ja && a.body_ja !== a.body;
+  document.getElementById("det-body-label").textContent = isTranslated ? "記事本文（日本語訳）" : "記事本文";
+  const origText = (a.body && a.body !== "undefined") ? a.body : "";
+  document.getElementById("det-body").innerHTML =
+    (a.body_ja || origText || "") +
+    (isTranslated && origText ? `<div class="detail-orig-body"><div class="detail-orig-label">ORIGINAL</div>${origText}</div>` : "") +
+    `<br><a href="${a.link}" target="_blank" rel="noopener" class="source-link">🔗 元記事を開く</a>`;
+  showPage("article");
+  showPage("article");
+}
+
+function updateCount() {
+  const checked = document.querySelectorAll('#all-articles input[type=checkbox]:checked').length;
+  document.getElementById('save-count').textContent = `チェックした記事: ${checked}件`;
+  document.getElementById('save-btn').disabled = checked === 0;
+}
+
+// 保存済みIDをセッション内で管理
+const savedIds = new Set();
+
+function markAsSaved(idx) {
+  savedIds.add(idx);
+  const item = document.querySelector(`[data-idx="${idx}"]`);
+  if (!item) return;
+  // チェックボックスを非表示にして保存済みバッジを表示
+  const wrap = item.querySelector('.check-wrap');
+  if (wrap) wrap.style.display = 'none';
+  if (!item.querySelector('.saved-badge')) {
+    const badge = document.createElement('div');
+    badge.className = 'saved-badge';
+    badge.textContent = '✅ 保存済み';
+    item.insertBefore(badge, item.firstChild);
+  }
+}
+
+async function saveChecked() {
+  const checkboxes = document.querySelectorAll('#all-articles input[type=checkbox]:checked');
+  if (checkboxes.length === 0) return;
+  const articles = [];
+  const idxList = [];
+  checkboxes.forEach(cb => {
+    const idx = parseInt(cb.id.replace('chk-', ''));
+    articles.push(ARTICLES[idx]);
+    idxList.push(idx);
+  });
+  const btn = document.getElementById('save-btn');
+  btn.disabled = true;
+  btn.textContent = '保存中...';
+  try {
+    await fetch(GAS_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ articles })
+    });
+    btn.textContent = '✅ 保存しました';
+    // 保存済みバッジを付与
+    idxList.forEach(idx => markAsSaved(idx));
+    updateCount();
+    setTimeout(() => {
+      btn.textContent = '📥 スプレッドシートに保存';
+    }, 3000);
+  } catch(e) {
+    btn.textContent = 'エラー: ' + e.message;
+    btn.disabled = false;
+  }
+}
+
+function openPerplexity() {
+  const a = ARTICLES[currentArticleIdx];
+  const query = encodeURIComponent(a.title_ja || a.title);
+  window.open(`https://www.perplexity.ai/search?q=${query}`, '_blank');
+}
+</script>
+
+<div class="save-bar">
+  <div class="save-count" id="save-count">チェックした記事: 0件</div>
+  <button class="save-btn" id="save-btn" onclick="saveChecked()" disabled>📥 スプレッドシートに保存</button>
+</div>
+</body>
+</html>
